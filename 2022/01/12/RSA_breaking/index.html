@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -17,19 +17,21 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="首届（2016）全国高校密码数学挑战赛 赛题三：RSA 加密体制破译 ​    1 问题描述      有人制作了一个 RSA 加解密软件（采用的 RSA 体制的参数特点描 述见密码背景部分）。已知该软件发送某个明文的所有参数和加密过 程的全部数据（加密案例文件详见附件 3-1）。Alice 使用该软件发送 了一个通关密语，且所有加密数据已经被截获，请问能否仅从加密数 据恢复该通关密语及 RSA">
+  <meta name="description" content="首届（2016）全国高校密码数学挑战赛">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RSA 加密体制破译">
 <meta property="og:url" content="http://example.com/2022/01/12/RSA_breaking/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="首届（2016）全国高校密码数学挑战赛 赛题三：RSA 加密体制破译 ​    1 问题描述      有人制作了一个 RSA 加解密软件（采用的 RSA 体制的参数特点描 述见密码背景部分）。已知该软件发送某个明文的所有参数和加密过 程的全部数据（加密案例文件详见附件 3-1）。Alice 使用该软件发送 了一个通关密语，且所有加密数据已经被截获，请问能否仅从加密数 据恢复该通关密语及 RSA">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-01-11T18:09:34.928Z">
-<meta property="article:modified_time" content="2022-01-12T09:45:37.865Z">
-<meta property="article:author" content="John Doe">
+<meta property="og:site_name" content="FireKnight-HJ">
+<meta property="og:description" content="首届（2016）全国高校密码数学挑战赛">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-12T04:03:55.000Z">
+<meta property="article:modified_time" content="2022-01-13T08:25:55.387Z">
+<meta property="article:author" content="fireknight">
+<meta property="article:tag" content="密码学">
+<meta property="article:tag" content="作业">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://example.com/2022/01/12/RSA_breaking/">
@@ -41,11 +43,11 @@
     sidebar: "",
     isHome : false,
     isPost : true,
-    lang   : 'en'
+    lang   : 'zh-CN'
   };
 </script>
 
-  <title>RSA 加密体制破译 | Hexo</title>
+  <title>RSA 加密体制破译 | FireKnight-HJ</title>
   
 
 
@@ -76,6 +78,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="FireKnight-HJ" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -85,7 +88,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
+    <div class="toggle" aria-label="切换导航栏">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -96,7 +99,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Hexo</h1>
+      <h1 class="site-title">FireKnight-HJ</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -114,12 +117,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
   </ul>
@@ -137,6 +155,8 @@
     <span>0%</span>
   </div>
 
+  <a href="https://github.com/fireknight-hJ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
 
     <main class="main">
       <div class="main-inner">
@@ -149,17 +169,17 @@
     
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/12/RSA_breaking/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="fireknight">
+      <meta itemprop="description" content="fireknight-hJ的博客">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="FireKnight-HJ">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -171,13 +191,47 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Created: 2022-01-12 02:09:34 / Modified: 17:45:37" itemprop="dateCreated datePublished" datetime="2022-01-12T02:09:34+08:00">2022-01-12</time>
+              <time title="创建时间：2022-01-12 12:03:55" itemprop="dateCreated datePublished" datetime="2022-01-12T12:03:55+08:00">2022-01-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-13 16:25:55" itemprop="dateModified" datetime="2022-01-13T16:25:55+08:00">2022-01-13</time>
+              </span>
 
           
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/01/12/RSA_breaking/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/12/RSA_breaking/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -189,71 +243,58 @@
 
       
         <p>首届（2016）全国高校密码数学挑战赛</p>
+<span id="more"></span>
 <p><strong>赛题三：RSA 加密体制破译</strong></p>
 <p>​    <strong>1 问题描述</strong></p>
 <pre><code>     有人制作了一个 RSA 加解密软件（采用的 RSA 体制的参数特点描 述见密码背景部分）。已知该软件发送某个明文的所有参数和加密过 程的全部数据（加密案例文件详见附件 3-1）。Alice 使用该软件发送 了一个通关密语，且所有加密数据已经被截获，请问能否仅从加密数 据恢复该通关密语及 RSA 体制参数？如能请给出原文和参数，如不能 请给出已恢复部分并说明剩余部分不能恢复的理由？
-</code></pre>
-<p>​    <strong>2.求解过程</strong></p>
+</code></pre><p>​    <strong>2.求解过程</strong></p>
 <p>​        本次实验通过多种RSA攻击策略还原了13个Frame片段的明文。</p>
 <h2 id="用到的RSA攻击方法"><a href="#用到的RSA攻击方法" class="headerlink" title="用到的RSA攻击方法"></a>用到的RSA攻击方法</h2><h3 id="1-公共模数攻击"><a href="#1-公共模数攻击" class="headerlink" title="1.公共模数攻击"></a>1.公共模数攻击</h3><p><em>攻击条件：</em>当两个用户使用相同模数N，不同私钥，加密同一明文消息时存在此攻击</p>
 <p><em>攻击原理：</em></p>
-<p>设两用户公钥为$e_1,e_2$，二者互质。明文消息$m$，密文$c1，c2$则有：<br>$$<br>c_1=m^{e1}mod\ N<br>$$</p>
-<p>$$<br>c_2=m^{e2}mod\ N<br>$$</p>
-<p>当$Adversary$截获了$c_1,c_2$后，可以用扩展欧几里得算法计算：$re_1+se_2=1\ mod\ n $的两个整数$r$和$s$，由此：<br>$$<br>\begin{align}<br>c_1^rc_2^s &amp;=m^{re_1}m^{se_2}\ mod\ n\<br>&amp;=m^{re_1+se_2}\ mod\ n\<br>&amp;=m\ mod\ n<br>\end{align}<br>$$<br>共模攻击代码如下：</p>
+<p>设两用户公钥为$e_1,e_2$，二者互质。明文消息$m$，密文$c1，c2$则有：</p>
+<script type="math/tex; mode=display">
+c_1=m^{e1}mod\ N</script><script type="math/tex; mode=display">
+c_2=m^{e2}mod\ N</script><p>当$Adversary$截获了$c_1,c_2$后，可以用扩展欧几里得算法计算：$re_1+se_2=1\ mod\ n $的两个整数$r$和$s$，由此：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+c_1^rc_2^s &=m^{re_1}m^{se_2}\ mod\ n\\
+&=m^{re_1+se_2}\ mod\ n\\
+&=m\ mod\ n
+\end{align}</script><p>共模攻击代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">公共模数攻击,输入对应frame序号a,b</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sameModulAttack</span>(<span class="params">a,b</span>):</span></span><br><span class="line">    <span class="keyword">if</span> ns[a]!=ns[b]:</span><br><span class="line">        <span class="keyword">return</span>-<span class="number">1</span></span><br><span class="line">    e1,e2,c1,c2,n = <span class="built_in">int</span>(es[a], <span class="number">16</span>),<span class="built_in">int</span>(es[b], <span class="number">16</span>),<span class="built_in">int</span>(cs[a], <span class="number">16</span>),<span class="built_in">int</span>(cs[b], <span class="number">16</span>),<span class="built_in">int</span>(ns[a],<span class="number">16</span>)</span><br><span class="line">    <span class="comment">#r*e1+s*e2=g(g=1)mod n，其中rs有一个是负的</span></span><br><span class="line">    g,r,s = egcd(e1, e2)</span><br><span class="line">    <span class="comment">#这里pow不能算负多少次方于是吧那个负项拆成了c^&#123;s&#125;=c^&#123;-1*s&#125;=(c^&#123;-1&#125;)^s</span></span><br><span class="line">    <span class="keyword">if</span> r&lt;<span class="number">0</span>:</span><br><span class="line">        r = - r</span><br><span class="line">        c1 = gmpy2.invert(c1, n)</span><br><span class="line">    <span class="keyword">elif</span> s&lt;<span class="number">0</span>:</span><br><span class="line">        s = - s</span><br><span class="line">        c2 = gmpy2.invert(c2, n)</span><br><span class="line">    <span class="comment">#message解出来就是此处的m</span></span><br><span class="line">    m = <span class="built_in">pow</span>(c1,r,n)*<span class="built_in">pow</span>(c2,s,n) % n</span><br><span class="line">    <span class="comment">#print(m)</span></span><br><span class="line">    <span class="built_in">print</span>(binascii.a2b_hex(<span class="built_in">hex</span>(m)[<span class="number">2</span>:]))</span><br><span class="line">    <span class="keyword">return</span> binascii.a2b_hex(<span class="built_in">hex</span>(m)[<span class="number">2</span>:])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
 <h3 id="2-低加密指数广播攻击"><a href="#2-低加密指数广播攻击" class="headerlink" title="2.低加密指数广播攻击"></a>2.低加密指数广播攻击</h3><p><em>攻击条件：</em>选取的加密指数$e$较小，并且使用相同的加密指数给一个接收者群发送了相同的信息</p>
 <p><em>攻击原理：</em></p>
-<p>例如选取接收者群有三个成员的情况：<br>$$<br>c_1=m^e\ mod\ n_1\<br>c_2=m^e\ mod\ n_2\<br>c_3=m^e\ mod\ n_3<br>$$<br>对上述几个等式，用中国剩余定理求解，可以得到：<br>$$<br>c_x =N_1N_1^{-1}c_1+N_2N_2^{-1}c_2+N_3N_3^{-1}c_3\ mod\ N\ \ \ (N=n_1n_2n_3)<br>$$<br>又当e=3时，可以求得：<br>$$<br>m=\sqrt[3]{c_x}<br>$$</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">低加密指数爆破攻击（广播攻击）</span></span><br><span class="line"><span class="string">c1 = m^5 mod N1</span></span><br><span class="line"><span class="string">c2 = m^5 mod N2</span></span><br><span class="line"><span class="string">c3 = m^5 mod N3</span></span><br><span class="line"><span class="string">c4 = m^5 mod N4</span></span><br><span class="line"><span class="string">c5 = m^5 mod N5</span></span><br><span class="line"><span class="string">用中国剩余定理解出m^5，之后开五次根即求出m</span></span><br><span class="line"><span class="string">这种也只有在几个m相同的情况下有的算</span></span><br><span class="line"><span class="string">Frame3,Frame8,Frame12,Frame16,Frame20采用低加密指数e=5进行加密，恰好能够进行爆破</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lowEburp5</span>():</span></span><br><span class="line">    sessions = [[<span class="built_in">int</span>(cs[<span class="number">3</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">3</span>],<span class="number">16</span>)],[<span class="built_in">int</span>(cs[<span class="number">8</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">8</span>],<span class="number">16</span>)],[<span class="built_in">int</span>(cs[<span class="number">12</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">12</span>],<span class="number">16</span>)],[<span class="built_in">int</span>(cs[<span class="number">16</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">16</span>],<span class="number">16</span>)],[<span class="built_in">int</span>(cs[<span class="number">20</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">20</span>],<span class="number">16</span>)]]</span><br><span class="line">    ret,N = chinese_remainder_theorem(sessions)</span><br><span class="line">    ans = gmpy2.iroot(ret,<span class="number">5</span>)</span><br><span class="line">    <span class="built_in">print</span>(binascii.a2b_hex(<span class="built_in">hex</span>(ans[<span class="number">0</span>])[<span class="number">2</span>:]))</span><br><span class="line">    <span class="keyword">return</span> binascii.a2b_hex(<span class="built_in">hex</span>(ans[<span class="number">0</span>])[<span class="number">2</span>:])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
+<p>例如选取接收者群有三个成员的情况：</p>
+<script type="math/tex; mode=display">
+c_1=m^e\ mod\ n_1\\
+c_2=m^e\ mod\ n_2\\
+c_3=m^e\ mod\ n_3</script><p>对上述几个等式，用中国剩余定理求解，可以得到：</p>
+<script type="math/tex; mode=display">
+c_x =N_1N_1^{-1}c_1+N_2N_2^{-1}c_2+N_3N_3^{-1}c_3\ mod\ N\ \ \ (N=n_1n_2n_3)</script><p>又当e=3时，可以求得：</p>
+<script type="math/tex; mode=display">
+m=\sqrt[3]{c_x}</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">低加密指数爆破攻击（广播攻击）</span></span><br><span class="line"><span class="string">c1 = m^5 mod N1</span></span><br><span class="line"><span class="string">c2 = m^5 mod N2</span></span><br><span class="line"><span class="string">c3 = m^5 mod N3</span></span><br><span class="line"><span class="string">c4 = m^5 mod N4</span></span><br><span class="line"><span class="string">c5 = m^5 mod N5</span></span><br><span class="line"><span class="string">用中国剩余定理解出m^5，之后开五次根即求出m</span></span><br><span class="line"><span class="string">这种也只有在几个m相同的情况下有的算</span></span><br><span class="line"><span class="string">Frame3,Frame8,Frame12,Frame16,Frame20采用低加密指数e=5进行加密，恰好能够进行爆破</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lowEburp5</span>():</span></span><br><span class="line">    sessions = [[<span class="built_in">int</span>(cs[<span class="number">3</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">3</span>],<span class="number">16</span>)],[<span class="built_in">int</span>(cs[<span class="number">8</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">8</span>],<span class="number">16</span>)],[<span class="built_in">int</span>(cs[<span class="number">12</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">12</span>],<span class="number">16</span>)],[<span class="built_in">int</span>(cs[<span class="number">16</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">16</span>],<span class="number">16</span>)],[<span class="built_in">int</span>(cs[<span class="number">20</span>],<span class="number">16</span>),<span class="built_in">int</span>(ns[<span class="number">20</span>],<span class="number">16</span>)]]</span><br><span class="line">    ret,N = chinese_remainder_theorem(sessions)</span><br><span class="line">    ans = gmpy2.iroot(ret,<span class="number">5</span>)</span><br><span class="line">    <span class="built_in">print</span>(binascii.a2b_hex(<span class="built_in">hex</span>(ans[<span class="number">0</span>])[<span class="number">2</span>:]))</span><br><span class="line">    <span class="keyword">return</span> binascii.a2b_hex(<span class="built_in">hex</span>(ans[<span class="number">0</span>])[<span class="number">2</span>:])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h3 id="3-因数碰撞攻击"><a href="#3-因数碰撞攻击" class="headerlink" title="3.因数碰撞攻击"></a>3.因数碰撞攻击</h3><p><em>攻击条件</em>：获取到两个公钥参数$N_1，N_2$ 不互素的密文信息</p>
 <p><em>攻击原理</em>：</p>
 <p>当存在两个公钥的$ N_1，N_2$ 不互素时，我们显然可以直接对这两个数求最大公因数，获得二者的共同的p然后直接获得$ q=n/p$，进而获得相应的私钥。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">因数碰撞攻击</span></span><br><span class="line"><span class="string">当存在两个公钥的 N 不互素时，我们显然可以直接对这两个数求最大公因数，然后直接获得 p，q，进而获得相应的私钥。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_factor_pairs</span>():</span></span><br><span class="line">    pairs = []</span><br><span class="line">    <span class="comment"># 遍历每个组合，找到有最大公约数不为1的n1，n2对</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(ns)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i+<span class="number">1</span>,<span class="built_in">len</span>(ns)):</span><br><span class="line">            ni = <span class="built_in">int</span>(ns[i],<span class="number">16</span>)</span><br><span class="line">            nj = <span class="built_in">int</span>(ns[j],<span class="number">16</span>)</span><br><span class="line">            <span class="keyword">if</span> ni == nj:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> gmpy2.gcd(ni,nj)!=<span class="number">1</span>:</span><br><span class="line">                pairs.append([i,j,gmpy2.gcd(ni,nj)])</span><br><span class="line">    <span class="comment"># print打印pairs</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> pairs:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;出现碰撞的frame序号为 &quot;</span>,i[<span class="number">0</span>],<span class="string">&quot; &quot;</span>,i[<span class="number">1</span>],<span class="string">&quot; 公因数为 &quot;</span>,i[<span class="number">2</span>])</span><br><span class="line">    <span class="keyword">return</span> pairs</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sameFactorAttack</span>(<span class="params">i,j</span>):</span></span><br><span class="line">    <span class="comment"># 对pairs中的每个组合进行破解</span></span><br><span class="line">    ni = <span class="built_in">int</span>(ns[i], <span class="number">16</span>); nj = <span class="built_in">int</span>(ns[j], <span class="number">16</span>)</span><br><span class="line">    ci = <span class="built_in">int</span>(cs[i], <span class="number">16</span>); cj = <span class="built_in">int</span>(cs[j], <span class="number">16</span>)</span><br><span class="line">    ei = <span class="built_in">int</span>(es[i], <span class="number">16</span>); ej = <span class="built_in">int</span>(es[j], <span class="number">16</span>)</span><br><span class="line">    <span class="comment"># 求ni nj公因数得到p</span></span><br><span class="line">    p = gmpy2.gcd(ni,nj)</span><br><span class="line">    qi = ni//p</span><br><span class="line">    qj = nj//p</span><br><span class="line">    <span class="comment"># 根据欧拉定理，求phi</span></span><br><span class="line">    phi_i = (p-<span class="number">1</span>)*(qi-<span class="number">1</span>)</span><br><span class="line">    phi_j = (p-<span class="number">1</span>)*(qj-<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># 由ed = 1 mod phi可以得到 d = e^-1 mod phi</span></span><br><span class="line">    di = gmpy2.invert(ei,phi_i)</span><br><span class="line">    dj = gmpy2.invert(ej,phi_j)</span><br><span class="line">    <span class="comment"># 明文m = c^d mod n</span></span><br><span class="line">    mi = gmpy2.powmod(ci,di,ni)</span><br><span class="line">    mj = gmpy2.powmod(cj,dj,nj)</span><br><span class="line">    <span class="built_in">print</span>(binascii.a2b_hex(<span class="built_in">hex</span>(mi)[<span class="number">2</span>:]))</span><br><span class="line">    <span class="built_in">print</span>(binascii.a2b_hex(<span class="built_in">hex</span>(mj)[<span class="number">2</span>:]))</span><br><span class="line">    <span class="keyword">return</span> binascii.a2b_hex(<span class="built_in">hex</span>(mi)[<span class="number">2</span>:]),binascii.a2b_hex(<span class="built_in">hex</span>(mj)[<span class="number">2</span>:])</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 <h3 id="4-费马分解法：p-q分解"><a href="#4-费马分解法：p-q分解" class="headerlink" title="4.费马分解法：p-q分解"></a>4.费马分解法：p-q分解</h3><p><em>攻击条件：</em>p或q选择不当：|p-q|较小</p>
 <p><em>攻击原理：</em></p>
-<p>由如下式子：<br>$$<br>\frac{(p+q)^2}{4}-n=\frac{(p+q)^2}{4}-pq=\frac{(p-q)^2}{4}<br>$$<br>可以看到，$|p-q|$较小时，$\frac{(p-q)^2}{4}$也较小，从而$\frac{(p+q)^2}{4}$只是比$n$稍微大了一点点，从而$\frac{p+q}{2}$与$\sqrt{n}$相近。那么我们可以：</p>
+<p>由如下式子：</p>
+<script type="math/tex; mode=display">
+\frac{(p+q)^2}{4}-n=\frac{(p+q)^2}{4}-pq=\frac{(p-q)^2}{4}</script><p>可以看到，$|p-q|$较小时，$\frac{(p-q)^2}{4}$也较小，从而$\frac{(p+q)^2}{4}$只是比$n$稍微大了一点点，从而$\frac{p+q}{2}$与$\sqrt{n}$相近。那么我们可以：</p>
 <ul>
 <li>顺序检查$\sqrt{n}$的每一个整数$x$，直到找到一个$x$使得$x^2-n$是平方数，记为$y^2$</li>
 <li>那么$x^2-n=y^2$，进而根据平方差公式即可分解$N$</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fermat_pq_get_p</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="comment"># 定义一个较小（也没有很小）的常数b</span></span><br><span class="line">    b = math.factorial(<span class="number">2</span>**<span class="number">14</span>)</span><br><span class="line">    <span class="comment"># 从u0 = sqrt(n)开始遍历</span></span><br><span class="line">    u0 = gmpy2.iroot(n,<span class="number">2</span>)[<span class="number">0</span>]+<span class="number">1</span></span><br><span class="line">    i=<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; b-<span class="number">1</span>:</span><br><span class="line">        u = (u0+i)*(u0+i)-n</span><br><span class="line">        <span class="comment"># 如果u是某个数的平方张，则u为y^2，u0+i为x</span></span><br><span class="line">        <span class="keyword">if</span> gmpy2.is_square(u):</span><br><span class="line">            v=gmpy2.isqrt(u)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        i+=<span class="number">1</span></span><br><span class="line">    <span class="comment"># 此时p，q为x-y 和 x+y，我们返回x+y的值</span></span><br><span class="line">    <span class="keyword">return</span> (u0+i)+v</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fermart_crack</span>(<span class="params">i</span>):</span></span><br><span class="line">    n = <span class="built_in">int</span>(ns[i], <span class="number">16</span>)</span><br><span class="line">    c = <span class="built_in">int</span>(cs[i], <span class="number">16</span>)</span><br><span class="line">    e = <span class="built_in">int</span>(es[i], <span class="number">16</span>)</span><br><span class="line">    <span class="comment"># 分解n得到p，q</span></span><br><span class="line">    p = fermat_pq_get_p(n)</span><br><span class="line">    q = n//p</span><br><span class="line">    <span class="comment"># 根据欧拉定理，求phi</span></span><br><span class="line">    phi = (p-<span class="number">1</span>)*(q-<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># 由ed = 1 mod phi可以得到 d = e^-1 mod phi</span></span><br><span class="line">    d = gmpy2.invert(e,phi)</span><br><span class="line">    <span class="comment"># 明文m = c^d mod n</span></span><br><span class="line">    m = gmpy2.powmod(c,d,n)</span><br><span class="line">    <span class="built_in">print</span>(binascii.a2b_hex(<span class="built_in">hex</span>(m)[<span class="number">2</span>:]))</span><br><span class="line">    <span class="keyword">return</span> binascii.a2b_hex(<span class="built_in">hex</span>(m)[<span class="number">2</span>:])</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 <h3 id="5-pollard-p-1分解法"><a href="#5-pollard-p-1分解法" class="headerlink" title="5.pollard p-1分解法"></a>5.pollard p-1分解法</h3><p>攻击条件：适用于$p-1$或$q-1$能够被小素数整除的情况，通过此分解法可以找到一个因子$d$满足$d|n$</p>
 <p>攻击原理：</p>
-<p>寻找一个整数k，k要满足(p-1)|k!，由欧拉定理可以得知，若a和p互素：<br>$$<br>a^{p-1}=1\ mod\ p<br>$$<br>即：<br>$$<br>a^{k!}=1\ mod\ p<br>$$<br>则：$p|(a^{k!}-1)$，这样的话，$n$和$(a^{k!}-1)$必由一个公因数p，这样的话只需求$p=gcd(n,a^{k!}-1)$，之后就能够轻易地分解出n来了。</p>
+<p>寻找一个整数k，k要满足(p-1)|k!，由欧拉定理可以得知，若a和p互素：</p>
+<script type="math/tex; mode=display">
+a^{p-1}=1\ mod\ p</script><p>即：</p>
+<script type="math/tex; mode=display">
+a^{k!}=1\ mod\ p</script><p>则：$p|(a^{k!}-1)$，这样的话，$n$和$(a^{k!}-1)$必由一个公因数p，这样的话只需求$p=gcd(n,a^{k!}-1)$，之后就能够轻易地分解出n来了。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Pollard p-1 分解法</span></span><br><span class="line"><span class="string">适用于p-1或q-1能够被小素数整除的情况</span></span><br><span class="line"><span class="string">通过此分解法可以找到一个因子d|n</span></span><br><span class="line"><span class="string">原理是找到一个满足(p-1)|k!的整数k，由fermart小定理，a^p-1=1 mod p ----&gt; p|(a^k!-1)</span></span><br><span class="line"><span class="string">这样n与(a^k!-1)有公因数p，n被分解出来</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pollard_p_1</span>(<span class="params">n</span>):</span></span><br><span class="line">    m = <span class="number">2</span></span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>,n):</span><br><span class="line">        <span class="comment"># 此时每次遍历，m=2^(k!)</span></span><br><span class="line">        m = <span class="built_in">pow</span>(m,k,n)</span><br><span class="line">        <span class="comment"># 找到一个k使得p|(a^k!-1)，即(a^k!-1)与n有公因数p</span></span><br><span class="line">        <span class="keyword">if</span> gmpy2.gcd(m - <span class="number">1</span>, n) != <span class="number">1</span>:</span><br><span class="line">            <span class="comment"># 返回p</span></span><br><span class="line">            <span class="keyword">return</span> gmpy2.gcd(m - <span class="number">1</span>, n)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">(github上原文的内容有问题，解不出来)</span></span><br><span class="line"><span class="string">0.固定一个整数B=2**20</span></span><br><span class="line"><span class="string">1.选择一个整数k，k为满足b&lt;=B的大部分或者全部b的乘积，可以选：k = B!</span></span><br><span class="line"><span class="string">2.选择一个随机整数a：2&lt;a&lt;n-2</span></span><br><span class="line"><span class="string">3.计算r = a^k mod n</span></span><br><span class="line"><span class="string">4.计算d = gcd(r-1,n)</span></span><br><span class="line"><span class="string">5.如果d=1或d=n,回到1，否则我们找到d为一个因子</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="comment"># def pollard_p_1(n):</span></span><br><span class="line"><span class="comment">#     B = 2**20</span></span><br><span class="line"><span class="comment">#     while True:</span></span><br><span class="line"><span class="comment">#         k = math.factorial(B)</span></span><br><span class="line"><span class="comment">#         a = random.randint(3,n-2)</span></span><br><span class="line"><span class="comment">#         r = a**k%n</span></span><br><span class="line"><span class="comment">#         d = gmpy2.gcd(r-1,n)</span></span><br><span class="line"><span class="comment">#         if d==1 or d==n:</span></span><br><span class="line"><span class="comment">#             continue</span></span><br><span class="line"><span class="comment">#         return d</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">p1_crack</span>(<span class="params">i</span>):</span></span><br><span class="line">    n = <span class="built_in">int</span>(ns[i], <span class="number">16</span>)</span><br><span class="line">    c = <span class="built_in">int</span>(cs[i], <span class="number">16</span>)</span><br><span class="line">    e = <span class="built_in">int</span>(es[i], <span class="number">16</span>)</span><br><span class="line">    <span class="comment"># 分解n得到d=p，之后算q</span></span><br><span class="line">    p = pollard_p_1(n)</span><br><span class="line">    q = n//p</span><br><span class="line">    phi = (p-<span class="number">1</span>)*(q-<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># 由ed = 1 mod phi可以得到 d = e^-1 mod phi</span></span><br><span class="line">    d = gmpy2.invert(e,phi)</span><br><span class="line">    <span class="comment"># 明文m = c^d mod n</span></span><br><span class="line">    m = gmpy2.powmod(c,d,n)</span><br><span class="line">    <span class="built_in">print</span>(binascii.a2b_hex(<span class="built_in">hex</span>(m)[<span class="number">2</span>:]))</span><br><span class="line">    <span class="keyword">return</span> binascii.a2b_hex(<span class="built_in">hex</span>(m)[<span class="number">2</span>:])</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 <h2 id="分析Frame文件，进行RSA攻击"><a href="#分析Frame文件，进行RSA攻击" class="headerlink" title="分析Frame文件，进行RSA攻击"></a>分析Frame文件，进行RSA攻击</h2><ul>
 <li>Frame0和Frame4的模数N相同，假设这两片段对应的明文内容相同，则可以使用公共模数攻击的方法</li>
 <li>Frame1和Frame18的模数N具有公共因子，可以通过因数碰撞法还原明文</li>
@@ -262,21 +303,13 @@
 <li>Frame10 经尝试后发现其p，q选择较为接近，采用费马分解法(p-q法)进行破解</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">数据读取</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">readFrames</span>():</span></span><br><span class="line">    ns = []</span><br><span class="line">    cs = []</span><br><span class="line">    es = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">21</span>):</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;RSA大礼包/frame_set/Frame&quot;</span>+<span class="built_in">str</span>(i), <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            tmp = f.read()</span><br><span class="line">            ns.append(tmp[<span class="number">0</span>:<span class="number">256</span>])</span><br><span class="line">            es.append(tmp[<span class="number">256</span>:<span class="number">512</span>])</span><br><span class="line">            cs.append(tmp[<span class="number">512</span>:<span class="number">768</span>])</span><br><span class="line">    <span class="keyword">return</span> ns,cs,es</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    ns,cs,es = readFrames()</span><br><span class="line">    pt = [<span class="string">&quot;&quot;</span>]*<span class="built_in">len</span>(ns)</span><br><span class="line">    <span class="comment">#针对Frame0和Frame4，构建共模攻击函数</span></span><br><span class="line">    pt[<span class="number">4</span>] = sameModulAttack(<span class="number">0</span>, <span class="number">4</span>)</span><br><span class="line">    pt[<span class="number">0</span>]=pt[<span class="number">4</span>]</span><br><span class="line">    <span class="comment">#针对Frame1和Frame18，构造因数碰撞函数</span></span><br><span class="line">    pairs = get_factor_pairs()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> pairs:</span><br><span class="line">        pt[i[<span class="number">0</span>]],pt[i[<span class="number">1</span>]] = sameFactorAttack(i[<span class="number">0</span>],i[<span class="number">1</span>])</span><br><span class="line">    <span class="comment">#针对Frame10采用费马分解法(p-q法)进行破解</span></span><br><span class="line">    pt[<span class="number">10</span>] = fermart_crack(<span class="number">10</span>)</span><br><span class="line">    <span class="comment">#针对Frame2,Frame6,Frame19,构造Pollard p-1分解函数分解</span></span><br><span class="line">    pt[<span class="number">2</span>] = p1_crack(<span class="number">2</span>)</span><br><span class="line">    pt[<span class="number">6</span>] = p1_crack(<span class="number">6</span>)</span><br><span class="line">    pt[<span class="number">19</span>] = p1_crack(<span class="number">19</span>)</span><br><span class="line">    <span class="comment">#针对Frame3,Frame8,Frame12,Frame16,Frame20采用低加密指数e=5进行加密，恰好能够进行爆破</span></span><br><span class="line">    pt[<span class="number">3</span>] = lowEburp5()</span><br><span class="line">    pt[<span class="number">8</span>] = pt[<span class="number">3</span>]</span><br><span class="line">    pt[<span class="number">12</span>] = pt[<span class="number">3</span>]</span><br><span class="line">    pt[<span class="number">16</span>] = pt[<span class="number">3</span>]</span><br><span class="line">    pt[<span class="number">20</span>] = pt[<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 展示结果</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(pt)):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Frame &quot;</span>,i,<span class="string">&quot; 破译结果为：&quot;</span>,pt[i][-<span class="number">8</span>:])</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 <p>​    <strong>3.实验结果</strong></p>
 <p>程序运行的结果如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">b&#x27;\x98vT2\x10\xab\xcd\xef\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00My secre&#x27;</span><br><span class="line">出现碰撞的frame序号为  1   18  公因数为  72732681634</span><br><span class="line">65293471933643674908027120929096536045429682300347130226398442391418956862476173798834057392247872274441320512158525416407044516675402521694747</span><br><span class="line">b&#x27;\x98vT2\x10\xab\xcd\xef\x00\x00\x00\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00. Imagin&#x27;</span><br><span class="line">b&#x27;\x98vT2\x10\xab\xcd\xef\x00\x00\x00\n\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00m A to B&#x27;</span><br><span class="line">b&#x27;\x98vT2\x10\xab\xcd\xef\x00\x00\x00\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00will get&#x27;</span><br><span class="line">b&#x27;\x98vT2\x10\xab\xcd\xef\x00\x00\x00\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00 That is&#x27;</span><br><span class="line">b&#x27;\x98vT2\x10\xab\xcd\xef\x00\x00\x00\x07\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00 &quot;Logic &#x27;</span><br><span class="line">b&#x27;\x98vT2\x10\xab\xcd\xef\x00\x00\x00\x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00instein.&#x27;</span><br><span class="line">b&#x27;\x98vT2\x10\xab\xcd\xef\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00t is a f&#x27;</span><br><span class="line"></span><br><span class="line">Frame  0  破译结果为： b&#x27;My secre&#x27;</span><br><span class="line">Frame  1  破译结果为： b&#x27;. Imagin&#x27;</span><br><span class="line">Frame  2  破译结果为： b&#x27; That is&#x27;</span><br><span class="line">Frame  3  破译结果为： b&#x27;t is a f&#x27;</span><br><span class="line">Frame  4  破译结果为： b&#x27;My secre&#x27;</span><br><span class="line">Frame  5  破译结果为： </span><br><span class="line">Frame  6  破译结果为： b&#x27; &quot;Logic &#x27;</span><br><span class="line">Frame  7  破译结果为： </span><br><span class="line">Frame  8  破译结果为： b&#x27;t is a f&#x27;</span><br><span class="line">Frame  9  破译结果为： </span><br><span class="line">Frame  10  破译结果为： b&#x27;will get&#x27;</span><br><span class="line">Frame  11  破译结果为： </span><br><span class="line">Frame  12  破译结果为： b&#x27;t is a f&#x27;</span><br><span class="line">Frame  13  破译结果为： </span><br><span class="line">Frame  14  破译结果为： </span><br><span class="line">Frame  15  破译结果为： </span><br><span class="line">Frame  16  破译结果为： b&#x27;t is a f&#x27;</span><br><span class="line">Frame  17  破译结果为： </span><br><span class="line">Frame  18  破译结果为： b&#x27;m A to B&#x27;</span><br><span class="line">Frame  19  破译结果为： b&#x27;instein.&#x27;</span><br><span class="line">Frame  20  破译结果为： b&#x27;t is a f&#x27;</span><br><span class="line"></span><br><span class="line">进程已结束，退出代码 0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
 <p>​    <strong>4.总结</strong></p>
 <p>通过完成本次大作业我学习了一些针对RSA算法的攻击方式，收获很大。同时我了解到即便 RSA 算法目前来说是安全可靠的，但是错误的应用场景，错误的环境配置，以及错误的使用方法都会导致 RSA 的算法体系出现问题，因此日后学习过程中遇到相关的问题时要多留心思考研究，以免出现疏漏。</p>
 <p>​    <strong>5.参考</strong></p>
-<p><a target="_blank" rel="noopener" href="https://www.tr0y.wang/2017/11/06/CTFRSA/#%E4%BE%8B%E9%A2%98-6">https://www.tr0y.wang/2017/11/06/CTFRSA/#%E4%BE%8B%E9%A2%98-6</a> </p>
+<p><a target="_blank" rel="noopener" href="https://www.tr0y.wang/2017/11/06/CTFRSA/#例题-6">https://www.tr0y.wang/2017/11/06/CTFRSA/#%E4%BE%8B%E9%A2%98-6</a> </p>
 <p><a target="_blank" rel="noopener" href="https://www.tr0y.wang/2017/10/31/RSA2016/">https://www.tr0y.wang/2017/10/31/RSA2016/</a>  </p>
 <p><a target="_blank" rel="noopener" href="https://github.com/blank-vax/RSA_breaking">https://github.com/blank-vax/RSA_breaking</a>  </p>
 
@@ -285,8 +318,30 @@
     
     
     
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>fireknight
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/01/12/RSA_breaking/" title="RSA 加密体制破译">http://example.com/2022/01/12/RSA_breaking/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
 
       <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 密码学</a>
+              <a href="/tags/%E4%BD%9C%E4%B8%9A/" rel="tag"><i class="fa fa-tag"></i> 作业</a>
+          </div>
 
         
 
@@ -297,7 +352,10 @@
     <a href="/2022/01/12/hello-world/" rel="prev" title="Hello World">
       <i class="fa fa-chevron-left"></i> Hello World
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/13/hexo-next-blog%E6%90%AD%E5%BB%BA/" rel="next" title="hexo_next_blog搭建">
+      hexo_next_blog搭建 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -310,6 +368,7 @@
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -347,10 +406,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Table of Contents
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Overview
+          站点概览
         </li>
       </ul>
 
@@ -362,22 +421,43 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">John Doe</p>
-  <div class="site-description" itemprop="description"></div>
+    <img class="site-author-image" itemprop="image" alt="fireknight"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">fireknight</p>
+  <div class="site-description" itemprop="description">fireknight-hJ的博客</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
-          <span class="site-state-item-name">posts</span>
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fireknight-hJ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fireknight-hJ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/fireknight-hJ" title="https:&#x2F;&#x2F;github.com&#x2F;fireknight-hJ" rel="noopener" target="_blank">github_site</a>
+        </li>
+    </ul>
+  </div>
 
       </div>
 
@@ -402,10 +482,20 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">fireknight</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">24k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">22 分钟</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
-  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
 
@@ -421,6 +511,9 @@
   </div>
 
   
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
@@ -430,12 +523,16 @@
 <script src="/js/motion.js"></script>
 
 
-<script src="/js/schemes/muse.js"></script>
+<script src="/js/schemes/pisces.js"></script>
 
 
 <script src="/js/next-boot.js"></script>
 
 
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
 
 
   
@@ -457,6 +554,101 @@
   
 
   
+      
 
-</body>
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : true,
+      appId      : 'R8brtkIXPg6UVi6tzdQm1aIC-gzGzoHsz',
+      appKey     : '3XexM3rU032vWyOvDGsWO4Fp',
+      placeholder: "ヾﾉ≧∀≦)o来啊, 快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+  
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/js/cursor/explosion.min.js"></script>
+  
+  
+  
+  <!--页面点击小桃心-->
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
+
