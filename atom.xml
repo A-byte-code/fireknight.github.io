@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-01-13T08:35:25.687Z</updated>
+  <updated>2022-01-14T17:00:45.579Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>计网复习：拥塞控制</title>
+    <link href="http://example.com/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/"/>
+    <id>http://example.com/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/</id>
+    <published>2022-01-14T16:50:02.000Z</published>
+    <updated>2022-01-14T17:00:45.579Z</updated>
+    
+    <content type="html"><![CDATA[<p>数据通信与网络24章 前半部分</p><span id="more"></span><h3 id="数据通信量"><a href="#数据通信量" class="headerlink" title="数据通信量"></a>数据通信量</h3><h5 id="通信量描述符"><a href="#通信量描述符" class="headerlink" title="通信量描述符"></a>通信量描述符</h5><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005120833.png" alt="image-20220115005120833"></p><p>平均数据速率=一段时间内发送数据比特数/时间</p><p>峰值数据速率=平均数据速率最大值：重要，它表明了让通信量通过网络而无需改变数据流的情况下，网络所需的峰值带宽</p><p>最大突发长度=峰值速率传输通信量持续时间的最大值：如果峰值持续时间很短可以忽略不计</p><p>有效带宽=网络需要分配给通信留的带宽。f(平均数据速率，峰值速率，最大突发长度) 计算过程很复杂。</p><h5 id="通信量特征值"><a href="#通信量特征值" class="headerlink" title="通信量特征值"></a>通信量特征值</h5><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005150444.png" alt="image-20220115005150444"></p><p>恒定比特率CBR：数据速率恒定不变</p><p>可变比特率VBR：数据流速率随时间平滑变化（（不是几句的突然的）</p><p>突发性数据 bursty data：短时间内数据速率突然发生变化：为了处理这种，需要重新整形技术进行重新整形</p><p>突发性通信量时网络中拥塞的主要原因之一</p><h4 id="拥塞"><a href="#拥塞" class="headerlink" title="拥塞"></a>拥塞</h4><p>拥塞：网络中的载荷（发闪送到网络中的分组数量）超过网络容量，即可能发生</p><p>拥塞控制：控制拥塞和时载荷抵御网络容量的机制和技术</p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005207933.png" alt="image-20220115005207933"></p><p>为什么发生？</p><p>1.分组到达速率高举分组处理速率，输入队列越来越长</p><p>2.分组转发速率抵御分组处理速率输出队列也会越来越长</p><p>网络性能</p><p>两个测试网络性能的要素：延迟和吞吐量</p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005226352.png" alt="image-20220115005226352"></p><p>延迟：载荷必容量小得多时，延迟最小，载荷大于网络容量时，延迟变为无穷大</p><p>吞吐量：网络吞吐量定义为单位时间内通过网络的分组数量：当载荷小于网络容量，吞吐量随载荷增加成比例增长，载荷达到网络容量时，期望吞吐量却不会恒定，而是急剧下降（丢弃分组 ，之后网络中分组数量也不会少，源端会重发，加重延迟和阻塞）</p><h4 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h4><p>两大类：开环拥塞控制（预防），闭环拥塞控制 (消除)</p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005247592.png" alt="image-20220115005247592"></p><h4 id="开环拥塞控制"><a href="#开环拥塞控制" class="headerlink" title="开环拥塞控制"></a>开环拥塞控制</h4><p><strong>重传策略</strong></p><p>有时<em>重发不可避免</em>，而重发会增加拥塞现象，但是一个<em>好的重传策略可以预防拥塞</em></p><p><strong>窗口策略</strong></p><p>发送方窗口类型会影响拥塞，对拥塞控制了而言，选择重复窗口优于回退n帧窗口</p><p><strong>确认策略</strong></p><p>接收方确认策略也可影响拥塞，如果接收方并不对它所接收的每个分组都进行确认，则它会使发送方放慢发送速度，从而预防拥塞（？？？）</p><p><strong>丢弃策略</strong></p><p>路由器用好的丢弃策略可以预防拥塞，同时不破哦坏传输的完整性。eg：声音传输时丢弃不明干的分组，仍能保证通信声音质量</p><p><strong>许可策略</strong></p><p>虚电路网络中的一种QOS机制，也能预防拥塞。</p><h3 id="闭环拥塞控制"><a href="#闭环拥塞控制" class="headerlink" title="闭环拥塞控制"></a>闭环拥塞控制</h3><p>拥塞发生后，用闭环拥塞控制可以缓解拥塞状况</p><p><strong>背压</strong></p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005311932.png" alt="image-20220115005311932"></p><p>仅用于虚电路网络，因为必须要知道其上行节点。</p><p>一个用色点停止接收来自直接上行节点的数据，这样上行节点只进不出，也会拥塞，这样一次拥塞传播到源端。</p><p>被压技术时点到点的拥塞控制</p><p><strong>抑制分组</strong></p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005320519.png" alt="image-20220115005320519"></p><p>抑制分组时一个有节点发送给源端的分组，通知其发生了拥塞情况（注意这里时直接传到源端的）如ICMP源站点抑制报文</p><p><strong>隐含信令</strong></p><p>拥塞节点，节点，源端间没有通信，源端自行察觉，例如源端发送多个分组暂时没有得到确认。</p><p>eg：TCP拥塞控制</p><p><strong>显式信令</strong></p><p>大概与抑制分组方法相似，不同处在于：信号包含再携带数据的分组中。</p><p>前向信令：提示目的端网络发生拥塞</p><p>后向信令：提示源端网络发生拥塞</p><h3 id="两个例子"><a href="#两个例子" class="headerlink" title="两个例子"></a>两个例子</h3><h4 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h4><h5 id="拥塞窗口"><a href="#拥塞窗口" class="headerlink" title="拥塞窗口"></a>拥塞窗口</h5><p>实际窗口大小=min(rwnd,cwnd) rwnd：接收方缓冲空间大小，cwnd：拥塞窗口大小</p><h5 id="拥塞策略"><a href="#拥塞策略" class="headerlink" title="拥塞策略"></a>拥塞策略</h5><p>慢速启动，拥塞避免，拥塞检测。</p><h6 id="慢速启动：指数增长"><a href="#慢速启动：指数增长" class="headerlink" title="慢速启动：指数增长"></a>慢速启动：指数增长</h6><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005334497.png" alt="image-20220115005334497"></p><p>慢启动：指数增长，TCP拥塞控制所使用一种算法为慢速启动</p><p>开始时设置拥塞窗口大小(cwnd)为一个最大段长度MSS（MSS在连接建立期间由最大段长度选项决定）</p><p>每次收到一个ACK确认时，窗口大小增加一个MSS值，窗口慢速启动，但每次将所有段传输并收到ACK后，cwnd大小相当于按指数按规律增长。</p><p>当慢速启动到达阈值时停止，这个阈值由发送方保存的一个变量（ssthresh慢速启动阈值）决定，在大多数实现中，ssthresh值为65535字节。</p><p>图中这里省略了MSS的大小(MSS=1，实际不可能这样)</p><h6 id="拥塞避免：加性增加"><a href="#拥塞避免：加性增加" class="headerlink" title="拥塞避免：加性增加"></a>拥塞避免：加性增加</h6><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005353703.png" alt="image-20220115005353703"></p><p>拥塞窗口大小达到阈值，慢速启动停止，碱性增加开始，这样，每次整个窗口所有段都确认后，cwnd+1</p><p>拥塞窗口大小线性增加知道检测到拥塞</p><h6 id="拥塞检测：乘性减少"><a href="#拥塞检测：乘性减少" class="headerlink" title="拥塞检测：乘性减少"></a>拥塞检测：乘性减少</h6><p>复习：发生重传==重传计时器到时 or 收到了三个ACK</p><p><strong>计时器倒时</strong>存在非常严重的拥塞可能性：</p><p>a.设置阈值为当前cwnd的一半</p><p>b.设置cwnd为1个MSS</p><p>c.启动慢速启动阶段</p><p><strong>接收到三个ACK</strong>存在轻度拥塞的可能性：</p><p>a.设置阈值为当前cwnd的一半</p><p>b.设置cwnd为阈值</p><p>c.启动拥塞避免阶段</p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005433172.png" alt="image-20220115005433172"></p><p>如图是一个例子</p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005455533.png" alt="image-20220115005455533"></p><h4 id="帧中继中的拥塞控制"><a href="#帧中继中的拥塞控制" class="headerlink" title="帧中继中的拥塞控制"></a>帧中继中的拥塞控制</h4><p>2个位明确提示源端与目的端拥塞发生，即只有拥塞避免措施。</p><p>BECN 后向显示拥塞通知—&gt;：用来提示发送方网络中的拥塞情况。</p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005506089.png" alt="image-20220115005506089"></p><p>FECN 前向显示拥塞通知&lt;—：用来提示接收方网络中的拥塞情况。</p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005511529.png" alt="image-20220115005511529"></p><p><img src="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/image-20220115005523462.png" alt="image-20220115005523462"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;数据通信与网络24章 前半部分&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="计算机网络" scheme="http://example.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    <category term="期末复习" scheme="http://example.com/tags/%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>hexo_next_blog搭建</title>
