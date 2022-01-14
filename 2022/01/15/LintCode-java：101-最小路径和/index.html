@@ -20,19 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+  <meta name="description" content="Lintcode 110. 最小路径和 难度：简单">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2022/01/12/hello-world/index.html">
+<meta property="og:title" content="LintCode+java：101-最小路径和">
+<meta property="og:url" content="http://example.com/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/index.html">
 <meta property="og:site_name" content="FireKnight-HJ">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta property="og:description" content="Lintcode 110. 最小路径和 难度：简单">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-01-11T17:33:36.569Z">
-<meta property="article:modified_time" content="2022-01-13T07:15:32.382Z">
+<meta property="article:published_time" content="2022-01-14T18:01:08.000Z">
+<meta property="article:modified_time" content="2022-01-14T18:04:27.960Z">
 <meta property="article:author" content="fireknight">
+<meta property="article:tag" content="LintCode">
+<meta property="article:tag" content="动态规划">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2022/01/12/hello-world/">
+<link rel="canonical" href="http://example.com/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/">
 
 
 <script id="page-configurations">
@@ -45,7 +47,7 @@
   };
 </script>
 
-  <title>Hello World | FireKnight-HJ</title>
+  <title>LintCode+java：101-最小路径和 | FireKnight-HJ</title>
   
 
 
@@ -168,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/12/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -181,7 +183,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          LintCode+java：101-最小路径和
         </h1>
 
         <div class="post-meta">
@@ -190,16 +192,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-01-12 01:33:36" itemprop="dateCreated datePublished" datetime="2022-01-12T01:33:36+08:00">2022-01-12</time>
+              <time title="创建时间：2022-01-15 02:01:08 / 修改时间：02:04:27" itemprop="dateCreated datePublished" datetime="2022-01-15T02:01:08+08:00">2022-01-15</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-13 15:15:32" itemprop="dateModified" datetime="2022-01-13T15:15:32+08:00">2022-01-13</time>
-              </span>
 
           
   
@@ -210,8 +206,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/01/12/hello-world/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/12/hello-world/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -221,7 +217,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>367</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -240,16 +236,46 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+        <p><a target="_blank" rel="noopener" href="https://www.lintcode.com/problem/110/">Lintcode 110. 最小路径和</a></p>
+<p>难度：简单</p>
 <span id="more"></span>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h4 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h4><p>给定一个只含非负整数的$m*n$网格，找到一条从左上角到右下角的可以使数字和最小的路径。</p>
+<hr>
+<p>你在同一时间只能向下或者向右移动一步</p>
+<p>样例</p>
+<p><strong>样例 1：</strong></p>
+<p>输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grid = [[1,3,1],[1,5,1],[4,2,1]]</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">7</span><br></pre></td></tr></table></figure>
+<p>解释：</p>
+<p>路线为： 1 -&gt; 3 -&gt; 1 -&gt; 1 -&gt; 1</p>
+<p><strong>样例 2：</strong></p>
+<p>输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grid = [[1,3,2]]</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6</span><br></pre></td></tr></table></figure>
+<p>解释：</p>
+<p>路线是： 1 -&gt; 3 -&gt; 2</p>
+<p><strong>描述</strong><br>给定一个只含非负整数的m*n网格，找到一条从左上角到右下角的可以使数字和最小的路径。</p>
+<p>你在同一时间只能向下或者向右移动一步</p>
+<p><strong>样例</strong><br>[[1,3,1],</p>
+<p>[1,5,1],</p>
+<p>[4,2,1]]</p>
+<p>输出: 7</p>
+<p>路径: 1 -&gt; 3 -&gt; 1 -&gt; 1 -&gt; 1</p>
+<h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><p>动态规划问题，坐标型动态规划</p>
+<p>建立$sumL[][]$数组存储到达每个节点的数字和最小路径</p>
+<p>我们可以发现：</p>
+<ol>
+<li><p>$sumL[0][0]=grid[0][0]$</p>
+</li>
+<li><p>第0行，第0列没有上方元素，或者没有左方元素，即$sumL[0][i] = grid[0][i] + sumL[0][i-1]$ ，$sumL[i][0] = grid[i][0] + sumL[i-1][0]$</p>
+</li>
+<li>对其余位置i，j，如果其左，上元素都确定的话，有$sumL[i][j] = Math.min(sumL[i][j-1], sumL[i-1][j]) + grid[i][j]$</li>
+<li>最后的结果即完全更新完毕后的sumL数组中的$sumL[xlen-1][ylen-1]$值，其中xlen和ylen分别为grid数组的行数与列数</li>
+</ol>
+<h4 id="程序展示："><a href="#程序展示：" class="headerlink" title="程序展示："></a>程序展示：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> grid: a list of lists of integers</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: An integer, minimizes the sum of all numbers along its path</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minPathSum</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> xlen = grid.length;</span><br><span class="line">        <span class="keyword">int</span> ylen = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="comment">// write your code here</span></span><br><span class="line">        <span class="keyword">int</span>[][] sumL = <span class="keyword">new</span> <span class="keyword">int</span>[xlen][ylen];</span><br><span class="line">        <span class="comment">//初始位置sumL[0][0]</span></span><br><span class="line">        sumL[<span class="number">0</span>][<span class="number">0</span>] = grid[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">        <span class="comment">//更新第一行</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;ylen;i++)&#123;</span><br><span class="line">            sumL[<span class="number">0</span>][i] = grid[<span class="number">0</span>][i] + sumL[<span class="number">0</span>][i-<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//更新第一列</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;xlen;i++)&#123;</span><br><span class="line">            sumL[i][<span class="number">0</span>] = grid[i][<span class="number">0</span>] + sumL[i-<span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//更新剩下的位置</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;xlen;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;ylen;j++)&#123;</span><br><span class="line">                sumL[i][j] = Math.min(sumL[i][j-<span class="number">1</span>], sumL[i-<span class="number">1</span>][j]) + grid[i][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//返回右下角的sumL</span></span><br><span class="line">        <span class="keyword">return</span> sumL[xlen-<span class="number">1</span>][ylen-<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -265,7 +291,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2022/01/12/hello-world/" title="Hello World">http://example.com/2022/01/12/hello-world/</a>
+    <a href="http://example.com/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/" title="LintCode+java：101-最小路径和">http://example.com/2022/01/15/LintCode-java：101-最小路径和/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -275,17 +301,22 @@
 
 
       <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/LintCode/" rel="tag"><i class="fa fa-tag"></i> LintCode</a>
+              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"><i class="fa fa-tag"></i> 动态规划</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2022/01/12/RSA_breaking/" rel="next" title="RSA 加密体制破译">
-      RSA 加密体制破译 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" rel="prev" title="计网复习：拥塞控制">
+      <i class="fa fa-chevron-left"></i> 计网复习：拥塞控制
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -345,7 +376,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">题目：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">解题思路：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%B1%95%E7%A4%BA%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">程序展示：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -487,6 +518,59 @@
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
