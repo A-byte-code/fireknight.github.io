@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-01-14T18:04:27.960Z</updated>
+  <updated>2022-01-15T07:05:56.909Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LintCode-java：872-终止进程.md</title>
+    <link href="http://example.com/2022/01/15/LintCode-java%EF%BC%9A872-%E7%BB%88%E6%AD%A2%E8%BF%9B%E7%A8%8B-md/"/>
+    <id>http://example.com/2022/01/15/LintCode-java%EF%BC%9A872-%E7%BB%88%E6%AD%A2%E8%BF%9B%E7%A8%8B-md/</id>
+    <published>2022-01-15T07:04:50.000Z</published>
+    <updated>2022-01-15T07:05:56.909Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://www.lintcode.com/problem/872/">Lintcode 872. 终止进程</a></p><p>难度：中等</p><span id="more"></span><h4 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h4><p>描述</p><p>这个问题中. 每个进程都有一个唯一的 <strong>PID(进程id)</strong> 和 <strong>PPID(父进程id)</strong>。每个进程只有一个父进程，但可能有一个或多个子进程，这就像一个树形结构。并且只有一个进程的PPID是0，这意味着这个进程没有父进程。所有的pid都是不同的正整数。</p><p>我们使用两个整数列表来表示进程列表，其中第一个列表包含每个进程的PID，第二个列表包含对应的PPID。</p><p>现在给定这两个列表，以及一个你要终止(kill)的进程的ID，返回将在最后被终止的进程的PID列表。（当一个进程被终止时，它的所有子进程将被终止。返回的列表没有顺序要求）</p><hr><p>给定的kill id一定是PID列表中的某个id给定的PID列表中至少含有一个进程</p><p>样例</p><p><strong>样例 1:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: PID = [1, 3, 10, 5], PPID = [3, 0, 5, 3], killID = 5</span><br><span class="line">输出: [5, 10]</span><br><span class="line">解释: 终止进程5同样会终止进程10.</span><br><span class="line">     3</span><br><span class="line">   /   \</span><br><span class="line">  1     5</span><br><span class="line">       /</span><br><span class="line">      10</span><br></pre></td></tr></table></figure><p><strong>样例 2:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: PID = [1, 2, 3], PPID = [0, 1, 1], killID = 2</span><br><span class="line">输出: [2]</span><br></pre></td></tr></table></figure><h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><p>一个简单的深度优先搜索算法，使用递归实现。</p><p>找到终止kill需要的进程-&gt;找到kill的所有子孙进程-&gt;找到kill的所有子进程的子孙进程-&gt;递归</p><p>最小问题：终止一个没有子进程的进程p：单纯返回只有一个元素p的ArrayList。</p><h4 id="程序展示"><a href="#程序展示" class="headerlink" title="程序展示"></a>程序展示</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pid: the process id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ppid: the parent process id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> kill: a PID you want to kill</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: a list of PIDs of processes that will be killed in the end</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">killProcess</span><span class="params">(List&lt;Integer&gt; pid, List&lt;Integer&gt; ppid, <span class="keyword">int</span> kill)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Write your code here</span></span><br><span class="line">        List&lt;Integer&gt; tokill = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">//先添加进程kill</span></span><br><span class="line">        tokill.add(kill);</span><br><span class="line">        <span class="comment">//添加kill的子进程</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ppid.size();i++)&#123;</span><br><span class="line">            <span class="comment">//找到kill的子进程后，递归调用kill子进程</span></span><br><span class="line">            <span class="keyword">if</span>(ppid.get(i)==kill)&#123;</span><br><span class="line">                tokill.addAll(killProcess(pid, ppid, pid.get(i)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> tokill;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="Java复习-预习-："><a href="#Java复习-预习-：" class="headerlink" title="Java复习(预习)："></a>Java复习(预习)：</h4><p><strong>Java ArrayList addAll() 方法</strong></p><p>addAll() 方法将给定集合中的所有元素添加到 arraylist 中。</p><p>addAll() 方法的语法为：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arraylist.addAll(<span class="keyword">int</span> index, Collection c)</span><br></pre></td></tr></table></figure><p><strong>注：</strong>arraylist 是 ArrayList 类的一个对象。</p><p><strong>参数说明：</strong></p><ul><li>index（可选参数）- 表示集合元素插入处的索引值</li><li>c - 要插入的集合元素</li></ul><p>如果 index 没有传入实际参数，元素将追加至数组的最末尾。</p><p><strong>返回值</strong></p><p>如果成功插入元素，返回 true。</p><p>如果给定的集合为 null，则超出 NullPointerException 异常。</p><p>注意：如果 index 超出范围，则该方法抛出 IndexOutOfBoundsException 异常。</p><p><strong>泛型相关</strong></p><p>List是一个接口，而ArrayList是List接口的一个实现类。 ArrayList类是继承AbstractList抽象类和实现List接口的一个实现类。 向自己的对象引用，而ArrayList实现类的实例对象就在这充当了这个指向List接口的对象引用。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://www.lintcode.com/problem/872/&quot;&gt;Lintcode 872. 终止进程&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;难度：中等&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="LintCode" scheme="http://example.com/tags/LintCode/"/>
+    
+    <category term="深度优先搜索" scheme="http://example.com/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
+    
+    <category term="递归" scheme="http://example.com/tags/%E9%80%92%E5%BD%92/"/>
+    
+  </entry>
   
   <entry>
     <title>LintCode+java：101-最小路径和</title>
