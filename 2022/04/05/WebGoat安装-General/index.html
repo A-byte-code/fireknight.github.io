@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="WebGoat 安全学习计划 Part 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebGoat安装+General">
+<meta property="og:url" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/index.html">
+<meta property="og:site_name" content="FireKnight-HJ">
+<meta property="og:description" content="WebGoat 安全学习计划 Part 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1648645754057.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649081157493.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649081220726.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649086409212.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649086469910.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649086626579.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649086640671.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649087391762.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649087711796.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649089039058.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649089792965.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649091660470.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/passwd-file-791527.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649095531918.png">
+<meta property="og:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649095704263.png">
+<meta property="article:published_time" content="2022-04-04T18:21:59.000Z">
+<meta property="article:modified_time" content="2022-04-04T18:28:04.727Z">
+<meta property="article:author" content="fireknight">
+<meta property="article:tag" content="WebGoat">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1648645754057.png">
+
+<link rel="canonical" href="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>WebGoat安装+General | FireKnight-HJ</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="FireKnight-HJ" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">FireKnight-HJ</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/fireknight-hJ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="fireknight">
+      <meta itemprop="description" content="fireknight-hJ的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FireKnight-HJ">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          WebGoat安装+General
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-05 02:21:59 / 修改时间：02:28:04" itemprop="dateCreated datePublished" datetime="2022-04-05T02:21:59+08:00">2022-04-05</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>WebGoat 安全学习计划 Part 1</p>
+<span id="more"></span>
+<h2 id="用docker启动webgoat"><a href="#用docker启动webgoat" class="headerlink" title="用docker启动webgoat"></a>用docker启动webgoat</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8080:8080 -p 9090:9090 -p 8888:8888 -e TZ=Europe/Amsterdam webgoat/goatandwolf:latest</span><br></pre></td></tr></table></figure>
+<p>之后：通过浏览器访问<a target="_blank" rel="noopener" href="http://localhost:8080/WebGoat">http://localhost:8080/WebGoat</a></p>
+<ul>
+<li><p>注意：网址中的<em>WebGoat</em>，必须区分大小写！</p>
+</li>
+<li><p>注意：docker下载卡住的问题，用镜像参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/manmanchanglu/p/11968269.html阿里云很顶">https://www.cnblogs.com/manmanchanglu/p/11968269.html阿里云很顶</a></p>
+</li>
+</ul>
+<p>我的本地VMware虚拟机：</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.146.141:8080/WebGoat/login">http://192.168.146.141:8080/WebGoat/login</a></p>
+<p><a target="_blank" rel="noopener" href="http://192.168.146.141:9090/login">http://192.168.146.141:9090/login</a></p>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1648645754057.png" alt="uTools_1648645754057"></p>
+<h2 id="General"><a href="#General" class="headerlink" title="General"></a>General</h2><h3 id="HTTP-Basics"><a href="#HTTP-Basics" class="headerlink" title="HTTP Basics"></a>HTTP Basics</h3><p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649081157493.png" alt="uTools_1649081157493"></p>
+<p>用Get还是Post很简单，get是url传参：”?key=value”</p>
+<p>这个看样子是用Post，随便填点啥，先go，用burpsuite抓包看看</p>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649081220726.png" alt="uTools_1649081220726"></p>
+<p>报文头的最后一行：77, POST都出现了</p>
+<h3 id="HTTP-Basics-1"><a href="#HTTP-Basics-1" class="headerlink" title="HTTP Basics"></a>HTTP Basics</h3><p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649086409212.png" alt="uTools_1649086409212"></p>
+<p>让修改request头到规定的样子，我们用burp suite抓包，右键Change Request method</p>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649086469910.png" alt="uTools_1649086469910"></p>
+<p>右键send to repeater，在repeater上修改，之后点send，收到response</p>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649086626579.png" alt="uTools_1649086626579"></p>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649086640671.png" alt="uTools_1649086640671"></p>
+<p>可以看到response上提示成功了，我们回到Proxy，将Repeater上的内容粘过去，关闭intercept，发包出去，题目就完成了。</p>
+<h3 id="Developer-Tools"><a href="#Developer-Tools" class="headerlink" title="Developer Tools"></a>Developer Tools</h3><ol>
+<li>F12-&gt;Console-&gt;CtrL cv: webgoat.customjs.phoneHome()-&gt;submit结果</li>
+</ol>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649087391762.png" alt="uTools_1649087391762"></p>
+<ol>
+<li>F12-&gt;Network-&gt;找network包点开-&gt;Headers-&gt;查阅networkNum</li>
+</ol>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649087711796.png" alt="uTools_1649087711796"></p>
+<h3 id="Crypto-Basics"><a href="#Crypto-Basics" class="headerlink" title="Crypto Basics"></a>Crypto Basics</h3><ol>
+<li><p>直接滚去Base64解密</p>
+</li>
+<li><p>base64解密结果：;&gt;+&gt;=&gt;,:/&gt;,,(0-; 这个信息是用IBM的<strong>WebSphere</strong>工具中的编码规则处理的！！！所以我们从网上找到专门解码WebSphere规则的应用进行解码：<a target="_blank" rel="noopener" href="http://www.sysman.nl/wasdecoder/">http://www.sysman.nl/wasdecoder/</a></p>
+</li>
+</ol>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649089039058.png" alt="uTools_1649089039058"></p>
+<ol>
+<li><p>在线反向硬破解MD5明文网站<a target="_blank" rel="noopener" href="https://www.cmd5.com/">https://www.cmd5.com/</a></p>
+</li>
+<li><p>生成模数的命令：</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lyq@lyq-virtual-machine:~/Desktop$ touch sk</span><br><span class="line">lyq@lyq-virtual-machine:~/Desktop$ vim sk</span><br><span class="line">lyq@lyq-virtual-machine:~/Desktop$ openssl rsa -in ./sk -modulus</span><br></pre></td></tr></table></figure>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649089792965.png" alt="uTools_1649089792965"></p>
+<p>生成签名的指令：此处用RAW signatures</p>
+<p>openssl资料：<a target="_blank" rel="noopener" href="https://www.openssl.net.cn/docs/224.html">https://www.openssl.net.cn/docs/224.html</a></p>
+<p>dgst用于数据摘要。</p>
+<p>-sign    privatekeyfile</p>
+<p>​    用privatekeyfile中的私钥签名。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo -n &quot;A537B78C310837CD2BCA7694AED8CFDACA7CA55B087948E95D61759C9CA783DB933D07C194ADB30B20DCC1926A6DC2C64EEA6690AA799320D19B0A57881634AECBE7FEE8201EC44ADC9F950BF5CA7C070F7C65B781331D7BCBA681F95356F4D8356FA991BF137F10A12CEF22B53D8602C01C05D0D113C05BB5A64482945BA88F7F888B4CDE69E89AB812522518C0FE9B8B85A3E3D7828F3E46C3188FBFA78A0DE5160FD14E5CDF9F58BCE13ADBC5572B9EB7DA707A0DC81ECDF1CBDF4779F3E1B927A8A0FCF0EAF94BAEFF60ECD0E90A79F3922AE9060AB4C73448AB69A5D287E2EA28AD02C716E1BACC96288E1444F8A56E99819DC9CDD5238CAC6D5C9FE39D&quot; | openssl dgst -sign ./sk -sha256 -out ./dgst.txt</span><br><span class="line">base64 ./dgst.txt &gt; result</span><br><span class="line"><span class="meta">#</span><span class="bash"> result中的内容就是签名</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol>
+<li>先敲题目给的命令，之后进入对应打开了的容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">lyq@lyq-virtual-machine:~/Desktop$ docker run -d webgoat/assignments:findthesecret</span><br><span class="line"><span class="meta">#</span><span class="bash"> -d默认放到了后台去运行docker，不会有显式的命令行</span></span><br><span class="line">lyq@lyq-virtual-machine:~/Desktop$ sudo docker container ls</span><br><span class="line">CONTAINER ID        IMAGE                               COMMAND                  CREATED              STATUS              PORTS</span><br><span class="line">                 NAMES</span><br><span class="line">a9b080a12c88        webgoat/assignments:findthesecret   &quot;/bin/bash /home/web…&quot;   About a minute ago   Up About a minute</span><br><span class="line">                 sharp_dubinsky</span><br><span class="line">b22c19eb35f1        webgoat/goatandwolf:latest          &quot;/bin/sh -c &#x27;/bin/ba…&quot;   5 hours ago          Up 5 hours          0.0.0.0:8080-&gt;8080/tcp, 0.0.0.0:8888-&gt;8888/tcp, 0.0.0.0:9090-&gt;9090/tcp   wonderful_ride</span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以看到展示出的两个docker容器，我们刚刚新建的是container id为a9b080a12c88的容器</span></span><br><span class="line">lyq@lyq-virtual-machine:~/Desktop$ docker exec -it a9b080a12c88 bash</span><br><span class="line"><span class="meta">#</span><span class="bash"> 用<span class="built_in">exec</span> -it进入容器里面，发现死路，不知道下一步怎么解</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649091660470.png" alt="uTools_1649091660470"></p>
+<p>参考网上的解决方案<a target="_blank" rel="noopener" href="https://www.rizkymd.com/2021/05/walkthrough-webgoat-assignment-crypto.html">https://www.rizkymd.com/2021/05/walkthrough-webgoat-assignment-crypto.html</a></p>
+<p>原题目提示：</p>
+<ul>
+<li>After starting the docker container enter the container using docker exec -ti _dockerid_ /bin/bash</li>
+<li>Try to gain access to /root. Try to become user root by su -</li>
+<li>Try to change the /etc/shadow file using docker cp</li>
+</ul>
+<p>我们需要</p>
+<ol>
+<li>从container中把存了UID和GID的文件 /etc/passwd 拷贝下来</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp a9b080a12c88:/etc/passwd test.passwd</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>查看这个复制下来的test.passwd</p>
+</li>
+<li><p>编辑这个test.passwd，将webgoat UID和GID 从1000:1000改成0:0（最后一行）</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">sys:x:3:3:sys:/dev:/usr/sbin/nologin</span><br><span class="line">sync:x:4:65534:sync:/bin:/bin/sync</span><br><span class="line">games:x:5:60:games:/usr/games:/usr/sbin/nologin</span><br><span class="line">man:x:6:12:man:/var/cache/man:/usr/sbin/nologin</span><br><span class="line">lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin</span><br><span class="line">mail:x:8:8:mail:/var/mail:/usr/sbin/nologin</span><br><span class="line">news:x:9:9:news:/var/spool/news:/usr/sbin/nologin</span><br><span class="line">uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin</span><br><span class="line">proxy:x:13:13:proxy:/bin:/usr/sbin/nologin</span><br><span class="line">www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin</span><br><span class="line">backup:x:34:34:backup:/var/backups:/usr/sbin/nologin</span><br><span class="line">list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin</span><br><span class="line">irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin</span><br><span class="line">gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin</span><br><span class="line">nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin</span><br><span class="line">_apt:x:100:65534::/nonexistent:/bin/false</span><br><span class="line">webgoat:x:0:0::/home/webgoat:</span><br></pre></td></tr></table></figure>
+<p>为什么这么改？？参考：<a target="_blank" rel="noopener" href="https://www.cyberciti.biz/faq/understanding-etcpasswd-file-format/">https://www.cyberciti.biz/faq/understanding-etcpasswd-file-format/</a></p>
+<p>这里有对/etc/passwd文件的讲解</p>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/passwd-file-791527.png" alt="img"></p>
+<ol>
+<li><strong>Username</strong>: It is used when user logs in. It should be between 1 and 32 characters in length.</li>
+<li><strong>Password</strong>: An x character indicates that encrypted password is stored in <a target="_blank" rel="noopener" href="https://www.cyberciti.biz/faq/understanding-etcshadow-file/">/etc/shadow file</a>. Please note that you need to use the passwd command to computes the hash of a password typed at the CLI or to store/update the hash of the password in /etc/shadow file.</li>
+<li><strong>User ID (UID)</strong>: Each user must be assigned a user ID (UID). UID 0 (zero) is reserved for root and UIDs 1-99 are reserved for other predefined accounts. Further UID 100-999 are reserved by system for administrative and system accounts/groups.</li>
+<li><strong>Group ID (GID)</strong>: The primary group ID (stored in /etc/group file)</li>
+<li><strong>User ID Info (GECOS)</strong>: The comment field. It allow you to add extra information about the users such as user’s full name, phone number etc. This field use by finger command.</li>
+<li><strong>Home directory</strong>: The absolute path to the directory the user will be in when they log in. If this directory does not exists then users directory becomes /</li>
+<li><strong>Command/shell</strong>: The absolute path of a command or shell (/bin/bash). Typically, this is a shell. Please note that it does not have to be a shell. For example, sysadmin can use the nologin shell, which acts as a replacement shell for the user accounts. If shell set to /sbin/nologin and the user tries to log in to the Linux system directly, the /sbin/nologin shell closes the connection.</li>
+</ol>
+<p>大意就是：3，4两个位置分别是User ID和Group ID字段，而UID=0是专门为root用户保留的，UID 1-99 为其他预定义帐户保留。进一步的 UID 100-999 由系统保留用于管理和系统帐户/组，因此我们的普通用户（eg: webgoat）是从序号1000开始的，我们把webgoat的字段改成0:0, 就相当于赋予了webgoat用户一个root权限。</p>
+<ol>
+<li>将这个改过的test.passwd 从本地系统拷贝回Container</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp test.passwd a9b080a12c88:/etc/passwd</span><br></pre></td></tr></table></figure>
+<ol>
+<li>再次进入容器，此时理论上我们有了root权限，可以进我们之前进不去的root目录</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it a9b080a12c88 /bin/bash</span><br></pre></td></tr></table></figure>
+<ol>
+<li>到 /root/目录下，发现只有一个default_secret文件，这里存着的就是私钥。我们再利用题目给的命令进行解密。（实际上我是用—user root进入root权限的）</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">lyq@lyq-virtual-machine:~/Desktop$ sudo docker exec -it --user root a9b080a12c88 /bin/bash</span><br><span class="line">root@a9b080a12c88:/# ls</span><br><span class="line">bin   dev               etc   lib    media  opt   root  sbin  sys  usr</span><br><span class="line">boot  docker-java-home  home  lib64  mnt    proc  run   srv   tmp  var</span><br><span class="line">root@a9b080a12c88:/# cd root</span><br><span class="line">root@a9b080a12c88:~# ls</span><br><span class="line">default_secret</span><br><span class="line">root@a9b080a12c88:~# echo &quot;U2FsdGVkX199jgh5oANElFdtCxIEvdEvciLi+v+5loE+VCuy6Ii0b+5byb5DXp32RPmT02Ek1pf55ctQN+DHbwCPiVRfFQamDmbHBUpD7as=&quot; | openssl enc -aes-256-cbc -d -a -kfile default_secret</span><br><span class="line">Leaving passwords in docker images is not so secure</span><br></pre></td></tr></table></figure>
+<p>结果截图：</p>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649095531918.png" alt="uTools_1649095531918"></p>
+<p>答案：default_secret，Leaving passwords in docker images is not so secure</p>
+<p>一点疑惑：</p>
+<p>当我用<strong>docker exec -it a9b080a12c88 /bin/bash</strong>命令进去之后，没有预想中的root，反而变成了daemon用户，而不是webgoat，不理解为什么。</p>
+<p><img src="/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/uTools_1649095704263.png" alt="uTools_1649095704263"></p>
+<p>如果我直接用docker命令参数<strong>—user root </strong>，也能成功用root权限进入容器中，那么问题就来了，有必要弄这么麻烦改配置文件吗？是不是直接就可以进root呢？？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lyq@lyq-virtual-machine:~/Desktop$ sudo docker exec -it --user root a9b080a12c88 /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash"> 这样也完全可行？？</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>fireknight
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/04/05/WebGoat%E5%AE%89%E8%A3%85-General/" title="WebGoat安装+General">http://example.com/2022/04/05/WebGoat安装-General/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/WebGoat/" rel="tag"><i class="fa fa-tag"></i> WebGoat</a>
+              <a href="/tags/docker/" rel="tag"><i class="fa fa-tag"></i> docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/15/LintCode-java%EF%BC%9A872-%E7%BB%88%E6%AD%A2%E8%BF%9B%E7%A8%8B-md/" rel="prev" title="LintCode-java：872-终止进程.md">
+      <i class="fa fa-chevron-left"></i> LintCode-java：872-终止进程.md
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8docker%E5%90%AF%E5%8A%A8webgoat"><span class="nav-number">1.</span> <span class="nav-text">用docker启动webgoat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#General"><span class="nav-number">2.</span> <span class="nav-text">General</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-Basics"><span class="nav-number">2.1.</span> <span class="nav-text">HTTP Basics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-Basics-1"><span class="nav-number">2.2.</span> <span class="nav-text">HTTP Basics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Developer-Tools"><span class="nav-number">2.3.</span> <span class="nav-text">Developer Tools</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto-Basics"><span class="nav-number">2.4.</span> <span class="nav-text">Crypto Basics</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fireknight"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">fireknight</p>
+  <div class="site-description" itemprop="description">fireknight-hJ的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fireknight-hJ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fireknight-hJ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jhao00251@gmail.com" title="E-Mail → mailto:jhao00251@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/fireknight-hJ" title="https:&#x2F;&#x2F;github.com&#x2F;fireknight-hJ" rel="noopener" target="_blank">github_site</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fireknight</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">35k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">32 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : true,
+      appId      : 'R8brtkIXPg6UVi6tzdQm1aIC-gzGzoHsz',
+      appKey     : '3XexM3rU032vWyOvDGsWO4Fp',
+      placeholder: "ヾﾉ≧∀≦)o来啊, 快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+  
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/js/cursor/explosion.min.js"></script>
+  
+  
+  
+  <!--页面点击小桃心-->
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
