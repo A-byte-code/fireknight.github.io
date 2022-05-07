@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="今日C++起步小记从今天开始努力学习C++！！！ C++ auto for循环for(auto a:b)中b为一个容器，效果是利用a遍历并获得b容器中的每一个值，但是a无法影响到b容器中的元素。 for(auto &amp;a:b)中加了引用符号，可以对容器中的内容进行赋值，即可通过对a赋值来做到容器b的内容填充。  拷贝range的元素时，使用for(auto x : range). 修改ran">
+<meta property="og:type" content="article">
+<meta property="og:title" content="今日C++起步小记">
+<meta property="og:url" content="http://example.com/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/index.html">
+<meta property="og:site_name" content="FireKnight-HJ">
+<meta property="og:description" content="今日C++起步小记从今天开始努力学习C++！！！ C++ auto for循环for(auto a:b)中b为一个容器，效果是利用a遍历并获得b容器中的每一个值，但是a无法影响到b容器中的元素。 for(auto &amp;a:b)中加了引用符号，可以对容器中的内容进行赋值，即可通过对a赋值来做到容器b的内容填充。  拷贝range的元素时，使用for(auto x : range). 修改ran">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-07T16:36:38.000Z">
+<meta property="article:modified_time" content="2022-05-07T16:39:22.025Z">
+<meta property="article:author" content="fireknight">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>今日C++起步小记 | FireKnight-HJ</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="FireKnight-HJ" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">FireKnight-HJ</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/fireknight-hJ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="fireknight">
+      <meta itemprop="description" content="fireknight-hJ的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FireKnight-HJ">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          今日C++起步小记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-08 00:36:38 / 修改时间：00:39:22" itemprop="dateCreated datePublished" datetime="2022-05-08T00:36:38+08:00">2022-05-08</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="今日C-起步小记"><a href="#今日C-起步小记" class="headerlink" title="今日C++起步小记"></a>今日C++起步小记</h2><p>从今天开始努力学习C++！！！</p>
+<h2 id="C-auto-for循环"><a href="#C-auto-for循环" class="headerlink" title="C++ auto for循环"></a>C++ auto for循环</h2><p>for(auto a:b)中b为一个容器，效果是利用a<strong>遍历并获得</strong>b容器中的每一个值，但是a无法影响到b容器中的元素。</p>
+<p>for(auto &amp;a:b)中加了引用符号，可以对容器中的内容进行赋值，即可通过<strong>对a赋值来做到容器b的内容填充</strong>。</p>
+<ol>
+<li>拷贝range的元素时，使用for(auto x : range).</li>
+<li>修改range的元素时，使用for(auto &amp;&amp; x : range).</li>
+<li>只读range的元素时，使用for(const auto &amp; x : range).</li>
+</ol>
+<h2 id="C-STL-unordered-set容器"><a href="#C-STL-unordered-set容器" class="headerlink" title="C++ STL unordered_set容器"></a>C++ STL unordered_set容器</h2><p>C++ 11 为 STL 标准库增添的 4 种无序（哈希）容器之一</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unordered_set&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="string">&quot;&quot;</span><span class="string">&quot;注意，第二行代码不是必需的，但如果不用，则程序中只要用到该容器时，必须手动注明 std 命名空间（强烈建议初学者使用）。&quot;</span><span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>unordered_set 容器的类模板定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt; <span class="class"><span class="keyword">class</span> <span class="title">Key</span>,            //容器中存储元素的类型</span></span><br><span class="line"><span class="class">           <span class="keyword">class</span> <span class="title">Hash</span> =</span> hash&lt;Key&gt;,    <span class="comment">//确定元素存储位置所用的哈希函数</span></span><br><span class="line">           <span class="class"><span class="keyword">class</span> <span class="title">Pred</span> =</span> equal_to&lt;Key&gt;,   <span class="comment">//判断各个元素是否相等所用的函数</span></span><br><span class="line">           <span class="class"><span class="keyword">class</span> <span class="title">Alloc</span> =</span> allocator&lt;Key&gt;   <span class="comment">//指定分配器对象的类型</span></span><br><span class="line">           &gt; <span class="class"><span class="keyword">class</span> <span class="title">unordered_set</span>;</span></span><br></pre></td></tr></table></figure>
+<p>以上 4 个参数中，只有第一个参数没有默认值，这意味着如果我们想创建一个 unordered_set 容器，至少需要手动传递 1 个参数。事实上，在 99% 的实际场景中最多只需要使用前 3 个参数（各自含义如表 1 所示），最后一个参数保持默认值即可。</p>
+<h3 id="C-unordered-set容器的成员方法"><a href="#C-unordered-set容器的成员方法" class="headerlink" title="C++ unordered_set容器的成员方法"></a>C++ unordered_set容器的成员方法</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>成员方法</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>begin()</td>
+<td>返回指向容器中第一个元素的正向迭代器。</td>
+</tr>
+<tr>
+<td>end();</td>
+<td>返回指向容器中最后一个元素之后位置的正向迭代器。</td>
+</tr>
+<tr>
+<td>cbegin()</td>
+<td>和 begin() 功能相同，只不过其返回的是 const 类型的正向迭代器。</td>
+</tr>
+<tr>
+<td>cend()</td>
+<td>和 end() 功能相同，只不过其返回的是 const 类型的正向迭代器。</td>
+</tr>
+<tr>
+<td>empty()</td>
+<td>若容器为空，则返回 true；否则 false。</td>
+</tr>
+<tr>
+<td>size()</td>
+<td>返回当前容器中存有元素的个数。</td>
+</tr>
+<tr>
+<td>max_size()</td>
+<td>返回容器所能容纳元素的最大个数，不同的操作系统，其返回值亦不相同。</td>
+</tr>
+<tr>
+<td>find(key)</td>
+<td>查找以值为 key 的元素，如果找到，则返回一个指向该元素的正向迭代器；反之，则返回一个指向容器中最后一个元素之后位置的迭代器（如果 end() 方法返回的迭代器）。</td>
+</tr>
+<tr>
+<td>count(key)</td>
+<td>在容器中查找值为 key 的元素的个数。</td>
+</tr>
+<tr>
+<td>equal_range(key)</td>
+<td>返回一个 pair 对象，其包含 2 个迭代器，用于表明当前容器中值为 key 的元素所在的范围。</td>
+</tr>
+<tr>
+<td><strong>emplace()</strong></td>
+<td>向容器中添加新元素，效率比 insert() 方法高。</td>
+</tr>
+<tr>
+<td>emplace_hint()</td>
+<td>向容器中添加新元素，效率比 insert() 方法高。</td>
+</tr>
+<tr>
+<td>insert()</td>
+<td>向容器中添加新元素。</td>
+</tr>
+<tr>
+<td>erase()</td>
+<td>删除指定元素。</td>
+</tr>
+<tr>
+<td>clear()</td>
+<td>清空容器，即删除容器中存储的所有元素。</td>
+</tr>
+<tr>
+<td>swap()</td>
+<td>交换 2 个 unordered_map 容器存储的元素，前提是必须保证这 2 个容器的类型完全相等。</td>
+</tr>
+<tr>
+<td>bucket_count()</td>
+<td>返回当前容器底层存储元素时，使用桶（一个线性链表代表一个桶）的数量。</td>
+</tr>
+<tr>
+<td>max_bucket_count()</td>
+<td>返回当前系统中，unordered_map 容器底层最多可以使用多少桶。</td>
+</tr>
+<tr>
+<td>bucket_size(n)</td>
+<td>返回第 n 个桶中存储元素的数量。</td>
+</tr>
+<tr>
+<td>bucket(key)</td>
+<td>返回值为 key 的元素所在桶的编号。</td>
+</tr>
+<tr>
+<td>load_factor()</td>
+<td>返回 unordered_map 容器中当前的负载因子。负载因子，指的是的当前容器中存储元素的数量（size()）和使用桶数（bucket_count()）的比值，即 load_factor() = size() / bucket_count()。</td>
+</tr>
+<tr>
+<td>max_load_factor()</td>
+<td>返回或者设置当前 unordered_map 容器的负载因子。</td>
+</tr>
+<tr>
+<td>rehash(n)</td>
+<td>将当前容器底层使用桶的数量设置为 n。</td>
+</tr>
+<tr>
+<td>reserve()</td>
+<td>将存储桶的数量（也就是 bucket_count() 方法的返回值）设置为至少容纳count个元（不超过最大负载因子）所需的数量，并重新整理容器。</td>
+</tr>
+<tr>
+<td>hash_function()</td>
+<td>返回当前容器使用的哈希函数对象。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p> unordered_set 容器内部存储的元素值不能被修改，因此无论使用那个迭代器方法获得的迭代器，都不能用于修改容器中元素的值。(但可以删除和添加元素)</p>
+<h3 id="C-unordered-set容器创建"><a href="#C-unordered-set容器创建" class="headerlink" title="C++ unordered_set容器创建"></a>C++ unordered_set容器创建</h3><ol>
+<li>通过调用 unordered_set 模板类的默认构造函数，可以创建空的 unordered_set 容器。</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::unordered_set&lt;std::string&gt; uset;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>创建unordered_set容器同时完成初始化操作。</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::unordered_set&lt;std::string&gt; uset&#123; <span class="string">&quot;http://c.biancheng.net/c/&quot;</span>,</span><br><span class="line">                                      <span class="string">&quot;http://c.biancheng.net/java/&quot;</span>,</span><br><span class="line">                                      <span class="string">&quot;http://c.biancheng.net/linux/&quot;</span> &#125;;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>调用 unordered_set 模板中提供的复制（拷贝）构造函数，将现有 unordered_set 容器中存储的元素全部用于为新建 unordered_set 容器初始化。</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::unordered_set&lt;std::string&gt; <span class="title">uset2</span><span class="params">(uset)</span></span>;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>如果不想全部拷贝，可以使用 unordered_set 类模板提供的迭代器，在现有 unordered_set 容器中选择部分区域内的元素，为新建 unordered_set 容器初始化。</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//传入 2 个迭代器，uset.begin(),uset.end()</span></span><br><span class="line"><span class="function">std::unordered_set&lt;std::string&gt; <span class="title">uset2</span><span class="params">(++uset.begin(),uset.end())</span></span>;</span><br><span class="line"><span class="comment">//通过此方式创建的 uset2 容器，其内部就包含 uset 容器中除第 1 个元素外的所有其它元素。</span></span><br></pre></td></tr></table></figure>
+<h3 id="C-unordered-set示例"><a href="#C-unordered-set示例" class="headerlink" title="C++ unordered_set示例"></a>C++ unordered_set示例</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unordered_set&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//创建一个空的unordered_set容器</span></span><br><span class="line">    std::unordered_set&lt;std::string&gt; uset;</span><br><span class="line">    <span class="comment">//给 uset 容器添加数据</span></span><br><span class="line">    uset.<span class="built_in">emplace</span>(<span class="string">&quot;http://c.biancheng.net/java/&quot;</span>);</span><br><span class="line">    uset.<span class="built_in">emplace</span>(<span class="string">&quot;http://c.biancheng.net/c/&quot;</span>);</span><br><span class="line">    uset.<span class="built_in">emplace</span>(<span class="string">&quot;http://c.biancheng.net/python/&quot;</span>);</span><br><span class="line">    <span class="comment">//查看当前 uset 容器存储元素的个数</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;uset size = &quot;</span> &lt;&lt; uset.<span class="built_in">size</span>() &lt;&lt; endl;</span><br><span class="line">    <span class="comment">//遍历输出 uset 容器存储的所有元素</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> iter = uset.<span class="built_in">begin</span>(); iter != uset.<span class="built_in">end</span>(); ++iter) &#123;</span><br><span class="line">        cout &lt;&lt; *iter &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="C-queue-STL-queue"><a href="#C-queue-STL-queue" class="headerlink" title="C++ queue (STL queue)"></a>C++ queue (STL queue)</h2><h3 id="queue-的生成"><a href="#queue-的生成" class="headerlink" title="queue 的生成"></a>queue 的生成</h3><p>下面展示如何创建一个保存字符串对象的 queue:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::queue&lt;std::string&gt; words;</span><br></pre></td></tr></table></figure>
+<p>也可以使用拷贝构造函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::queue&lt;std::string&gt; copy_words &#123;words&#125;; // A duplicate of words</span><br></pre></td></tr></table></figure>
+<p>stack<T>、queue<T> 这类适配器类都默认封装了一个 deque<T> 容器，也可以通过指定第二个模板类型参数来使用其他类型的容器：</T></T></T></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::queue&lt;std::string, std::list&lt;std::string&gt;&gt;words;</span><br></pre></td></tr></table></figure>
+<h3 id="queue-操作"><a href="#queue-操作" class="headerlink" title="queue 操作"></a>queue 操作</h3><p>queue 和 stack 有一些成员函数相似，但在一些情况下，工作方式有些不同：</p>
+<ul>
+<li>front()：返回 queue 中第一个元素的引用。如果 queue 是常量，就返回一个常引用；如果 queue 为空，返回值是未定义的。</li>
+<li>back()：返回 queue 中最后一个元素的引用。如果 queue 是常量，就返回一个常引用；如果 queue 为空，返回值是未定义的。</li>
+<li>push(const T&amp; obj)：在 queue 的尾部添加一个元素的副本。这是通过调用底层容器的成员函数 push_back() 来完成的。</li>
+<li>push(T&amp;&amp; obj)：以移动的方式在 queue 的尾部添加元素。这是通过调用底层容器的具有右值引用参数的成员函数 push_back() 来完成的。</li>
+<li>pop()：删除 queue 中的第一个元素。</li>
+<li>size()：返回 queue 中元素的个数。</li>
+<li>empty()：如果 queue 中没有元素的话，返回 true。</li>
+<li>emplace()：用传给 emplace() 的参数调用 T 的构造函数，在 queue 的尾部生成对象。</li>
+<li>swap(queue<T> &amp;other_q)：将当前 queue 中的元素和参数 queue 中的元素交换。它们需要包含相同类型的元素。也可以调用全局函数模板 swap() 来完成同样的操作。</T></li>
+</ul>
+<p>和 stack 一样，queue 也没有迭代器。访问元素的唯一方式是遍历容器内容，并移除访问过的每一个元素。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::deque&lt;<span class="keyword">double</span>&gt; values &#123;<span class="number">1.5</span>, <span class="number">2.5</span>, <span class="number">3.5</span>, <span class="number">4.5</span>&#125;; <span class="function">std::queue&lt;<span class="keyword">double</span>&gt; <span class="title">numbers</span><span class="params">(values)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (!numbers, <span class="built_in">empty</span>())</span><br><span class="line">&#123;</span><br><span class="line">    std ::cout &lt;&lt; numbers. <span class="built_in">front</span>() &lt;&lt; <span class="string">&quot; &quot;</span>; <span class="comment">// Output the 1st element </span></span><br><span class="line">    numbers. <span class="built_in">pop</span>();  <span class="comment">// Delete the 1st element</span></span><br><span class="line">&#125;</span><br><span class="line">std::cout &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>fireknight
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/" title="今日C++起步小记">http://example.com/2022/05/08/今日C-起步小记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/12/Buffer-Overflow-Attack-%EF%BC%8Cpart2%EF%BC%9A%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C/" rel="prev" title="Buffer Overflow Attack ，part2：模拟实验">
+      <i class="fa fa-chevron-left"></i> Buffer Overflow Attack ，part2：模拟实验
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">今日C++起步小记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-auto-for%E5%BE%AA%E7%8E%AF"><span class="nav-number">2.</span> <span class="nav-text">C++ auto for循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-STL-unordered-set%E5%AE%B9%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">C++ STL unordered_set容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C-unordered-set%E5%AE%B9%E5%99%A8%E7%9A%84%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">C++ unordered_set容器的成员方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-unordered-set%E5%AE%B9%E5%99%A8%E5%88%9B%E5%BB%BA"><span class="nav-number">3.2.</span> <span class="nav-text">C++ unordered_set容器创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-unordered-set%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.3.</span> <span class="nav-text">C++ unordered_set示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-queue-STL-queue"><span class="nav-number">4.</span> <span class="nav-text">C++ queue (STL queue)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#queue-%E7%9A%84%E7%94%9F%E6%88%90"><span class="nav-number">4.1.</span> <span class="nav-text">queue 的生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#queue-%E6%93%8D%E4%BD%9C"><span class="nav-number">4.2.</span> <span class="nav-text">queue 操作</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fireknight"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">fireknight</p>
+  <div class="site-description" itemprop="description">fireknight-hJ的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fireknight-hJ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fireknight-hJ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jhao00251@gmail.com" title="E-Mail → mailto:jhao00251@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/fireknight-hJ" title="https:&#x2F;&#x2F;github.com&#x2F;fireknight-hJ" rel="noopener" target="_blank">github_site</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fireknight</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">81k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:13</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : true,
+      appId      : 'R8brtkIXPg6UVi6tzdQm1aIC-gzGzoHsz',
+      appKey     : '3XexM3rU032vWyOvDGsWO4Fp',
+      placeholder: "ヾﾉ≧∀≦)o来啊, 快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+  
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/js/cursor/explosion.min.js"></script>
+  
+  
+  
+  <!--页面点击小桃心-->
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
