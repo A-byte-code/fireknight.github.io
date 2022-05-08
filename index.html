@@ -165,6 +165,345 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/09/%E5%BA%94%E7%94%A8AddressSanitizer%E5%8F%91%E7%8E%B0%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="fireknight">
+      <meta itemprop="description" content="fireknight-hJ的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FireKnight-HJ">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/09/%E5%BA%94%E7%94%A8AddressSanitizer%E5%8F%91%E7%8E%B0%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF/" class="post-title-link" itemprop="url">应用AddressSanitizer发现程序内存错误</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-09 01:25:33 / 修改时间：01:26:03" itemprop="dateCreated datePublished" datetime="2022-05-09T01:25:33+08:00">2022-05-09</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/05/09/%E5%BA%94%E7%94%A8AddressSanitizer%E5%8F%91%E7%8E%B0%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/05/09/%E5%BA%94%E7%94%A8AddressSanitizer%E5%8F%91%E7%8E%B0%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="应用-AddressSanitizer-发现程序内存错误"><a href="#应用-AddressSanitizer-发现程序内存错误" class="headerlink" title="应用 AddressSanitizer 发现程序内存错误"></a>应用 AddressSanitizer 发现程序内存错误</h2><p>可以检测下面这些内存错误 </p>
+<ul>
+<li>– Use after free：访问堆上已经被释放的内存 </li>
+<li>– Heap buffer overflow：堆上缓冲区访问溢出 – Stack buffer overflow：栈上缓冲区访问溢出 </li>
+<li>– Global buffer overflow：全局缓冲区访问溢出 </li>
+<li>– Use after return：访问栈上已被释放的内存 </li>
+<li>– Use after scope：栈对象使用超过定义范围 </li>
+<li>– Initialization order bugs：初始化命令错误 </li>
+<li>– Memory leaks：内存泄漏</li>
+</ul>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcc -fsanitize=address -fno-omit-frame-pointer -O1 -g use-after-free.c -o use-after-free</span><br><span class="line">    </span><br><span class="line">g++ -fsanitize=address -fno-omit-frame-pointer -O1 -g use-after-free.c -o use-after-free</span><br></pre></td></tr></table></figure>
+<ul>
+<li>用-fsanitize=address选项编译和链接你的程序。</li>
+<li>用-fno-omit-frame-pointer编译，以得到更容易理解stack trace。</li>
+<li>可选择-O1或者更高的优化级别编译</li>
+</ul>
+<p>运行use-after-fee。如果发现了错误，就会打印出类似下面的信息：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">==<span class="number">9901</span>==ERROR: AddressSanitizer: heap-use-after-free <span class="keyword">on</span> address <span class="number">0x60700000dfb5</span> </span><br><span class="line">  at pc <span class="number">0x45917b</span> bp <span class="number">0x7fff4490c700</span> sp <span class="number">0x7fff4490c6f8</span></span><br><span class="line">READ of size <span class="number">1</span> at <span class="number">0x60700000dfb5</span> thread T0</span><br><span class="line">    <span class="meta">#0 0x45917a in main use-after-free.c:5</span></span><br><span class="line">    <span class="meta">#1 0x7fce9f25e76c in __libc_start_main /build/buildd/eglibc-2.15/csu/libc-start.c:226</span></span><br><span class="line">    <span class="meta">#2 0x459074 in _start (a.out+0x459074)</span></span><br><span class="line"><span class="number">0x60700000dfb5</span> <span class="keyword">is</span> located <span class="number">5</span> bytes inside of <span class="number">80</span>-<span class="built_in">byte</span> region [<span class="number">0x60700000dfb0</span>,<span class="number">0x60700000e000</span>)</span><br><span class="line">freed <span class="keyword">by</span> thread T0 here:</span><br><span class="line">    <span class="meta">#0 0x4441ee in __interceptor_free projects/compiler-rt/lib/asan/asan_malloc_linux.cc:64</span></span><br><span class="line">    <span class="meta">#1 0x45914a in main use-after-free.c:4</span></span><br><span class="line">    <span class="meta">#2 0x7fce9f25e76c in __libc_start_main /build/buildd/eglibc-2.15/csu/libc-start.c:226</span></span><br><span class="line">previously allocated <span class="keyword">by</span> thread T0 here:</span><br><span class="line">    <span class="meta">#0 0x44436e in __interceptor_malloc projects/compiler-rt/lib/asan/asan_malloc_linux.cc:74</span></span><br><span class="line">    <span class="meta">#1 0x45913f in main use-after-free.c:3</span></span><br><span class="line">    <span class="meta">#2 0x7fce9f25e76c in __libc_start_main /build/buildd/eglibc-2.15/csu/libc-start.c:226</span></span><br><span class="line">SUMMARY: AddressSanitizer: heap-use-after-free use-after-free.c:<span class="number">5</span> main</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一部分（ERROR）指出错误类型是heap-use-after-free；</li>
+<li>第二部分（READ）, 指出线程名thread T0，操作为READ，发生的位置是use-after-free.c:5。<ul>
+<li>该heapk块之前已经在use-after-free.c:4被释放了；</li>
+<li>该heap块是在use-fater-free.c:3分配</li>
+</ul>
+</li>
+<li>第三部分 (SUMMARY) 前面输出的概要说明。</li>
+</ul>
+<h3 id="heap-use-after-free-释放后使用"><a href="#heap-use-after-free-释放后使用" class="headerlink" title="(heap) use after free 释放后使用"></a>(heap) use after free 释放后使用</h3><p>下面的代码中，分配array数组并释放，然后返回它的一个元素。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">      <span class="keyword">int</span>* array = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">100</span>];</span><br><span class="line">      <span class="keyword">delete</span> []array;</span><br><span class="line">      <span class="keyword">return</span> array[<span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<p><img src="/2022/05/09/%E5%BA%94%E7%94%A8AddressSanitizer%E5%8F%91%E7%8E%B0%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF/uTools_1652011917225.png" alt="uTools_1652011917225"></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">=================================================================</span><br><span class="line">==<span class="number">7045</span>==ERROR: AddressSanitizer: heap-use-after-free <span class="keyword">on</span> address <span class="number">0x61400000fe44</span> at pc <span class="number">0x0000004007d1</span> bp <span class="number">0x7fff93403860</span> sp <span class="number">0x7fff93403850</span></span><br><span class="line">READ of size <span class="number">4</span> at <span class="number">0x61400000fe44</span> thread T0</span><br><span class="line">    <span class="meta">#0 0x4007d0 in main /home/lyq/Desktop/addresssanitizer_use/use_after_free.cpp:5</span></span><br><span class="line">    <span class="meta">#1 0x7f9a1281883f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)</span></span><br><span class="line">    <span class="meta">#2 0x4006b8 in _start (/home/lyq/Desktop/addresssanitizer_use/use-after-free+0x4006b8)</span></span><br><span class="line"></span><br><span class="line"><span class="number">0x61400000fe44</span> <span class="keyword">is</span> located <span class="number">4</span> bytes inside of <span class="number">400</span>-<span class="built_in">byte</span> region [<span class="number">0x61400000fe40</span>,<span class="number">0x61400000ffd0</span>)</span><br><span class="line">freed <span class="keyword">by</span> thread T0 here:</span><br><span class="line">    <span class="meta">#0 0x7f9a12c5bcaa in operator delete[](void*) (/usr/lib/x86_64-linux-gnu/libasan.so.2+0x99caa)</span></span><br><span class="line">    <span class="meta">#1 0x4007a8 in main /home/lyq/Desktop/addresssanitizer_use/use_after_free.cpp:4</span></span><br><span class="line">    <span class="meta">#2 0x7f9a1281883f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)</span></span><br><span class="line"></span><br><span class="line">previously allocated <span class="keyword">by</span> thread T0 here:</span><br><span class="line">    <span class="meta">#0 0x7f9a12c5b6b2 in operator new[](unsigned long) (/usr/lib/x86_64-linux-gnu/libasan.so.2+0x996b2)</span></span><br><span class="line">    <span class="meta">#1 0x400798 in main /home/lyq/Desktop/addresssanitizer_use/use_after_free.cpp:3</span></span><br><span class="line">    <span class="meta">#2 0x7f9a1281883f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)</span></span><br><span class="line"></span><br><span class="line">SUMMARY: AddressSanitizer: heap-use-after-free /home/lyq/Desktop/addresssanitizer_use/use_after_free.cpp:<span class="number">5</span> main</span><br><span class="line">Shadow bytes around the buggy address:</span><br><span class="line">  <span class="number">0x0c287fff9f70</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fff9f80</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fff9f90</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fff9fa0</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fff9fb0</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">=&gt;<span class="number">0x0c287fff9fc0</span>: fa fa fa fa fa fa fa fa[fd]fd fd fd fd fd fd fd</span><br><span class="line">  <span class="number">0x0c287fff9fd0</span>: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd</span><br><span class="line">  <span class="number">0x0c287fff9fe0</span>: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd</span><br><span class="line">  <span class="number">0x0c287fff9ff0</span>: fd fd fd fd fd fd fd fd fd fd fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fffa000</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fffa010</span>: <span class="function">fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span></span><br><span class="line"><span class="function">Shadow <span class="built_in">byte</span> <span class="title">legend</span> (<span class="params">one shadow <span class="built_in">byte</span> represents <span class="number">8</span> application bytes</span>):</span></span><br><span class="line"><span class="function">  Addressable:           00</span></span><br><span class="line"><span class="function">  Partially addressable: 01 02 03 04 05 06 07</span></span><br><span class="line"><span class="function">  Heap left redzone:       fa</span></span><br><span class="line"><span class="function">  Heap right redzone:      fb</span></span><br><span class="line"><span class="function">  Freed heap region:       fd</span></span><br><span class="line"><span class="function">  Stack left redzone:      f1</span></span><br><span class="line"><span class="function">  Stack mid redzone:       f2</span></span><br><span class="line"><span class="function">  Stack right redzone:     f3</span></span><br><span class="line"><span class="function">  Stack <span class="keyword">partial</span> redzone:   f4</span></span><br><span class="line"><span class="function">  Stack after <span class="keyword">return</span>:      f5</span></span><br><span class="line"><span class="function">  Stack use after scope:   f8</span></span><br><span class="line"><span class="function">  Global redzone:          f9</span></span><br><span class="line"><span class="function">  Global <span class="keyword">init</span> order:       f6</span></span><br><span class="line"><span class="function">  Poisoned <span class="keyword">by</span> user:        f7</span></span><br><span class="line"><span class="function">  Container overflow:      fc</span></span><br><span class="line"><span class="function">  Array cookie:            ac</span></span><br><span class="line"><span class="function">  Intra <span class="built_in">object</span> redzone:    bb</span></span><br><span class="line"><span class="function">  ASan <span class="keyword">internal</span>:           fe</span></span><br><span class="line">==<span class="number">7045</span>==ABORTING</span><br></pre></td></tr></table></figure>
+<h3 id="heap-buffer-overflow-堆缓存访问溢出"><a href="#heap-buffer-overflow-堆缓存访问溢出" class="headerlink" title="heap buffer overflow 堆缓存访问溢出"></a>heap buffer overflow 堆缓存访问溢出</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>* <span class="built_in">array</span> = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">100</span>];</span><br><span class="line">    <span class="keyword">int</span> res = <span class="built_in">array</span>[<span class="number">100</span>];</span><br><span class="line">    <span class="keyword">delete</span> [] <span class="built_in">array</span>;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<p><img src="/2022/05/09/%E5%BA%94%E7%94%A8AddressSanitizer%E5%8F%91%E7%8E%B0%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF/uTools_1652012445122.png" alt="uTools_1652012445122"></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">buffer-overflow</span><br><span class="line">heap-buffer-overflow.c: In function ‘main’:</span><br><span class="line">heap-buffer-overflow.c:<span class="number">3</span>:<span class="number">18</span>: error: ‘<span class="keyword">new</span>’ undeclared (first use <span class="keyword">in</span> <span class="keyword">this</span> function)</span><br><span class="line">     <span class="built_in">int</span>* array = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">100</span>];</span><br><span class="line">                  ^</span><br><span class="line">heap-buffer-overflow.c:<span class="number">3</span>:<span class="number">18</span>: note: each undeclared identifier <span class="keyword">is</span> reported only once <span class="keyword">for</span> each function it appears</span><br><span class="line">heap-buffer-overflow.c:<span class="number">3</span>:<span class="number">22</span>: error: expected ‘,’ <span class="keyword">or</span> ‘;’ before ‘<span class="built_in">int</span>’</span><br><span class="line">     <span class="built_in">int</span>* array = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">100</span>];</span><br><span class="line">                      ^</span><br><span class="line">heap-buffer-overflow.c:<span class="number">5</span>:<span class="number">5</span>: error: ‘delete’ undeclared (first use <span class="keyword">in</span> <span class="keyword">this</span> function)</span><br><span class="line">     delete [] array;</span><br><span class="line">     ^</span><br><span class="line">heap-buffer-overflow.c:<span class="number">5</span>:<span class="number">13</span>: error: expected expression before ‘]’ token</span><br><span class="line">     delete [] array;</span><br><span class="line">             ^</span><br><span class="line">lyq@lyq-<span class="keyword">virtual</span>-machine:~/Desktop/addresssanitizer_use$ g++ -fsanitize=address -fno-omit-frame-pointer -O1 -g hebuffer-overflow</span><br><span class="line">lyq@lyq-<span class="keyword">virtual</span>-machine:~/Desktop/addresssanitizer_use$ ./heap-buffer-overflow</span><br><span class="line">=================================================================</span><br><span class="line">==<span class="number">7125</span>==ERROR: AddressSanitizer: heap-buffer-overflow <span class="keyword">on</span> address <span class="number">0x61400000ffd0</span> at pc <span class="number">0x0000004007c4</span> bp <span class="number">0x7ffd0b</span></span><br><span class="line">READ of size <span class="number">4</span> at <span class="number">0x61400000ffd0</span> thread T0</span><br><span class="line">    <span class="meta">#0 0x4007c3 in main /home/lyq/Desktop/addresssanitizer_use/heap-buffer-overflow.c:4</span></span><br><span class="line">    <span class="meta">#1 0x7f3fb6a5983f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)</span></span><br><span class="line">    <span class="meta">#2 0x4006b8 in _start (/home/lyq/Desktop/addresssanitizer_use/heap-buffer-overflow+0x4006b8)</span></span><br><span class="line"></span><br><span class="line"><span class="number">0x61400000ffd0</span> <span class="keyword">is</span> located <span class="number">0</span> bytes to the right of <span class="number">400</span>-<span class="built_in">byte</span> region [<span class="number">0x61400000fe40</span>,<span class="number">0x61400000ffd0</span>)</span><br><span class="line">allocated <span class="keyword">by</span> thread T0 here:</span><br><span class="line">    <span class="meta">#0 0x7f3fb6e9c6b2 in operator new[](unsigned long) (/usr/lib/x86_64-linux-gnu/libasan.so.2+0x996b2)</span></span><br><span class="line">    <span class="meta">#1 0x400798 in main /home/lyq/Desktop/addresssanitizer_use/heap-buffer-overflow.c:3</span></span><br><span class="line">    <span class="meta">#2 0x7f3fb6a5983f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)</span></span><br><span class="line"></span><br><span class="line">SUMMARY: AddressSanitizer: heap-buffer-overflow /home/lyq/Desktop/addresssanitizer_use/heap-buffer-overflow.c:<span class="number">4</span></span><br><span class="line">Shadow bytes around the buggy address:</span><br><span class="line">  <span class="number">0x0c287fff9fa0</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fff9fb0</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fff9fc0</span>: fa fa fa fa fa fa fa fa <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line">  <span class="number">0x0c287fff9fd0</span>: <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line">  <span class="number">0x0c287fff9fe0</span>: <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line">=&gt;<span class="number">0x0c287fff9ff0</span>: <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>[fa]fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fffa000</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fffa010</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fffa020</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fffa030</span>: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span><br><span class="line">  <span class="number">0x0c287fffa040</span>: <span class="function">fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa</span></span><br><span class="line"><span class="function">Shadow <span class="built_in">byte</span> <span class="title">legend</span> (<span class="params">one shadow <span class="built_in">byte</span> represents <span class="number">8</span> application bytes</span>):</span></span><br><span class="line"><span class="function">  Addressable:           00</span></span><br><span class="line"><span class="function">  Partially addressable: 01 02 03 04 05 06 07</span></span><br><span class="line"><span class="function">  Heap left redzone:       fa</span></span><br><span class="line"><span class="function">  Heap right redzone:      fb</span></span><br><span class="line"><span class="function">  Freed heap region:       fd</span></span><br><span class="line"><span class="function">  Stack left redzone:      f1</span></span><br><span class="line"><span class="function">  Stack mid redzone:       f2</span></span><br><span class="line"><span class="function">  Stack right redzone:     f3</span></span><br><span class="line"><span class="function">  Stack <span class="keyword">partial</span> redzone:   f4</span></span><br><span class="line"><span class="function">  Stack after <span class="keyword">return</span>:      f5</span></span><br><span class="line"><span class="function">  Stack use after scope:   f8</span></span><br><span class="line"><span class="function">  Global redzone:          f9</span></span><br><span class="line"><span class="function">  Global <span class="keyword">init</span> order:       f6</span></span><br><span class="line"><span class="function">  Poisoned <span class="keyword">by</span> user:        f7</span></span><br><span class="line"><span class="function">  Container overflow:      fc</span></span><br><span class="line"><span class="function">  Array cookie:            ac</span></span><br><span class="line"><span class="function">  Intra <span class="built_in">object</span> redzone:    bb</span></span><br><span class="line"><span class="function">  ASan <span class="keyword">internal</span>:           fe</span></span><br><span class="line">==<span class="number">7125</span>==ABORTING</span><br></pre></td></tr></table></figure>
+<blockquote id="fn_引用主要内容">
+<sup>引用主要内容</sup>. <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3a2df9b7c353">https://www.jianshu.com/p/3a2df9b7c353</a><a href="#reffn_引用主要内容" title="Jump back to footnote [引用主要内容] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/09/AddressSanitizer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="fireknight">
+      <meta itemprop="description" content="fireknight-hJ的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FireKnight-HJ">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/09/AddressSanitizer/" class="post-title-link" itemprop="url">AddressSanitizer 原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-09 01:23:27 / 修改时间：01:26:06" itemprop="dateCreated datePublished" datetime="2022-05-09T01:23:27+08:00">2022-05-09</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/05/09/AddressSanitizer/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/05/09/AddressSanitizer/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="AddressSanitizer-原理"><a href="#AddressSanitizer-原理" class="headerlink" title="AddressSanitizer 原理"></a>AddressSanitizer 原理</h2><p>AddressSanitizer（ASan）是一个快速的内存错误检测工具。它非常快，只拖慢程序两倍左右。它包括一个编译器instrumentation模块和一个提供malloc()/free()替代项的运行时库。从gcc 4.8开始，AddressSanitizer成为gcc的一部分。</p>
+<h3 id="AddressSanitizer原理简介"><a href="#AddressSanitizer原理简介" class="headerlink" title="AddressSanitizer原理简介"></a>AddressSanitizer原理简介</h3><p>两部分：插桩(Instrumentation)和动态运行库(Run-time library)。</p>
+<ul>
+<li><p>插桩主要是针对在llvm编译器级别对访问内存的操作(store，load，alloca等)，将它们进行处理。</p>
+</li>
+<li><p>动态运行库主要提供一些运行时的复杂的功能(比如poison/unpoison shadow memory)以及将malloc,free等系统调用函数hook住。该算法的思路是：如果想防住Buffer Overflow漏洞，只需要在每块内存区域右端（或两端，能防overflow和underflow）加一块区域（RedZone），使RedZone的区域的影子内存（Shadow Memory)设置为不可写即可。具体的示意图如下图所示。</p>
+</li>
+</ul>
+<p><img src="/2022/05/09/AddressSanitizer/a58.jpg" alt="img"></p>
+<h4 id="内存映射"><a href="#内存映射" class="headerlink" title="内存映射"></a>内存映射</h4><p>AddressSanitizer保护的主要原理是对程序中的虚拟内存提供粗粒度的影子内存(每8个字节的内存对应一个字节的影子内存)，为了减少overhead，采用了直接内存映射策略，所采用的具体策略如下：$Shadow=(Mem &gt;&gt; 3) + offset$，即每8个字节（Mem除以了8）的内存对应一个字节的影子内存，影子内存中每个字节存取一个数字k,如果k=0，则表示该影子内存对应的8个字节的内存都能访问，如果0&lt;k&lt;7,表示前k个字节可以访问，如果k为负数，不同的数字表示不同的错误（e.g. Stack buffer overflow, Heap buffer overflow)。</p>
+<h4 id="插桩"><a href="#插桩" class="headerlink" title="插桩"></a>插桩</h4><p>为了防止buffer overflow，需要将原来分配的内存两边分配额外的内存Redzone，并将这两边的内存加锁，设为不能访问状态，这样可以有效的防止buffer overflow(但不能杜绝buffer overflow)。以下是在栈中插桩的一个例子。</p>
+<p>影子和主应用程序内存之间存在对应关系。 <strong>在主内存中毒化</strong>一个字节意味着将一些特殊值写入相应的影子内存。</p>
+<h4 id="Shadow-Memory"><a href="#Shadow-Memory" class="headerlink" title="Shadow Memory"></a><strong>Shadow Memory</strong></h4><p>由malloc函数返回的内存地址通常至少对齐到8个字节。这导致观察到，任何对齐的8个应用程序堆内存的8字节序列都处于9种不同状态之一：前k(0≤k≤8)字节是可寻址的，其余8-k个字节是不可寻址的。这个状态可以被编码到一个字节的影子内存中。</p>
+<p>AddressSanitizer将八分之一的虚拟地址空间用于其影子内存，并使用带有比例和偏移量的直接映射来将应用程序地址转换为相应的影子地址。给定应用程序内存地址Addr，阴影字节的地址被计算为(Addr&gt;&gt;3)+Offset。如果Max-1是虚拟地址空间中的最大有效地址，则应用某种方式选择“Offset”的值，使启动时从Offset到Offset+Max/8的区域不被占用。</p>
+<p>对每个阴影字节使用以下编码：0表示对应的应用程序内存区域的所有8个字节都是可寻址的；k(1≤k≤7)表示前k个字节是可寻址的；任何负值都表示整个8字节的单词是不可寻址的。使用不同的负值来区分不同类型的不可寻址内存（heap redzones, stack redzones, global redzones, freed memory）。</p>
+<p><img src="/2022/05/09/AddressSanitizer/uTools_1652006880066.png" alt="uTools_1652006880066"></p>
+<p>地址空间的实际布局如下：可以看到一个application的memory分为高低两部分，分别映射到两个shadow region中的地址，而shadow|bad|shadow部分的地址又被映射到bad region部分的地址，而这部分shadow|bad|shadow当然会被page protection机制标记为“不可访问”。</p>
+<h4 id="Instrumentation"><a href="#Instrumentation" class="headerlink" title="Instrumentation"></a><strong>Instrumentation</strong></h4><p>当检测一个8字节的内存访问时，AddressSanitizer计算相应的阴影字节的地址，加载该字节，并检查它是否为零：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ShadowAddr = (Addr &gt;&gt; <span class="number">3</span>) + Offset;</span><br><span class="line"><span class="keyword">if</span> (*ShadowAddr != <span class="number">0</span>)</span><br><span class="line">	ReportAndCrash(Addr);</span><br></pre></td></tr></table></figure>
+<p>当检测1、2或4字节访问时，检测稍微复杂一些：如果阴影值为正(即，只有8字节字中的前k字节是可寻址的)，我们需要将地址的最后3位与k进行比较。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ShadowAddr = (Addr &gt;&gt; <span class="number">3</span>) + Offset;</span><br><span class="line">k = *ShadowAddr;</span><br><span class="line"><span class="keyword">if</span> (k != <span class="number">0</span> &amp;&amp; ((Addr &amp; <span class="number">7</span>) + AccessSize &gt; k))</span><br><span class="line">	<span class="built_in">ReportAndCrash</span>(Addr);</span><br></pre></td></tr></table></figure>
+<p>作者将AddressSanitizer仪器通道放置在LLVM optimization pipeline的最末端。通过这种方式，我们只检测那些经过由LLVM优化器执行的所有标量和循环优化的内存访问。例如，对由LLVM优化后的本地stack对象的内存访问将不会被检测。同时，我们不需要检测由LLVM代码生成器生成的内存访问（例如，寄存器泄漏）。</p>
+<h4 id="Run-time-Library"><a href="#Run-time-Library" class="headerlink" title="Run-time Library"></a><strong>Run-time Library</strong></h4><p>Run-time Library主要目的是管理影子内存。在应用程序启动时，整个阴影区域被映射，以便程序的其他部分不能使用它。影子内存的坏段受到保护。在Linux上，阴影区域在启动时总是未被占用的，因此内存映射总是成功的。在MacOS上，我们需要禁用地址空间布局随机化(ASLR)。</p>
+<p>malloc和free函数被一个特定的实现所取代。malloc函数在返回的区域周围分配额外的内存，即redzone。redzone被标记为<strong>不可寻址</strong>，或<strong>poisoned</strong>。redzone越大，将检测到的溢出或下溢就越大。</p>
+<p>分配器内部的内存区域被组织为一系列对应于相应对象大小的freelists数组。当与所请求的对象大小相对应的freelist为空时，将从操作系统分配一大组具有redzones的内存区域(例如，使用mmap)。对于这n个区域，我们分配了n个+1个redzone，这样一个区域的右redzone通常是另一个区域的左redzone：</p>
+<p><img src="/2022/05/09/AddressSanitizer/uTools_1651989469165.png" alt="uTools_1651989469165"></p>
+<p>左redzone被用作存储allocator的内部数据（如allocation size，thread ID等）因此，heap read zone最小32字节。这个left redzone中的内部数据不会被buffer underflow所损坏，因为这个underflow在真正store（改变memory）前会被立即检测到。（利用这个检测工具检测，当然这个underflow要发生在被检测的代码中）</p>
+<p>free函数poison整个memory区域并将其隔离，这样这个region不会被malloc再次分配，隔离是FIFO队列，有固定大小的memory。</p>
+<p>默认情况下，malloc和free记录当前调用堆栈，以便提供更多信息的bug报告。malloc调用堆栈存储在左边的redzone（redzone越大，可以存储的帧数就越大），而free调用堆栈存储在存储区域本身的开始部分。</p>
+<h4 id="Stack-And-Globals"><a href="#Stack-And-Globals" class="headerlink" title="Stack And Globals"></a><strong>Stack And Globals</strong></h4><p>为了检测对全局对象和堆栈对象的越界访问，地址消毒器必须在这些对象周围创建poisoned的redzone。</p>
+<p>对于全局区域，redzone是在编译时创建的，而redzone的地址是在应用程序启动时传递给Run-time Library的。Run-time Library函数会将redzones给poison了，并记录地址以进行进一步的错误报告。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> a[<span class="number">10</span>];</span><br><span class="line">    &lt;function body&gt; &#125;</span><br></pre></td></tr></table></figure>
+<p>转换后的代码类似：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> rz1[<span class="number">32</span>]</span><br><span class="line">    <span class="keyword">char</span> arr[<span class="number">10</span>];</span><br><span class="line">    <span class="keyword">char</span> rz2[<span class="number">32</span><span class="number">-10</span>+<span class="number">32</span>];</span><br><span class="line">    <span class="keyword">unsigned</span> *shadow =</span><br><span class="line">        (<span class="keyword">unsigned</span>*)(((<span class="keyword">long</span>)rz1&gt;&gt;<span class="number">8</span>)+Offset);</span><br><span class="line">    <span class="comment">// poison the redzones around arr.</span></span><br><span class="line">    shadow[<span class="number">0</span>] = <span class="number">0xffffffff</span>; <span class="comment">// rz1</span></span><br><span class="line">    shadow[<span class="number">1</span>] = <span class="number">0xffff0200</span>; <span class="comment">// arr and rz2</span></span><br><span class="line">    shadow[<span class="number">2</span>] = <span class="number">0xffffffff</span>; <span class="comment">// rz2</span></span><br><span class="line">    &lt;function body&gt;</span><br><span class="line">    <span class="comment">// un-poison all.</span></span><br><span class="line">    shadow[<span class="number">0</span>] = shadow[<span class="number">1</span>] = shadow[<span class="number">2</span>] = <span class="number">0</span>; &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/09/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="fireknight">
+      <meta itemprop="description" content="fireknight-hJ的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FireKnight-HJ">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/09/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B02/" class="post-title-link" itemprop="url">今日C++起步小记2</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-09 01:19:35 / 修改时间：01:20:17" itemprop="dateCreated datePublished" datetime="2022-05-09T01:19:35+08:00">2022-05-09</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/05/09/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B02/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/05/09/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B02/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>758</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="C-的-delete-与-delete"><a href="#C-的-delete-与-delete" class="headerlink" title="C++的 delete 与 delete []"></a>C++的 delete 与 delete []</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/05/09/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B02/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -821,300 +1160,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="fireknight">
-      <meta itemprop="description" content="fireknight-hJ的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FireKnight-HJ">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" class="post-title-link" itemprop="url">计网复习：拥塞控制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-15 00:50:02 / 修改时间：01:00:45" itemprop="dateCreated datePublished" datetime="2022-01-15T00:50:02+08:00">2022-01-15</time>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>数据通信与网络24章 前半部分</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/hexo-next-blog%E6%90%AD%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="fireknight">
-      <meta itemprop="description" content="fireknight-hJ的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FireKnight-HJ">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/hexo-next-blog%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">hexo_next_blog搭建</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-13 15:44:54" itemprop="dateCreated datePublished" datetime="2022-01-13T15:44:54+08:00">2022-01-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-05 02:40:37" itemprop="dateModified" datetime="2022-04-05T02:40:37+08:00">2022-04-05</time>
-              </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/01/13/hexo-next-blog%E6%90%AD%E5%BB%BA/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/13/hexo-next-blog%E6%90%AD%E5%BB%BA/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>14k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>13 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>搭建hexo，NexT主题博客时收集到的部分内容</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/hexo-next-blog%E6%90%AD%E5%BB%BA/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/12/RSA_breaking/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="fireknight">
-      <meta itemprop="description" content="fireknight-hJ的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FireKnight-HJ">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/12/RSA_breaking/" class="post-title-link" itemprop="url">RSA 加密体制破译</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-12 12:03:55" itemprop="dateCreated datePublished" datetime="2022-01-12T12:03:55+08:00">2022-01-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-13 16:25:55" itemprop="dateModified" datetime="2022-01-13T16:25:55+08:00">2022-01-13</time>
-              </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/01/12/RSA_breaking/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/12/RSA_breaking/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>9.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>8 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>首届（2016）全国高校密码数学挑战赛</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/12/RSA_breaking/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1186,12 +1231,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -1245,12 +1290,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">84k</span>
+    <span title="站点总字数">95k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:16</span>
+    <span title="站点阅读时长">1:26</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
