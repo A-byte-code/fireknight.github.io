@@ -20,21 +20,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Lintcode 110. 最小路径和 难度：简单">
+  <meta name="description" content="二分查找leetcode题目 33：搜索旋转排序数组">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LintCode+java：101-最小路径和">
-<meta property="og:url" content="http://example.com/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/index.html">
+<meta property="og:title" content="二分查找">
+<meta property="og:url" content="http://example.com/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/index.html">
 <meta property="og:site_name" content="FireKnight-HJ">
-<meta property="og:description" content="Lintcode 110. 最小路径和 难度：简单">
+<meta property="og:description" content="二分查找leetcode题目 33：搜索旋转排序数组">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-01-14T18:01:08.000Z">
-<meta property="article:modified_time" content="2022-01-14T18:04:27.960Z">
+<meta property="og:image" content="http://example.com/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/33_fig1.png">
+<meta property="article:published_time" content="2022-05-10T16:36:18.000Z">
+<meta property="article:modified_time" content="2022-05-10T16:37:21.613Z">
 <meta property="article:author" content="fireknight">
-<meta property="article:tag" content="LintCode">
-<meta property="article:tag" content="动态规划">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="二分查找">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/33_fig1.png">
 
-<link rel="canonical" href="http://example.com/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/">
+<link rel="canonical" href="http://example.com/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">
 
 
 <script id="page-configurations">
@@ -47,7 +49,7 @@
   };
 </script>
 
-  <title>LintCode+java：101-最小路径和 | FireKnight-HJ</title>
+  <title>二分查找 | FireKnight-HJ</title>
   
 
 
@@ -170,7 +172,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -183,7 +185,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          LintCode+java：101-最小路径和
+          二分查找
         </h1>
 
         <div class="post-meta">
@@ -194,7 +196,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-01-15 02:01:08 / 修改时间：02:04:27" itemprop="dateCreated datePublished" datetime="2022-01-15T02:01:08+08:00">2022-01-15</time>
+              <time title="创建时间：2022-05-11 00:36:18 / 修改时间：00:37:21" itemprop="dateCreated datePublished" datetime="2022-05-11T00:36:18+08:00">2022-05-11</time>
             </span>
 
           
@@ -206,8 +208,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -217,14 +219,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
+              <span>2.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -236,46 +238,33 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><a target="_blank" rel="noopener" href="https://www.lintcode.com/problem/110/">Lintcode 110. 最小路径和</a></p>
-<p>难度：简单</p>
+        <h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><p>leetcode题目 33：搜索旋转排序数组</p>
 <span id="more"></span>
-<h4 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h4><p>给定一个只含非负整数的$m*n$网格，找到一条从左上角到右下角的可以使数字和最小的路径。</p>
-<hr>
-<p>你在同一时间只能向下或者向右移动一步</p>
-<p>样例</p>
-<p><strong>样例 1：</strong></p>
-<p>输入：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grid = [[1,3,1],[1,5,1],[4,2,1]]</span><br></pre></td></tr></table></figure>
-<p>输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">7</span><br></pre></td></tr></table></figure>
-<p>解释：</p>
-<p>路线为： 1 -&gt; 3 -&gt; 1 -&gt; 1 -&gt; 1</p>
-<p><strong>样例 2：</strong></p>
-<p>输入：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grid = [[1,3,2]]</span><br></pre></td></tr></table></figure>
-<p>输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6</span><br></pre></td></tr></table></figure>
-<p>解释：</p>
-<p>路线是： 1 -&gt; 3 -&gt; 2</p>
-<p><strong>描述</strong><br>给定一个只含非负整数的m*n网格，找到一条从左上角到右下角的可以使数字和最小的路径。</p>
-<p>你在同一时间只能向下或者向右移动一步</p>
-<p><strong>样例</strong><br>[[1,3,1],</p>
-<p>[1,5,1],</p>
-<p>[4,2,1]]</p>
-<p>输出: 7</p>
-<p>路径: 1 -&gt; 3 -&gt; 1 -&gt; 1 -&gt; 1</p>
-<h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><p>动态规划问题，坐标型动态规划</p>
-<p>建立$sumL[][]$数组存储到达每个节点的数字和最小路径</p>
-<p>我们可以发现：</p>
-<ol>
-<li><p>$sumL[0][0]=grid[0][0]$</p>
-</li>
-<li><p>第0行，第0列没有上方元素，或者没有左方元素，即$sumL[0][i] = grid[0][i] + sumL[0][i-1]$ ，$sumL[i][0] = grid[i][0] + sumL[i-1][0]$</p>
-</li>
-<li>对其余位置i，j，如果其左，上元素都确定的话，有$sumL[i][j] = Math.min(sumL[i][j-1], sumL[i-1][j]) + grid[i][j]$</li>
-<li>最后的结果即完全更新完毕后的sumL数组中的$sumL[xlen-1][ylen-1]$值，其中xlen和ylen分别为grid数组的行数与列数</li>
-</ol>
-<h4 id="程序展示："><a href="#程序展示：" class="headerlink" title="程序展示："></a>程序展示：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> grid: a list of lists of integers</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: An integer, minimizes the sum of all numbers along its path</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minPathSum</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> xlen = grid.length;</span><br><span class="line">        <span class="keyword">int</span> ylen = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="comment">// write your code here</span></span><br><span class="line">        <span class="keyword">int</span>[][] sumL = <span class="keyword">new</span> <span class="keyword">int</span>[xlen][ylen];</span><br><span class="line">        <span class="comment">//初始位置sumL[0][0]</span></span><br><span class="line">        sumL[<span class="number">0</span>][<span class="number">0</span>] = grid[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">        <span class="comment">//更新第一行</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;ylen;i++)&#123;</span><br><span class="line">            sumL[<span class="number">0</span>][i] = grid[<span class="number">0</span>][i] + sumL[<span class="number">0</span>][i-<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//更新第一列</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;xlen;i++)&#123;</span><br><span class="line">            sumL[i][<span class="number">0</span>] = grid[i][<span class="number">0</span>] + sumL[i-<span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//更新剩下的位置</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;xlen;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;ylen;j++)&#123;</span><br><span class="line">                sumL[i][j] = Math.min(sumL[i][j-<span class="number">1</span>], sumL[i-<span class="number">1</span>][j]) + grid[i][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//返回右下角的sumL</span></span><br><span class="line">        <span class="keyword">return</span> sumL[xlen-<span class="number">1</span>][ylen-<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="题目复述"><a href="#题目复述" class="headerlink" title="题目复述"></a>题目复述</h3><h4 id="33-搜索旋转排序数组"><a href="#33-搜索旋转排序数组" class="headerlink" title="33. 搜索旋转排序数组"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/search-in-rotated-sorted-array/">33. 搜索旋转排序数组</a></h4><p>难度中等2070收藏分享切换为英文接收动态反馈</p>
+<p>整数数组 <code>nums</code> 按升序排列，数组中的值 <strong>互不相同</strong> 。</p>
+<p>在传递给函数之前，<code>nums</code> 在预先未知的某个下标 <code>k</code>（<code>0 &lt;= k &lt; nums.length</code>）上进行了 <strong>旋转</strong>，使数组变为 <code>[nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]]</code>（下标 <strong>从 0 开始</strong> 计数）。例如， <code>[0,1,2,4,5,6,7]</code> 在下标 <code>3</code> 处经旋转后可能变为 <code>[4,5,6,7,0,1,2]</code> 。</p>
+<p>给你 <strong>旋转后</strong> 的数组 <code>nums</code> 和一个整数 <code>target</code> ，如果 <code>nums</code> 中存在这个目标值 <code>target</code> ，则返回它的下标，否则返回 <code>-1</code> 。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [4,5,6,7,0,1,2], target = 0</span><br><span class="line">输出：4</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [4,5,6,7,0,1,2], target = 3</span><br><span class="line">输出：-1</span><br></pre></td></tr></table></figure>
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1], target = 0</span><br><span class="line">输出：-1</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 5000</code></li>
+<li><code>-10^4 &lt;= nums[i] &lt;= 10^4</code></li>
+<li><code>nums</code> 中的每个值都 <strong>独一无二</strong></li>
+<li>题目数据保证 <code>nums</code> 在预先未知的某个下标上进行了旋转</li>
+<li><code>-10^4 &lt;= target &lt;= 10^4</code></li>
+</ul>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>对于有序数组，可以使用二分查找的方法查找元素。</p>
+<p>但是这道题中，数组本身不是有序的，进行旋转后只保证了数组的局部是有序的，这还能进行二分查找吗？答案是可以的。</p>
+<p>可以发现的是，我们将数组从中间分开成左右两部分的时候，一定有一部分的数组是有序的。拿示例来看，我们从 6 这个位置分开以后数组变成了 [4, 5, 6] 和 [7, 0, 1, 2] 两个部分，其中左边 [4, 5, 6] 这个部分的数组是有序的，其他也是如此。</p>
+<p>这启示我们可以在常规二分查找的时候查看当前 mid 为分割位置分割出来的两个部分 [l, mid] 和 [mid + 1, r] 哪个部分是有序的，并根据有序的那个部分确定我们该如何改变二分查找的上下界，因为我们能够根据有序的那部分判断出 target 在不在这个部分：</p>
+<p>如果$ [l, mid - 1]$ 是有序数组，且 target 的大小满足$ [\textit{nums}[l],\textit{nums}[mid])$，则我们应该将搜索范围缩小至 $[l, mid - 1]$，否则在$ [mid + 1, r] $中寻找。<br>如果 $[mid, r]$ 是有序数组，且 target 的大小满足 $(\textit{nums}[mid+1],\textit{nums}[r]]$，则我们应该将搜索范围缩小至 $[mid + 1, r]$，否则在 $[l, mid - 1]$ 中寻找。</p>
+<p><img src="/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/33_fig1.png" alt="fig1"></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> length = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>, right = length<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">int</span> mid;</span><br><span class="line">        <span class="keyword">while</span>(right-left&gt;<span class="number">1</span>)&#123;</span><br><span class="line">            mid = (left+right)/<span class="number">2</span>;</span><br><span class="line">            cout&lt;&lt;mid&lt;&lt;left&lt;&lt;right&lt;&lt;endl;</span><br><span class="line">            <span class="comment">//若mid恰好是结果</span></span><br><span class="line">            <span class="keyword">if</span>(nums[mid] == target)&#123;</span><br><span class="line">                <span class="keyword">return</span> mid;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//若nums[mid]&lt;target, 且mid在左半，则结果只可能在右半</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(nums[<span class="number">0</span>]&lt;nums[mid] &amp;&amp; nums[mid] &lt; target)&#123;</span><br><span class="line">                left = mid;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//若nums[mid]&lt;target，且mid在右半</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(nums[<span class="number">0</span>]&gt;nums[mid] &amp;&amp; nums[mid] &lt; target)&#123;</span><br><span class="line">                <span class="comment">//若target大于所有右半，则在左边,否则在右边</span></span><br><span class="line">                <span class="keyword">if</span>(nums[length<span class="number">-1</span>]&lt;target)&#123;</span><br><span class="line">                    right = mid;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    left = mid;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//若nums[mid]&gt;target，且mid在左半</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(nums[<span class="number">0</span>]&lt;nums[mid] &amp;&amp; nums[mid] &gt; target)&#123;</span><br><span class="line">                <span class="comment">//若target小于所有左半，则target在右边，否则在左半</span></span><br><span class="line">                <span class="keyword">if</span>(nums[<span class="number">0</span>]&lt;=target)&#123;</span><br><span class="line">                    right = mid;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    left = mid;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//若nums[mid]&gt;target，且mid在右半,则结果只可能在左半</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(nums[<span class="number">0</span>]&gt;nums[mid] &amp;&amp; nums[mid] &gt; target)&#123;</span><br><span class="line">                right = mid;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(nums[right]==target)&#123;</span><br><span class="line">            <span class="keyword">return</span> right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(nums[left]==target)&#123;</span><br><span class="line">            <span class="keyword">return</span> left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -291,7 +280,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2022/01/15/LintCode-java%EF%BC%9A101-%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/" title="LintCode+java：101-最小路径和">http://example.com/2022/01/15/LintCode-java：101-最小路径和/</a>
+    <a href="http://example.com/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" title="二分查找">http://example.com/2022/05/11/二分查找/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -303,8 +292,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/LintCode/" rel="tag"><i class="fa fa-tag"></i> LintCode</a>
-              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"><i class="fa fa-tag"></i> 动态规划</a>
+              <a href="/tags/c/" rel="tag"><i class="fa fa-tag"></i> c++</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"><i class="fa fa-tag"></i> 二分查找</a>
           </div>
 
         
@@ -313,13 +302,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/01/15/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" rel="prev" title="计网复习：拥塞控制">
-      <i class="fa fa-chevron-left"></i> 计网复习：拥塞控制
+    <a href="/2022/05/10/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B03/" rel="prev" title="今日C++起步小记3">
+      <i class="fa fa-chevron-left"></i> 今日C++起步小记3
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/01/15/LintCode-java%EF%BC%9A872-%E7%BB%88%E6%AD%A2%E8%BF%9B%E7%A8%8B-md/" rel="next" title="LintCode-java：872-终止进程.md">
-      LintCode-java：872-终止进程.md <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -379,7 +365,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">题目：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">解题思路：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%B1%95%E7%A4%BA%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">程序展示：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">1.</span> <span class="nav-text">二分查找</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%A4%8D%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">题目复述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">33. 搜索旋转排序数组</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
