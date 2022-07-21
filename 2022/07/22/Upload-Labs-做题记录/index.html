@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>AFL 模糊测试实验 | FireKnight-HJ</title>
+  <title>Upload Labs 做题记录 | FireKnight-HJ</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -401,14 +401,14 @@
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        AFL 模糊测试实验
+        Upload Labs 做题记录
       </span>
     </div>
     
     
       
         <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> 发表于：2022-06-28 |
+          <i class="fas fa-calendar"></i> 发表于：2022-07-22 |
         </span>
       
 
@@ -432,182 +432,190 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h1 id="AFL-模糊测试实验"><a href="#AFL-模糊测试实验" class="headerlink" title="AFL 模糊测试实验"></a>AFL 模糊测试实验</h1><p>本次实验目标是对 Coreutils 软件集合使用 AFL 进行模糊测试。</p>
-<p>首先需要下载目标程序集（coreutils-9.0.tar.gz）</p>
-<p>下载地址：<a target="_blank" rel="noopener" href="https://ftp.gnu.org/gnu/coreutils/">https://ftp.gnu.org/gnu/coreutils/</a></p>
-<p>当源代码<em>不可</em>用时，fuzzer 为黑盒二进制文件的快速、动态检测提供实验性支持。这是通过运行在鲜为人知的“用户空间仿真”模式下的 QEMU 版本来完成的。</p>
-<h2 id="使用afl-fuzz进行模糊测试"><a href="#使用afl-fuzz进行模糊测试" class="headerlink" title="使用afl-fuzz进行模糊测试"></a>使用afl-fuzz进行模糊测试</h2><p>@@对应的位置就是 testcase_dir 中的 input file 内容该填充到的位置。即调用命令该输入的参数。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./afl-fuzz -i testcase_dir -o findings_dir /path/to/program @@</span><br></pre></td></tr></table></figure>
-<h4 id="AFL的status-screen状态UI概述"><a href="#AFL的status-screen状态UI概述" class="headerlink" title="AFL的status_screen状态UI概述"></a>AFL的status_screen状态UI概述</h4><p><a target="_blank" rel="noopener" href="https://github.com/google/AFL/blob/master/docs/status_screen.txt">https://github.com/google/AFL/blob/master/docs/status_screen.txt</a></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653804941802-16564119443911.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653804941802-16564119443911.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653804941802"></p>
-<h5 id="process-timing"><a href="#process-timing" class="headerlink" title="process timing"></a>process timing</h5><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1652803829999-16564119443912.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1652803829999-16564119443912.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1652803829999"></p>
-<p>四个栏目分别为：</p>
-<p>run time：工具运行总时间</p>
-<p>last new path：自发现最后一条新<strong>路径</strong>以来过了多长时间</p>
-<p>last uniq crash：最后一次出现新的不同的crash<strong>崩溃</strong>以来过了多长时间</p>
-<p>last uniq hang：最后一次 unique 的<strong>挂起</strong>以来过了多长时间</p>
-<h5 id="overall-results"><a href="#overall-results" class="headerlink" title="overall results"></a>overall results</h5><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653804984303-16564119443913.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653804984303-16564119443913.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653804984303"></p>
-<p>cycles done：已完成的循环次数，到目前为止完成的队列通过次数</p>
-<p>total paths：目前为止发现的测试用例（“路径”）的数量</p>
-<p>uniq crashes到目前为止发现的unique 的crash数量</p>
-<h5 id="cycle-progress"><a href="#cycle-progress" class="headerlink" title="cycle progress"></a>cycle progress</h5><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653808011217-16564119443914.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653808011217-16564119443914.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653808011217"></p>
-<p>now processing：告诉你模糊器在当前队列周期中的遍历位置：它显示它当前正在处理的测试用例的 ID，有时显示在第一行的“*”后缀表示当前处理后的路径不是“首选”。</p>
-<p>paths timed out：由于一直超时而选择放弃的输入数量。</p>
-<h5 id="map-coverage"><a href="#map-coverage" class="headerlink" title="map coverage"></a>map coverage</h5><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653808131053-16564119443915.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653808131053-16564119443915.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653808131053"></p>
-<p>提供一些在target二进制文件中embedded的工具检测到的有关于覆盖coverage的信息。</p>
-<p>map density：相比我们最多可以掌控的bitmap数，我们已经命中了多少 branch tuples 。左侧描述current input，右边描述</p>
-<h5 id="Stage-progress"><a href="#Stage-progress" class="headerlink" title="Stage progress"></a>Stage progress</h5><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653834669979-16564119443916.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653834669979-16564119443916.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653834669979"></p>
-<p>这个板块能告知fuzzer目前正处在的阶段. fuzzer的阶段有以下几种:</p>
-<ol>
-<li><code>calibration</code>校验: 在模糊测试前进行的阶段, 检查执行路径以发现异常, 评估基准速度等.</li>
-<li><code>trim L/S</code>: 另一个预准备阶段, 测试用例会被裁剪为同效的最简形式.</li>
-<li><code>bitflip L/S</code>: 比特翻转. 在任意时间翻转L个比特, S个比特的步长遍历输入文件.</li>
-<li><code>arith L/8</code>: 算数操作. fuzzer对<code>8/16/32</code>比特的数值加减某个小整数.</li>
-<li><code>extras</code>: 填充字典项. fuzzer根据是使用用户提供的字典(-x)还是自动创建的字典, 来显示为”user”或”auto”. 如果是覆写数据则是”over”, 插入数据则是”insert”.</li>
-<li><code>havoc</code>: 随机调整. 该阶段会进行包括比特翻转, 使用”随机有趣”证书进行覆写, 块删除, 块复制, 字典等各种操作.</li>
-<li><code>splice</code>: 在任意选择的中点将队列中的两个随机输入拼接在一起.</li>
-<li><code>sync</code>: 只在并行fuzz时出现, 该阶段会同步其他fuzzer的状态信息.</li>
-</ol>
-<p>各种Fuzzing 策略产生的收益</p>
-<h5 id="Path-geometry"><a href="#Path-geometry" class="headerlink" title="Path geometry"></a>Path geometry</h5><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/image-20220529223248762-16564119443917.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/image-20220529223248762-16564119443917.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="image-20220529223248762">    </p>
+        <h1 id="Upload-Labs-做题记录"><a href="#Upload-Labs-做题记录" class="headerlink" title="Upload Labs 做题记录"></a>Upload Labs 做题记录</h1><p>作业</p>
+<h2 id="Pass-01"><a href="#Pass-01" class="headerlink" title="Pass-01"></a>Pass-01</h2><p>尝试上传一个PHP文件，结果弹出结果：“该文件不允许上传，请上传.jpg|.png|.gif类型的文件” 。</p>
+<p>初步判断为JS前端绕过。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1657794763383.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1657794763383.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1657794763383"></p>
+<p>尝试前端绕过，在前端js判断函数中加上可以上传php文件。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1657795028004.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1657795028004.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1657795028004"></p>
+<p><code>p1_hack.php</code> 中的内容如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">	@<span class="keyword">eval</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;pp&#x27;</span>]); </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上传成功：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1657796603388.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1657796603388.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1657796603388"></p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658321247026.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658321247026.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658321247026"></p>
+<p>复制图片地址并用蚁剑进行连接：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658321755301.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658321755301.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658321755301"></p>
+<p>连接成功。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658321704956.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658321704956.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658321704956"></p>
+<h2 id="Pass-02"><a href="#Pass-02" class="headerlink" title="Pass-02"></a>Pass-02</h2><p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658321964748.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658321964748.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658321964748"></p>
+<p>查看源码，发现对可上传的文件类型进行了限制</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322064628.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322064628.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322064628"></p>
+<p>抓包并修改文件类型</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322190238.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322190238.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322190238"></p>
+<p>成功！！</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322236227.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322236227.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322236227"></p>
+<p>同理，使用蚁剑连接。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322411072.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322411072.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322411072"></p>
+<p>成功。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322427457.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322427457.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322427457"></p>
+<h2 id="Pass-03"><a href="#Pass-03" class="headerlink" title="Pass-03"></a>Pass-03</h2><p>不允许使用上传.asp,.aspx,.php,.jsp后缀的文件</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322572870.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322572870.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322572870"></p>
+<p>使用文件后缀名为<code>.php3</code>，成功上传</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322842510.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322842510.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322842510"></p>
+<p>成功连接</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322774663.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322774663.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322774663"></p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322735103.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658322735103.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658322735103"></p>
+<p>(坑：不要用新版！！不要用新版！！！，用旧版PhpStudy没问题</p>
+<p>小皮系统PHPstudy的Apache文件设置默认不支持php3,php5等，得自己修改)</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658326943296.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658326943296.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658326943296"></p>
+<h2 id="Pass-04"><a href="#Pass-04" class="headerlink" title="Pass-04"></a>Pass-04</h2><p>查看源码发现黑名单列表：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (file_exists(UPLOAD_PATH)) &#123; <span class="variable">$deny_ext</span> =<span class="keyword">array</span></span><br><span class="line">(<span class="string">&quot;.php&quot;</span>,<span class="string">&quot;.php5&quot;</span>,<span class="string">&quot;.php4&quot;</span>,<span class="string">&quot;.php3&quot;</span>,<span class="string">&quot;.php2&quot;</span>,<span class="string">&quot;.php1&quot;</span>,<span class="string">&quot;.html&quot;</span>,<span class="string">&quot;.htm&quot;</span>,<span class="string">&quot;.phtml&quot;</span>,<span class="string">&quot;.pht&quot;</span>,<span class="string">&quot;.pHp&quot;</span>,<span class="string">&quot;.pHp5&quot;</span>,<span class="string">&quot;.pHp4&quot;</span>,<span class="string">&quot;.pHp3&quot;</span>,<span class="string">&quot;.pHp2&quot;</span>,<span class="string">&quot;.pHp1&quot;</span>,<span class="string">&quot;.Html&quot;</span>,<span class="string">&quot;.Htm&quot;</span>,<span class="string">&quot;.pHtml&quot;</span>,<span class="string">&quot;.jsp&quot;</span>,<span class="string">&quot;.jspa&quot;</span>,<span class="string">&quot;.jspx&quot;</span>,<span class="string">&quot;.jsw&quot;</span>,<span class="string">&quot;.jsv&quot;</span>,<span class="string">&quot;.jspf&quot;</span>,<span class="string">&quot;.jtml&quot;</span>,<span class="string">&quot;.jSp&quot;</span>,<span class="string">&quot;.jSpx&quot;</span>,<span class="string">&quot;.jSpa&quot;</span>,<span class="string">&quot;.jSw&quot;</span>,<span class="string">&quot;.jSv&quot;</span>,<span class="string">&quot;.jSpf&quot;</span>,<span class="string">&quot;.jHtml&quot;</span>,<span class="string">&quot;.asp&quot;</span>,<span class="string">&quot;.aspx&quot;</span>,<span class="string">&quot;.asa&quot;</span>,<span class="string">&quot;.asax&quot;</span>,<span class="string">&quot;.ascx&quot;</span>,<span class="string">&quot;.ashx&quot;</span>,<span class="string">&quot;.asmx&quot;</span>,<span class="string">&quot;.cer&quot;</span>,<span class="string">&quot;.aSp&quot;</span>,<span class="string">&quot;.aSpx&quot;</span>,<span class="string">&quot;.aSa&quot;</span>,<span class="string">&quot;.aSax&quot;</span>,<span class="string">&quot;.aScx&quot;</span>,<span class="string">&quot;.aShx&quot;</span>,<span class="string">&quot;.aSmx&quot;</span>,<span class="string">&quot;.cEr&quot;</span>,<span class="string">&quot;.sWf&quot;</span>,<span class="string">&quot;.swf&quot;</span>,<span class="string">&quot;.ini&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>尝试上传一个不在黑名单列表里面的文件。</p>
+<p>创建文件：<code>p4_try.htaccess</code>，写入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SetHandler application/x-httpd-php</span><br></pre></td></tr></table></figure>
+<p>htaccess文件：是Apache服务器中的一个配置文件，它负责相关目录下的网页配置。通过htaccess文件，可以帮我们实现：网页301重定向、自定义404错误页面、改变文件扩展名、允许/阻止特定的用户或者目录的访问、禁止目录列表、配置默认文档等功能。</p>
+<p>.htaccess文件生效，需要两个条件</p>
 <ul>
-<li><code>levels</code>: 表示导向型fuzzing过程所到达的路径深度, 路径越深表明该导向的价值越高.</li>
-<li><code>pending</code>: 表示尚未经过任何模糊处理的输入的数量.</li>
-<li><code>pend fav</code>: 表示fuzzer认为队列中可能有趣的输入数量.</li>
-<li><code>own finds</code>: 表示模糊过程发现的新路径数量.</li>
-<li><code>imported</code>: 表示并行fuzz过程中从其他fuzzer中导入的新路径数量.</li>
-<li><code>stability</code>: 表示相同输入在目标程序中产生可变行为的程度, 这可以表明观察到的行为的一致性. 如果该数值较低, 就表明行为的不确定性, AFL也很难区分对输入文件变异带来的影响.</li>
+<li><p>在Apache的配置文件中写上：AllowOverride All</p>
+</li>
+<li><p>Apache要加载mod_Rewrite模块</p>
+</li>
 </ul>
-<h2 id="基于编译器的目标程序插桩"><a href="#基于编译器的目标程序插桩" class="headerlink" title="基于编译器的目标程序插桩"></a>基于编译器的目标程序插桩</h2><p>首先解压 coreutils-9.0.tar.gz 中对应内容。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf coreutils-9.0.tar.gz </span><br></pre></td></tr></table></figure>
-<p>进入<code>coreutils-9.0</code>文件夹，调整configure，将编译器从 gcc 换成 afl-gcc，之后编译文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./configure CC=&quot;afl-gcc&quot;</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
-<p>此时可以看到编译成功：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1652712954790-16564119443918.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1652712954790-16564119443918.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1652712954790"></p>
-<p>之后进入 ./src 文件夹，可以看到：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1652713047707-16564119443919.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1652713047707-16564119443919.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1652713047707"></p>
-<p>生成 coreutils 二进制程序集后，可以看到make 出来的每一个插桩后的二进制均在 coreutils-9.1/src 目录下。</p>
-<h3 id="在input中的各个目录下写入自定义testcase的seed文件"><a href="#在input中的各个目录下写入自定义testcase的seed文件" class="headerlink" title="在input中的各个目录下写入自定义testcase的seed文件"></a>在input中的各个目录下写入自定义testcase的seed文件</h3><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653804027787-165641194439110.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653804027787-165641194439110.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653804027787"></p>
-<p>文件的内容定义基本如下：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653805334471-165641194439111.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653805334471-165641194439111.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653805334471"></p>
-<h4 id="对-cat-指令测试"><a href="#对-cat-指令测试" class="headerlink" title="对 cat 指令测试"></a>对 cat 指令测试</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i input/cat -o output/cat ./cat -A @@</span><br></pre></td></tr></table></figure>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653805128524-165641194439112.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653805128524-165641194439112.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653805128524"></p>
-<h4 id="对-md5sum-指令测试"><a href="#对-md5sum-指令测试" class="headerlink" title="对 md5sum 指令测试"></a>对 md5sum 指令测试</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i input/md5sum/ -o output/md5sum ./md5sum @@</span><br></pre></td></tr></table></figure>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653805484570-165641194439113.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653805484570-165641194439113.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653805484570"></p>
-<h4 id="对base32指令测试"><a href="#对base32指令测试" class="headerlink" title="对base32指令测试"></a>对base32指令测试</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i input/base32/ -o output/base32 ./base32 @@</span><br></pre></td></tr></table></figure>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653805763212-165641194439114.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653805763212-165641194439114.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653805763212"></p>
-<h3 id="在input中新建random文件夹，输入随机的seed"><a href="#在input中新建random文件夹，输入随机的seed" class="headerlink" title="在input中新建random文件夹，输入随机的seed"></a>在input中新建random文件夹，输入随机的seed</h3><p>文件内容如下：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653833497710-165641194439115.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653833497710-165641194439115.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653833497710"></p>
-<p>目录结构如下：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653833789039-16538338245041-165641194439116.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653833789039-16538338245041-165641194439116.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653833789039"></p>
-<p>使用命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -Q -i input/random -o output/md5sum ./md5sum @@</span><br><span class="line"></span><br><span class="line">afl-fuzz -Q -i input/random -o output/base32 ./base32 @@</span><br><span class="line"></span><br><span class="line">afl-fuzz -Q -i input/random -o output/cat ./cat @@</span><br></pre></td></tr></table></figure>
-<h4 id="对-cat-指令测试-1"><a href="#对-cat-指令测试-1" class="headerlink" title="对 cat 指令测试"></a>对 cat 指令测试</h4><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653837016582-165641194439217.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653837016582-165641194439217.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653837016582"></p>
-<h4 id="对-md5sum-指令测试-1"><a href="#对-md5sum-指令测试-1" class="headerlink" title="对 md5sum 指令测试"></a>对 md5sum 指令测试</h4><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653836091451-165641194439218.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653836091451-165641194439218.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653836091451"></p>
-<h4 id="对base32指令测试-1"><a href="#对base32指令测试-1" class="headerlink" title="对base32指令测试"></a>对base32指令测试</h4><p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653836742323-165383683240811-165641194439219.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653836742323-165383683240811-165641194439219.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653836742323"></p>
-<h3 id="结果观察"><a href="#结果观察" class="headerlink" title="结果观察"></a>结果观察</h3><p>在output/cat文件夹下看到的内容如下：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806256086-165641194439220.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806256086-165641194439220.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653806256086"></p>
-<p>同样，在output/md5sum中的内容：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806497601-165641194439221.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806497601-165641194439221.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653806497601"></p>
-<p>我们继续观察queue中的内容，可以看到：</p>
-<p>id\:000000\,orig\:test1</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806669687-165641194439222.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806669687-165641194439222.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653806669687"></p>
-<p>id\:000002\,src\:000000\,op\:havoc\,rep\:16\,+cov</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806745632-165641194439223.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806745632-165641194439223.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653806745632"></p>
-<p>id\:000003\,src\:000000\,op\:havoc\,rep\:2\,+cov</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806792956-165641194439224.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806792956-165641194439224.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653806792956"></p>
-<p>id\:000004\,src\:000000\,op\:havoc\,rep\:64\,+cov</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806829918-165641194439225.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653806829918-165641194439225.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653806829918"></p>
-<p>等等。。</p>
-<p>可以看到 American Fuzzler Lop 工具对输入的seed进行了bit flip，byte flip，havoc等各种操作后生成的发现了新路径的测试文件，这些文件被加入到了queue中。</p>
-<p>在output/base32/fuzzer_stats的目录中可以看到如下内容，它包含了：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653829885716-165641194439226.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653829885716-165641194439226.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653829885716"></p>
-<p>在 plot_data 中的内容如下：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653833994905-165641194439228.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653833994905-165641194439228.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653833994905"></p>
-<p>它包含了afl-plot生成plot需要的统计信息。</p>
-<h3 id="测试过程问题"><a href="#测试过程问题" class="headerlink" title="测试过程问题"></a>测试过程问题</h3><p>开始使用命令进行模糊测试时，发现报错：</p>
-<p>出现问题？？这是怎么回事？</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1652800974168-165641194439227.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1652800974168-165641194439227.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1652800974168"></p>
-<p>查阅资料的解决方案：使用下述指令将core写入系统kernel的core_pattern文件夹中。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> core | sudo tee /proc/sys/kernel/core_pattern</span><br></pre></td></tr></table></figure>
-<p>使用qemu模式时出现问题</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653815901791-165641194439229.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653815901791-165641194439229.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653815901791"></p>
-<p>需要正确安装并将AFL_PATH加入路径中</p>
-<h2 id="基于-AFL-Qemu-的目标程序动态插桩"><a href="#基于-AFL-Qemu-的目标程序动态插桩" class="headerlink" title="基于 AFL-Qemu 的目标程序动态插桩"></a>基于 AFL-Qemu 的目标程序动态插桩</h2><p>使用默认的gcc编译器进行编译</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./configure CC=<span class="string">&quot;gcc&quot;</span></span><br><span class="line">make</span><br></pre></td></tr></table></figure>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653811567125-165641194439230.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653811567125-165641194439230.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653811567125"></p>
-<p>此时的可执行文件未经过插桩操作。</p>
-<h3 id="qemu安装"><a href="#qemu安装" class="headerlink" title="qemu安装"></a>qemu安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd qemu_mode</span><br><span class="line">./build_qemu_support.sh </span><br></pre></td></tr></table></figure>
-<p>注意这里要用python2的环境，自己下载并编译python2，之后在 build_qemu_support.sh 文件中找到对应 ./configure 位置，并将其换成如下内容：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --python=/home/lyq/Downloads/Python-2.7.10/（即：/path/to/python2）</span><br></pre></td></tr></table></figure>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653820956541-165641194439231.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653820956541-165641194439231.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653820956541"></p>
-<p>设置正确的AFL路径</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export AFL_PATH=/home/lyq/AFL-master/ (/PATH/TO/AFL_PROGRAM)</span><br></pre></td></tr></table></figure>
-<h3 id="使用-afl-fuzz-的-Q-选项，对-3-个-coreutils-程序进行-fuzzing"><a href="#使用-afl-fuzz-的-Q-选项，对-3-个-coreutils-程序进行-fuzzing" class="headerlink" title="使用 afl-fuzz 的-Q 选项，对 3 个 coreutils 程序进行 fuzzing"></a>使用 afl-fuzz 的-Q 选项，对 3 个 coreutils 程序进行 fuzzing</h3><h4 id="自定义seed"><a href="#自定义seed" class="headerlink" title="自定义seed"></a>自定义seed</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -Q -i input/md5sum -o output/md5sum ./md5sum @@</span><br><span class="line"></span><br><span class="line">afl-fuzz -Q -i input/base32 -o output/base32 ./base32 @@</span><br><span class="line"></span><br><span class="line">afl-fuzz -Q -i input/cat -o output/cat ./cat @@</span><br></pre></td></tr></table></figure>
-<p>得到结果如下：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653828911896-165641194439232.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653828911896-165641194439232.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653828911896"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653828971495-165641194439233.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653828971495-165641194439233.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653828971495"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653829555332-165641194439234.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653829555332-165641194439234.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653829555332"></p>
-<h4 id="随机生成seed"><a href="#随机生成seed" class="headerlink" title="随机生成seed"></a>随机生成seed</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -Q -i input/random -o output/md5sum ./md5sum @@</span><br><span class="line"></span><br><span class="line">afl-fuzz -Q -i input/random -o output/base32 ./base32 @@</span><br><span class="line"></span><br><span class="line">afl-fuzz -Q -i input/random -o output/cat ./cat @@</span><br></pre></td></tr></table></figure>
-<p>结果如下：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653837169739-165641194439235.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653837169739-165641194439235.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653837169739"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653837273860-165641194439236.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653837273860-165641194439236.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653837273860"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653837427613-165641194439237.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/uTools_1653837427613-165641194439237.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1653837427613"></p>
-<h3 id="问题解答1"><a href="#问题解答1" class="headerlink" title="问题解答1"></a>问题解答1</h3><p><strong>两种输入种子构造方法，对于 fuzzing 结果的影响</strong></p>
-<p>从结果上来看，自定义的seed文件的已发现路径的增长速度确实应该比随机seed快一点，在执行到40秒之后，二者基本上都已达到并稳定在15条路径数左右，这可能会说明自定义的seed文件相对效率更高一点。然而这种现象也可能是由于我们的随机testcase的内容相比自定义文件的内容显著增加了很多，这一原因造成的。针对我选取的这三条指令，我认为input中的testcase文件是否随机选取对fuzz程序的运行效率没有很大影响。</p>
-<p><strong><em>使用 afl-plot 生成 md5sum 命令分别在自定义seed和随机seed下的模糊测试统计图：</em></strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-plot output/md5sum ./graph</span><br></pre></td></tr></table></figure>
+<p>原理：他没有过滤 .htaccess后缀，我们可以构建一个htaccess配置文件，让所有格式文件都解析为php，然后再上传图片马（只要后缀是允许的，随便都可以）就会被解析了</p>
+<p>上传<code>p4_try.htaccess</code>，再上传图片马<code>p4_hack.jpg</code>，成功。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658323364911.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658323364911.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658323364911"></p>
+<p>尝试蚁剑连接：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658323340894.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658323340894.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658323340894"></p>
+<p>成功</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658323387900.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658323387900.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658323387900"></p>
+<h2 id="Pass-05"><a href="#Pass-05" class="headerlink" title="Pass-05"></a>Pass-05</h2><p>此时的黑名单更全，限制更多。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658323621734.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658323621734.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658323621734"></p>
+<p>上传时抓包，修改上传文件名：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658324730124.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658324730124.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658324730124"></p>
+<p>上传成功，使用蚁剑连接：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658325014943.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658325014943.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658325014943"></p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658325091591.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658325091591.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658325091591"></p>
+<h2 id="Pass-06"><a href="#Pass-06" class="headerlink" title="Pass-06"></a>Pass-06</h2><p>源码忽略了大小写限制</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658325399216.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658325399216.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658325399216"></p>
+<p>定义文件名：<code>p6_hack.PHP</code>，成功上传。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658325362900.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658325362900.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658325362900"></p>
+<p>利用蚁剑连接成功。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658329558376.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658329558376.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658329558376"></p>
+<h2 id="Pass-07"><a href="#Pass-07" class="headerlink" title="Pass-07"></a>Pass-07</h2><p>该题目没有设置限制首位去空的情况</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658329892930.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658329892930.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658329892930"></p>
+<p>尝试抓包，修改文件名，尝试绕过过滤。上传成功，并得到返回路径</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658329866542.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658329866542.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658329866542"></p>
+<p>可以看到：<code>&quot;../upload/202207201513145429.php &quot;</code></p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330068717.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330068717.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330068717"></p>
+<p>使用蚁剑连接：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330163600.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330163600.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330163600"></p>
+<h2 id="Pass-08"><a href="#Pass-08" class="headerlink" title="Pass-08"></a>Pass-08</h2><p>查看源码，发现该题目没有限制文件末尾点的情况</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330219434.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330219434.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330219434"></p>
+<p>尝试绕过：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330327867.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330327867.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330327867"></p>
+<p>上传成功：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330356321.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330356321.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330356321"></p>
+<p>蚁剑连接结果如下：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330390746.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330390746.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330390746"></p>
+<h2 id="Pass-09"><a href="#Pass-09" class="headerlink" title="Pass-09"></a>Pass-09</h2><p>查看源码，发现改题目忽略了字符串::$DATA限制</p>
+<blockquote>
+<p>在php+windows的情况下：如果文件名+”::$DATA”会把::$DATA之后的数据当成文件流处理,不会检测后缀名.且保持”::$DATA”之前的文件名。利用windows特性，可在后缀名中加” ::$DATA”绕过</p>
+</blockquote>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330593738.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330593738.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330593738"></p>
+<p>抓包并修改：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330726557.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330726557.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330726557"></p>
+<p>上传成功：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330778889.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330778889.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330778889"></p>
+<p>使用蚁剑连接：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330858626.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330858626.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330858626"></p>
+<p>连接成功。</p>
+<h2 id="Pass-10"><a href="#Pass-10" class="headerlink" title="Pass-10"></a>Pass-10</h2><p>抓包修改：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658331191913.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658331191913.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658331191913"></p>
+<p>使用蚁剑连接：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658331260766.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658331260766.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658331260766"></p>
+<h2 id="Pass-11"><a href="#Pass-11" class="headerlink" title="Pass-11"></a><strong>Pass-11</strong></h2><p>尝试上传<code>p11_hack_try.php</code>文件</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658331554737.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658331554737.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658331554737"></p>
+<p>成功，但是得到的文件连接为：<code>http://127.0.0.1/upload/p11_hack_try.</code>，无法利用。</p>
+<p>查看源码，发现题目使用了替换函数，将php文件替换为空</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330926251.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658330926251.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658330926251"></p>
+<p>使用文件名：<code>p11_hack.pphphp</code>，成功绕过，此时文件在服务器端文件名为：</p>
+<p><code>http://127.0.0.1/upload/p11_hack.php</code>，使用蚁剑连接</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658331735899.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658331735899.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658331735899"></p>
+<h2 id="Pass-12"><a href="#Pass-12" class="headerlink" title="Pass-12"></a>Pass-12</h2><p><strong>%00截断</strong><br>下面是用 URL 编码形式表示的 ASCII 字符</p>
+<p>在url中%00表示ascll码中的0 ，而ascii中0作为特殊字符保留，表示字符串结束，所以当url中出现%00时就会认为读取已结束</p>
+<p>比如：</p>
+<p><a target="_blank" rel="noopener" href="https://mp.csdn.net/upfiles/?filename=test.txt">https://mp.csdn.net/upfiles/?filename=test.txt</a>                                此时输出的是test.txt</p>
+<p>加上%00</p>
+<p><a target="_blank" rel="noopener" href="https://mp.csdn.net/upfiles/?filename=test.php%00.txt">https://mp.csdn.net/upfiles/?filename=test.php%00.txt</a>                   此时输出的是test.php</p>
+<p>就绕过了后缀限制，可以上传webshell啦。</p>
+<p><strong>php 00截断</strong></p>
 <ul>
-<li>自定义seed：</li>
+<li><p>php版本要小于5.3.4，5.3.4及以上已经修复该问题</p>
+</li>
+<li><p>magic_quotes_gpc需要为OFF状态</p>
+</li>
 </ul>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/exec_speed-16538358345035-165641194439238.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/exec_speed-16538358345035-165641194439238.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="exec_speed"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/high_freq-16538358345047-165641194439239.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/high_freq-16538358345047-165641194439239.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="high_freq"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/low_freq-16538358345046-165641194439240.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/low_freq-16538358345046-165641194439240.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="low_freq"></p>
+<p>include和require一般在网站内部读取文件</p>
+<p>file_get_contents一般用于打开一个url或一个文件</p>
+<p>file_exists判断文件是否存在</p>
+<hr>
 <ul>
-<li>随机seed：</li>
+<li>注意：需要将 php 版本调节到5.2.17，并且打开 php.ini 将 magic_quotes_gpc 修改为 Off ，保存，重启 php。</li>
 </ul>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/exec_speed-16538362602228-165641194439241.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/exec_speed-16538362602228-165641194439241.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="exec_speed"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/high_freq-165383626022210-165641194439342.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/high_freq-165383626022210-165641194439342.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="high_freq"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/low_freq-16538362602229-165641194439343.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/low_freq-16538362602229-165641194439343.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="low_freq"></p>
-<h3 id="问题解答2"><a href="#问题解答2" class="headerlink" title="问题解答2"></a>问题解答2</h3><p><strong>基于编译插桩的 fuzzing 与基于 Qemu 动态插桩的 fuzzing，从基本原理和实验效果两方面的差异</strong></p>
-<p>AFL同时支持的两种Fuzz模式如下：</p>
-<ol>
-<li>有源码模式</li>
-<li>无源码模式（afl-qemu）</li>
-</ol>
-<p>有源码模式依赖于对源码的重新编译，从而进行插桩。</p>
-<p>无源码模式的fuzz依赖于qemu虚拟化。在Fuzzing的对象是无源码的二进制程序时，我们无法通过编译时插桩来插入forkserver以及用于收集代码信息的插桩信息，使用QEMU模式可以实现二进制程序的动态插桩，收集代码覆盖率。</p>
-<p>qemu 在执行一个程序时，从被执行程序的入口点开始对基本块翻译并执行，为了提升效率，qemu会把翻译出来的基本块存放到 cache 中，当 qemu 要执行一个基本块时首先判断基本块是否在 cache 中，如果在 cache 中则直接执行基本块，否则会翻译基本块并执行。</p>
-<p>AFL 的 qemu 模式会在准备执行基本块的和准备翻译基本块的前面增加一些代码，在每次执行一个基本块前调用 AFL_QEMU_CPU_SNIPPET2 来和 afl 通信。如果当前执行的基本块是 afl_entry_point （即目标程序的入口点），就设置好与 afl 通信的命名管道和共享内存并初始化 fork server ，然后通过 afl_maybe_log 往共享内存中设置覆盖率信息。统计覆盖率的方式和 afl 的方式一样。</p>
-<p>简单来说，AFL的Qemu模式就是过程中插桩，每次翻译基本块前调用 <code>afl_maybe_log</code> 往 <code>afl-fuzz</code> 同步覆盖率信息，这种做法会造成程序执行中很大的额外开销，执行速度会明显减慢。同时依赖于Qemu的路径覆盖率相比从源码编译过程中直接进行提前进行插桩的方式来讲路径覆盖程度也会更低。</p>
-<p><strong><em>使用 afl-plot 生成 md5sum 命令分别在插桩模式和qemu模式下的模糊测试统计图：</em></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-plot output/md5sum ./graph</span><br></pre></td></tr></table></figure>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658332947803.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658332947803.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658332947803"></p>
+<p>蚁剑连接：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333088765.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333088765.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658333088765"></p>
+<h2 id="Pass-13"><a href="#Pass-13" class="headerlink" title="Pass-13"></a>Pass-13</h2><p>查看源码，发现和上一关一样，只是传参的方式变成了POST,尝试使用%00截断绕过，由于无法自行解码所以我们需要在 hex 中找到相对应的位置将数字修改为00</p>
+<p>需要注意的是两个截断有点区别，通过get方式是在url的参数中添加%00。这是因为%00通过get方式传递到服务器会被自动解码，所以就变成了ascii码中数值0对应的那个字符（null），这才能达到截断的目的。</p>
+<p>但是如果是通过post的话，加入%00不会别服务器解码，只会原样被参数变量接收。所以这里要通过修改post数据的十六进制来达到截断的目的。</p>
+<p>抓包，找到post参数save_path对应地方：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333568947.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333568947.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658333568947"></p>
+<p>使用hex，轻松定位到我们写aaaaaaa的地方</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333654813.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333654813.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658333654813"></p>
+<p>将20 (space) 改为00，造成截断。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333684985.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333684985.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658333684985"></p>
+<p>此时空格没了</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333742457.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333742457.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658333742457"></p>
+<p>send之后：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333837776.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333837776.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658333837776"></p>
+<p>连接尝试：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333812001.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658333812001.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658333812001"></p>
+<p>成功！！！</p>
+<h2 id="Pass-14"><a href="#Pass-14" class="headerlink" title="Pass-14"></a>Pass-14</h2><ul>
+<li>方案1：</li>
+</ul>
+<p>图片马制作：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658335286153.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658335286153.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658335286153"></p>
+<p>上传成功：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658335432622.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658335432622.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658335432622"></p>
+<p>本pass检查图标内容开头2个字节！</p>
+<p>根据提示：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658335783748.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658335783748.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658335783748"></p>
+<p>使用文件包含漏洞访问该图片并且使用蚁剑连接</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658336007784.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658336007784.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658336007784"></p>
 <ul>
-<li>插桩模式下结果如下：</li>
+<li>方案2：</li>
 </ul>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/exec_speed-16538355782682-165641194439344.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/exec_speed-16538355782682-165641194439344.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="exec_speed"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/low_freq-16538357621544-165641194439345.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/low_freq-16538357621544-165641194439345.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="low_freq"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/high_freq-16538355821203-165641194439346.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/high_freq-16538355821203-165641194439346.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="high_freq"></p>
-<ul>
-<li>Qemu模式下结果如下：</li>
-</ul>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/low_freq-165641194439347.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/low_freq-165641194439347.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="low_freq"></p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/high_freq-165641194439348.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/high_freq-165641194439348.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="high_freq"></p>
-<p>执行速度：</p>
-<p><img src="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/exec_speed-165641194439349.png" class="lazyload placeholder" data-srcset="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/exec_speed-165641194439349.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="exec_speed"></p>
-<p>从图中可以看到插桩模式下的path发现速度，队列循环的执行速度都远大于qemu模式，可见Qemu模式相对于直接在编译时插桩的模糊测试计算成本是相对大了很多的，这与我们的推测是相同的。</p>
+<p>观察代码可以看到实际上程序只是检查了前两个字节的内容，我们只要保证前两个字节是正确的。</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658337200693.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658337200693.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658337200693"></p>
+<p>上传成功后，利用文件包含漏洞访问：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658337118434.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658337118434.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658337118434"></p>
+<p>蚁剑连接：</p>
+<p><img src="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658337289452.png" class="lazyload placeholder" data-srcset="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/uTools_1658337289452.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1658337289452"></p>
+<h2 id="Pass-15"><a href="#Pass-15" class="headerlink" title="Pass-15"></a>Pass-15</h2><p>本题用getimagesize函数判断文件类型。</p>
+<p>使用14的方案1上传图片马即可，因为方案1是完整文件，检测image的size是可以通过的。</p>
 
       </div>
       <div class="post-tags-categories">
         
         <div class="tags">
           
-            <a href="/tags/AFL/" class="">
-              AFL
+            <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" class="">
+              渗透测试
             </a>
           
-            <a href="/tags/Fuzz/" class="">
-              Fuzz
+            <a href="/tags/CTF/" class="">
+              CTF
             </a>
           
         </div>
@@ -621,7 +629,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>文章链接:  </strong>
-    <a href="/2022/06/28/AFL-模糊测试实验/" target="_blank" title="AFL 模糊测试实验">http://example.com/2022/06/28/AFL-模糊测试实验/</a>
+    <a href="/2022/07/22/Upload-Labs-做题记录/" target="_blank" title="Upload Labs 做题记录">http://example.com/2022/07/22/Upload-Labs-做题记录/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明:   </strong>
@@ -639,41 +647,22 @@
 
 
 
-  
-  <div class="post-nav-prev post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/rand4.jpg" class="lazyload placeholder" data-srcset="/medias/rand4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-    </div>
-    <a href="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/" class="post-nav-link">
-      <div class="title">
-        <i class="fas fa-angle-left"></i> 上一篇:
-        <div class="title-text">Upload Labs 做题记录</div>
-      </div>
-      
-      <!-- <div class="content">
-        Upload Labs 做题记录作业
-Pass-01尝试上传一个PHP文件，结果弹出结果：“该文件不允许上传，请上传.j
-      </div> -->
-    </a>
-  </div>
-
 
 
   
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/rand13.jpg" class="lazyload placeholder" data-srcset="/medias/rand13.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/rand4.jpg" class="lazyload placeholder" data-srcset="/medias/rand4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
-    <a href="/2022/05/12/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-nav-link">
+    <a href="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/" class="post-nav-link">
       <div class="title">
         下一篇: <i class="fas fa-angle-right"></i>
-        <div class="title-text">二叉树的序列化与反序列化</div>
+        <div class="title-text">AFL 模糊测试实验</div>
       </div>
       <!-- <div class="content">
-        二叉树的序列化与反序列化
-leetcode 297 二叉树的序列化与反序列化297. 二叉树的序列化与反序列化序列化是将
+        AFL 模糊测试实验本次实验目标是对 Coreutils 软件集合使用 AFL 进行模糊测试。
+首先需要下载目标程序集（
       </div> -->
     </a>
   </div>
