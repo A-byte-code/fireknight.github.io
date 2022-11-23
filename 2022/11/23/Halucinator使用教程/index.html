@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html>
+  <!-- meta/link... -->
+  
+
+
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+  <title>Halucinator使用教程 | FireKnight-HJ</title>
+
+  <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
+  <link href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/js/swiper/swiper@5.4.1.min.css" rel="stylesheet">
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/animate.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/shareJs/share.min.css">
+
+  
+  <style>
+        @media (max-width: 992px) {
+            #waifu {
+                display: none;
+            }
+        }
+    </style>
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+    
+
+    <!-- import link -->
+    
+        
+            
+        
+            
+        
+    
+    <!-- import script -->
+    
+        
+            
+        
+            
+        
+    
+
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="FireKnight-HJ" type="application/atom+xml">
+</head>
+
+  
+  <!-- 依赖于jquery和vue -->
+  
+    
+<script src="https://unpkg.com/jquery@3.5.1/dist/jquery.min.js"></script>
+
+  
+
+  
+    
+<script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
+
+  
+  
+  <body>
+    <!-- 预加载动画 -->
+    <!-- 页面预加载动画 -->
+
+<div id='loader'>
+  <link rel="stylesheet" href="/js/loaded/index.css" >
+  <div class="loading-left-bg"></div>
+  <div class="loading-right-bg"></div>
+  <div class="spinner-box">
+    <div class="configure-border-1">
+      <div class="configure-core"></div>
+    </div>
+    <div class="configure-border-2">
+      <div class="configure-core"></div>
+    </div>
+    <div class="loading-word">加载中...</div>
+  </div>
+</div>
+
+<script>
+  var endLoading = function () {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loader').classList.add("loading");
+  }
+  window.addEventListener('DOMContentLoaded',endLoading);
+  
+</script>
+
+    
+    <!-- 判断是否为暗黑风格 -->
+    <!-- 判断是否为黑夜模式 -->
+<script>
+  let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+
+  if (isDark) {
+    $(document.body).addClass('darkModel');
+  }
+</script>
+
+    <!-- 需要在上面加载的js -->
+    <script>
+  function loadScript(src, cb) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+
+  //https://github.com/filamentgroup/loadCSS
+  var loadCSS = function (href, before, media, attributes) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  };
+
+</script> 
+
+<!-- 轮播图所需要的js -->
+<script src="/js/swiper/swiper.min.js"></script>
+<script src="/js/swiper/vue-awesome-swiper.js"></script>
+<script src="/js/swiper/swiper.animate1.0.3.min.js"></script>
+
+<script type="text/javascript">
+  Vue.use(window.VueAwesomeSwiper)
+</script>
+
+
+  <script src="/js/vue-typed-js/index.js"></script>
+
+
+<!-- 首页的公告滚动插件的js需要重新加载 -->
+<script src="/js/vue-seamless-scroll/index.js"></script>
+
+<!-- 打字机效果js -->
+<script src="https://unpkg.com/typed.js@2.0.11"></script>
+
+
+    <div id="safearea">
+      <main class="main" id="pjax-container">
+        <!-- 头部导航 -->
+        
+<header class="header   " 
+  id="navHeader"
+  style="position: fixed;
+  left: 0; top: 0; z-index: 10;width: 100%;"
+>
+  <div class="header-content">
+    <div class="bars">
+      <div id="appDrawer" class="sidebar-image">
+  <div class="drawer-box-icon">
+    <i class="fas fa-bars" aria-hidden="true" @click="showDialogDrawer"></i>
+  </div>
+  
+  <transition name="fade">
+    <div class="drawer-box_mask" v-cloak style="display: none;" v-show="visible" @click.self="cancelDialogDrawer">
+    </div>
+  </transition>
+  <div class="drawer-box" :class="{'active': visible}">
+    <div class="drawer-box-head bg-color">
+      <img class="drawer-box-head_logo lazyload placeholder" src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+      <h3 class="drawer-box-head_title">FireKnight-HJ</h3>
+      <h5 class="drawer-box-head_desc">fireknight-hJ的博客</h5>
+    </div>
+    
+    <div class="drawer-box-content">
+      <ul class="drawer-box-content_menu">
+        
+        
+          <li class="drawer-box-content_item">
+            <a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo">
+              <i class="fas fa-github" aria-hidden="true"></i>
+              <span>Github</span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDrawer',
+    data: {
+      visible: false,
+      top: 0,
+      openArr: [],
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      isOpen(index) {
+        if (this.openArr.includes(index)) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      openOrCloseMenu(curIndex) {
+        const index = this.openArr.indexOf(curIndex);
+        if (index !== -1) {
+          this.openArr.splice(index, 1);
+        } else {
+          this.openArr.push(curIndex);
+        }
+      },
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'width: 100%; height: 100%;overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      }
+    },
+    created() {}
+  })
+</script>
+
+    </div>
+    <div class="blog-title" id="author-avatar">
+      
+        <div class="avatar">
+          <img src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+        </div>
+      
+      <a href="/" class="logo">FireKnight-HJ</a>
+    </div>
+    <nav class="navbar">
+      <ul class="menu">
+        
+      </ul>
+      
+      
+        <div id="appSearch">
+  <div class="search"  @click="showDialog()"><i class="fas fa-search" aria-hidden="true"></i></div>
+  <transition name="fade">
+    <div class="message-box_wrapper" style="display: none;" v-cloak v-show="dialogVisible" @click.self="cancelDialogVisible()">
+      <div class="message-box animated bounceInDown">
+        <h2>
+          <span>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <span class="title">本地搜索</span>
+          </span>
+          <i class="fas fa-times close" pointer style="float:right;" aria-hidden="true" @click.self="cancelDialogVisible()"></i>
+        </h2>
+        <form class="site-search-form">
+          <input type="text"
+            placeholder="请输入关键字"
+            id="local-search-input" 
+            @click="getSearchFile()"
+            class="st-search-input"
+            v-model="searchInput"
+          />
+        </form>
+        <div class="result-wrapper">
+          <div id="local-search-result" class="local-search-result-cls"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+<script src="/js/local_search.js"></script>
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appSearch',
+    data: {
+      dialogVisible: false,
+      searchInput: '',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+      window.addEventListener('pjax:complete', () => {
+        this.cancelDialogVisible();
+      })
+    },
+    methods: {
+      showDialog() {
+        this.dialogVisible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'overflow: hidden;';
+      },
+      getSearchFile() {
+        if (!this.searchInput) {
+          getSearchFile("/search.xml");
+        }
+      },
+      cancelDialogVisible() {
+        this.dialogVisible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+    },
+    created() {}
+  })
+</script>
+<!-- 解决刷新页面闪烁问题，可以在元素上添加display: none, 或者用vue.extend方法，详情：https://blog.csdn.net/qq_31393401/article/details/81017912 -->
+<!-- 下面是搜索基本写法 -->
+<!-- <script type="text/javascript" id="local.search.active">
+  var inputArea = document.querySelector("#local-search-input");
+  inputArea.onclick   = function(){ getSearchFile(); this.onclick = null }
+  inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
+</script> -->
+
+      
+
+    </nav>
+  </div>
+  
+    <a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo" class="github-corner color-primary" aria-label="View source on GitHub"><svg width="60" height="60" viewBox="0 0 250 250" style="fill:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+  
+  
+</header>
+        <!-- 内容区域 -->
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/rand7.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        Halucinator使用教程
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> 发表于：2022-11-23 |
+        </span>
+      
+
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="post-detail-content row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本教程假设您已经在Ubuntu18.04上安装了HALucinator，并且位于名为halucinator的虚拟环境中，并且源代码位于您的home目录中（例如~/）。有关设置的说明，请参阅主存储库自述文件。</p>
+<p>它还使用了Ghidra9.1.2，我们已经将它放在了~/ghidra_9.1.2中。它可以位于任何位置，但您必须调整路径。可从以下网址获得：<a target="_blank" rel="noopener" href="https://ghidra-sre.org/。">https://ghidra-sre.org/。</a></p>
+<p>在整个教程中我们还使用visualstudio代码。您可以使用此编辑器或首选编辑器。</p>
+<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><p>本教程介绍了HALucinator的工作原理，以及如何实现自己的组件以实现固件的重新托管。如果您实现了支持新抽象层的组件，我们将很乐意接受拉取请求。</p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>HALucinator在仿真器中重新托管固件，以消除对硬件执行固件测试的需要。它使用一种称为高级仿真（HLE）的方法来实现这一点。通过使用HLE而不是试图使仿真器与硬件完美匹配，我们确定了固件中使用的抽象，并将其替换为提供足够功能的高级模型。</p>
+<p>例如，<strong>考虑用于串行通信的UART</strong>。在物理系统中，固件将通过阅读和写入一系列存储器映射寄存器来与其通信。每个寄存器和其中的位都有特定的作用，如设置时钟源、时钟分频器、指示数据可用、提供数据、写入数据等。如果我们<strong>想仿真UART，就必须了解这些寄存器的每个位的作用，并实现它和连接它们的状态机</strong>。考虑到大量不同的微控制器，并且<strong>大多数微控制器的UART实现方式各不相同，大规模仿真成为一个令人生畏的问题</strong>。</p>
+<p>这对于开发者也是一个挑战，因此制造商提供和/或开发者编写硬件抽象库（HAL）来简化仿真过程。您可以将这些HAL视为<strong>裸机系统的驱动程序函数</strong>。HAL<strong>提供HAL_UART_Transmit等功能</strong>，可<strong>执行UART寄存器发送数据所需的所有交互</strong>。使用HLE而不是实现UART来传输数据，我们<strong>只需拦截HAL_UART_Transmit函数的执行，读出数据，然后从函数返回而不执行它</strong>。然后我们管理并纠正任何状态，<strong>使其看起来像是正确执行了函数</strong>（或不正确地执行，如果这是我们想要的）。对于其他外围设备，我们执行相同的操作。这不仅更容易做到，而且可扩展性更好，因为<strong>制造商对整个设备系列使用相同的HAL</strong>。例如，STMicroelectronics提供了一个涵盖其所有ARMCortex-M器件的HAL。有关HALucinator概念的更多详细信息，请参阅我们的USENIXSecurity2020白皮书<a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity20/presentation/clements。">https://www.usenix.org/conference/usenixsecurity20/presentation/clements。</a></p>
+<h3 id="HALucinator内部构成"><a href="#HALucinator内部构成" class="headerlink" title="HALucinator内部构成"></a>HALucinator内部构成</h3><p>给出了HLE的概述，让我们来看看HALucinator的内部。</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/image-20221121163139366.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/image-20221121163139366.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="image-20221121163139366"></p>
+<p>HALucinator<strong>获取一个配置文件</strong>，用于设置固件的重新托管。</p>
+<p>配置文件指定：</p>
+<p>该架构的仿真器HALucinator采取配置文件，设置重新托管的固件。配置文件指定：</p>
+<ul>
+<li><p>仿真器应使用的架构（目前仅限ARMCortex-m0/m3和ARMv5）</p>
+</li>
+<li><p>开始执行的入口点</p>
+</li>
+<li><p>固件及其在仿真器中的位置</p>
+</li>
+<li><p>仿真器要使用的内存布局</p>
+</li>
+<li><p>要截取的函数以及如何处理它们</p>
+</li>
+</ul>
+<p>使用这个配置文件，HALucinator<strong>启动仿真器（QEMU）并将GDB连接到它</strong>。然后它<strong>使用GDB在所有要拦截的函数的位置设置断点（BP）</strong>，并<strong>注册一个BP处理程序，当断点命中时执行</strong>。BP处理程序从模拟器中读取/写入数据，并管理状态，使其看起来像是我们希望执行的函数。然后，它返回，并且仿真固件的执行继续，就像函数已执行一样。<strong>BP处理器利用实现外围设备的通用行为的外围设备模型</strong>（例如，发送以太网帧、读/写串行数据等）。</p>
+<p>回到UART示例，所有UART都发送/接收数据，但<strong>不同UART的HAL功能不同</strong>。我们<strong>在外设模型中实现了一次UART的数据发送和接收</strong>。BP<strong>处理程序处理HAL函数中的差异</strong>，并负责从模拟器中提取数据并将其传递给外围模型。然后，<strong>外围模块与外围服务器通信，外围服务器发送和接收来自外部设备的数据</strong>。这使得能够<strong>从一个点控制所有IO，并以灵活的方式进行控制</strong>。</p>
+<p><em>注：外围服务器在USENIXSecurity2020白皮书中称为IO服务器。在代码中，外围设备服务器是最常用的，因此这是本教程中使用的名称。</em></p>
+<p>在整个过程中，HALucinator<strong>使用Avatar2来控制许多不同组件的执行</strong>。HALucinator还可以使用Avatar2的外设，它提供了一种在MMIO寄存器级别实现外设的方法。然而，我们尽量不这样做，因为一般来说HLE更容易和更可扩展。</p>
+<p>现在让我们运行一个示例：2_run_uart_example</p>
+<h2 id="在UART上运行HALucinator示例"><a href="#在UART上运行HALucinator示例" class="headerlink" title="在UART上运行HALucinator示例"></a>在UART上运行HALucinator示例</h2><p>现在让我们运行HALucinator对于第一个示例，我们将<strong>运行一个简单的二进制文件</strong>，该文件<strong>通过UART发送几条消息，然后等待通过UART发送回10个字符</strong>。然后，<strong>二进制文件将这些字符回送，打印另一条消息，并进入无限循环</strong>。这与HALucinator的自述文件中的示例相同，位于<code>~/halucinator/test/STM32/example</code>中。除非另有指定，否则所有命令都应在此处运行。我们将在本教程中使用此示例固件。</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669021464722.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669021464722.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="~/halucinator/test/STM32/example中的内容"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*Bufferusedfortransmission*/</span></span><br><span class="line">uint8_taTxStartMessage[]=<span class="string">&quot;\n\r****UART-HyperterminalcommunicationbasedonIT****\n\rEnter10charactersusingkeyboard:\n\r&quot;</span>;</span><br><span class="line">uint8_taTxEndMessage[]=<span class="string">&quot;\n\rExampleFinished\n\r&quot;</span>;</span><br><span class="line"><span class="comment">/*Bufferusedforreception*/</span></span><br><span class="line">uint8_taRxBuffer[RXBUFFERSIZE];</span><br><span class="line"></span><br><span class="line">intmain(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">HAL_Init();</span><br><span class="line"></span><br><span class="line">SystemClock_Config();</span><br><span class="line"></span><br><span class="line"><span class="comment">/*Configureleds*/</span></span><br><span class="line">BSP_LED_Init(LED1);</span><br><span class="line">BSP_LED_Init(LED2);</span><br><span class="line">BSP_LED_Init(LED3);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*##-1-ConfiguretheUARTperipheral######################################*/</span></span><br><span class="line">UartHandle.Instance=USARTx;</span><br><span class="line"></span><br><span class="line">UartHandle.Init.BaudRate=<span class="number">9600</span>;	<span class="comment">//波特率9600</span></span><br><span class="line">UartHandle.Init.WordLength=UART_WORDLENGTH_8B;	<span class="comment">//字长8bit</span></span><br><span class="line">UartHandle.Init.StopBits=UART_STOPBITS_1;		<span class="comment">//</span></span><br><span class="line">UartHandle.Init.Parity=UART_PARITY_ODD;		<span class="comment">//奇偶性</span></span><br><span class="line">UartHandle.Init.HwFlowCtl=UART_HWCONTROL_NONE;	<span class="comment">//</span></span><br><span class="line">UartHandle.Init.Mode=UART_MODE_TX_RX;</span><br><span class="line">UartHandle.Init.OverSampling=UART_OVERSAMPLING_16;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(HAL_UART_Init(&amp;UartHandle)!=HAL_OK)</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">/*InitializationError*/</span></span><br><span class="line">Error_Handler();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*##-2-Startthetransmissionprocess#####################################*/</span></span><br><span class="line"><span class="keyword">if</span>(HAL_UART_Transmit_IT(&amp;UartHandle,(<span class="keyword">uint8_t</span>*)aTxStartMessage,TXSTARTMESSAGESIZE)!=HAL_OK)</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">/*Transfererrorintransmissionprocess*/</span></span><br><span class="line">Error_Handler();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*##-3-PutUARTperipheralinreceptionprocess###########################*/</span></span><br><span class="line"><span class="keyword">if</span>(HAL_UART_Receive_IT(&amp;UartHandle,(<span class="keyword">uint8_t</span>*)aRxBuffer,RXBUFFERSIZE)!=HAL_OK)</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">/*Transfererrorinreceptionprocess*/</span></span><br><span class="line">Error_Handler();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*##-4-Waitfortheendofthetransfer###################################*/</span></span><br><span class="line"><span class="keyword">while</span>(HAL_UART_GetState(&amp;UartHandle)!=HAL_UART_STATE_READY)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*##-5-SendthereceivedBuffer###########################################*/</span></span><br><span class="line"><span class="keyword">if</span>(HAL_UART_Transmit_IT(&amp;UartHandle,(<span class="keyword">uint8_t</span>*)aRxBuffer,RXBUFFERSIZE)!=HAL_OK)</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">/*Transfererrorintransmissionprocess*/</span></span><br><span class="line">Error_Handler();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*##-6-Waitfortheendofthetransfer###################################*/</span></span><br><span class="line"><span class="keyword">while</span>(HAL_UART_GetState(&amp;UartHandle)!=HAL_UART_STATE_READY)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*##-7-SendtheEndMessage###############################################*/</span></span><br><span class="line"><span class="keyword">if</span>(HAL_UART_Transmit_IT(&amp;UartHandle,(<span class="keyword">uint8_t</span>*)aTxEndMessage,TXENDMESSAGESIZE)!=HAL_OK)</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">/*TurnLED3on:Transfererrorintransmissionprocess*/</span></span><br><span class="line">BSP_LED_On(LED3);</span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*##-8-Waitfortheendofthetransfer###################################*/</span></span><br><span class="line"><span class="keyword">while</span>(HAL_UART_GetState(&amp;UartHandle)!=HAL_UART_STATE_READY)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*Infiniteloop*/</span></span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">staticvoidError_Handler(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">/*TurnLED3on*/</span></span><br><span class="line">BSP_LED_On(LED3);</span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是想要理解main的话<strong>最相关的代码部分</strong>。您会注意到<strong>它发送TxStartMessage</strong>，然后将RXBUFFERSIZE字符读入RxBuffer，<strong>再将其从UART写回，然后写入TxEndMessage</strong>。如果在<strong>任何时候出现错误，它将调用Error_Handler并打开LED3</strong>。</p>
+<h3 id="启动UART应用程序"><a href="#启动UART应用程序" class="headerlink" title="启动UART应用程序"></a>启动UART应用程序</h3><p>要运行该示例，我们需要两个终端，<strong>一个用于运行UART外部设备，该设备从/向HALucinator接收和发送字符，另一个用于执行HALucinator中的固件</strong>。</p>
+<p>打开终端并启动UART外部设备。此应用程序使用<code>-i</code>选项提供的id向外设服务器订阅UART消息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">workon halucinator           <span class="comment"># Activates the virtual environment</span></span><br><span class="line"><span class="built_in">cd</span> ~/halucinator/<span class="built_in">test</span>/STM32/example</span><br><span class="line">hal_dev_uart -i=1073811456   <span class="comment"># Start the uart dev for UART data with id -i</span></span><br></pre></td></tr></table></figure>
+<h3 id="在HALucinator中运行固件"><a href="#在HALucinator中运行固件" class="headerlink" title="在HALucinator中运行固件"></a>在HALucinator中运行固件</h3><p>接下来，我们将启动HALucinator。为了运行它，它需要知道固件期望的内存布局和固件本身。此外，我们希望指定函数来拦截HAL函数和每个函数的处理程序。这些都是在配置文件中指定的。</p>
+<p>为了便于移植，这些文件通常分布在多个文件中，稍后我们将介绍这些内容。这些被提供给HALucinator，然后HALucinator在内部将它们连接成单个配置。在此示例中，配置被拆分为三个文件。</p>
+<ul>
+<li><strong>Uart_Hyperterminal_IT_O0_memory.yaml</strong>描述内存布局以及固件的放置位置。</li>
+<li><strong>Uart_Hyperterminal_IT_O0_config.yaml</strong>中指定了要截取的函数的名称以及每个函数的处理程序</li>
+<li><strong>Uart_Hyperterminal_IT_O0_addrs.yaml</strong>提供了函数名称到固件中的地址的映射。通过提供不同的地址文件，将地址分开可以使同一配置用于多个固件。</li>
+</ul>
+<p>我们还将使用<code>--log_blocks=trace-nochain</code>指定另一个选项来<strong>保存执行跟踪</strong>。<strong>这将捕获QEMU执行的每条指令，并禁用QEMU内部的块缓存</strong>。它不是必需的，但它<strong>提供了对正在发生的事情的高度可见性</strong>。但是，它<strong>可能会导致仿真器的速度显著降低，并创建非常大的日志文件</strong>。对于长时间运行，示例中不使用—log_blocks选项。</p>
+<p>把上述所有的都放在一起。打开另一个终端并执行以下命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">workon halucinator</span><br><span class="line">cd ~/halucinator/test/STM32/example</span><br><span class="line">halucinator -c Uart_Hyperterminal_IT_O0_memory.yaml -c Uart_Hyperterminal_IT_O0_config.yaml -c Uart_Hyperterminal_IT_O0_addrs.yaml --log_blocks=trace-nochain</span><br></pre></td></tr></table></figure>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669024676899.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669024676899.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1669024676899"></p>
+<p>现在，您应该在两个终端中看到上图，<strong>左侧是HALucinator，右侧是外部设备</strong>。您将注意到HALucinator在初始化期间打印出消息，然后在该点之后让QEMU运行表示固件正在执行。您会注意到ReturnZero处理程序截获了几个HAL函数，然后UART TX处理程序运行并发送一个长字符串。相同的字符串显示在右侧的UART外部设备中。</p>
+<p>现在输入10个字符（例如，0123456789），然后按Enter键。您现在应该会看到如下所示的内容。</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669024771076.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669024771076.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1669024771076"></p>
+<p>当您输入10个字符并按下回车键时，<strong>UART外部设备将其发送到HALucinator</strong>。当<strong>调用HAL RX函数时</strong>，它<strong>进入BP处理程序</strong>，接收这些字节并将其<strong>复制到固件的接收缓冲区</strong>，然后返回。然后，<strong>固件将字符回送，再次触发UART TX处理程序</strong>。然后，<strong>固件通过UART发送示例完成消息，我们在UART外部设备中看到该消息</strong>。在两个终端中按<code>ctrl-c</code>退出。</p>
+<h3 id="检查输出"><a href="#检查输出" class="headerlink" title="检查输出"></a>检查输出</h3><p>现在，让我们来看看运行HALucinator所创建的一些输出。HALucinator在tmp/HALucinator中保存了一堆信息，可以在执行后进行检查。</p>
+<p><em>(Note：<code>-n&lt;RUN_NAME&gt;</code>选项可更改保存这些文件的位置。）</em></p>
+<p>这些文件包括：</p>
+<ul>
+<li>HALucinator_conf.json —提供给QEMU的配置文件，用于构建仿真机器</li>
+<li>HALucinator_err.txt —QEMU的Stderr </li>
+<li>HALucinator.log —Avatar的日志详细信息</li>
+<li>HALucinator_out.txt —QEMU的Stdout </li>
+<li>qemu_asm.log —QEMU从—log_blocks选项输出的跟踪信息</li>
+<li>stats.yaml —来自halucinator的统计信息，关于什么截取被使用了多久，何时，等等。</li>
+</ul>
+<p>如果HALucinator无法运行，则检查err.txt和out.txt通常会有所帮助。但是，最重要的通常是qemu_asm.log。这是一个文本文件，列出了基本块执行时的反汇编。它可以在文本编辑器中打开，但通常非常大。要查看执行跟踪的最后100行，请使用tail。</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>现在，让我们检查配置文件，看看我们告诉HALucinator要做什么。我们将为此使用Visual Studio Code。</p>
+<p>运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code ~/halucinator/test/STM32/example</span><br></pre></td></tr></table></figure>
+<p><em>（这里我是用docker装的没这个）</em></p>
+<h4 id="内存配置"><a href="#内存配置" class="headerlink" title="内存配置"></a>内存配置</h4><p>首先打开<code>Uart_Hyperterminal_IT_O0_memory.yaml</code>。这会指定仿真器中使用的内存</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">memories:</span></span><br><span class="line">  <span class="string">`alias`:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0x0</span>, <span class="attr">file:</span> <span class="string">Uart_Hyperterminal_IT_O0.elf.bin</span>,</span><br><span class="line">    <span class="attr">permissions:</span> <span class="string">r-x</span>, <span class="attr">size:</span> <span class="number">0x800000</span>&#125;</span><br><span class="line">  <span class="attr">flash:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0x8000000</span>, <span class="attr">file:</span> <span class="string">Uart_Hyperterminal_IT_O0.elf.bin</span>,</span><br><span class="line">    <span class="attr">permissions:</span> <span class="string">r-x</span>, <span class="attr">size:</span> <span class="number">0x200000</span>&#125;</span><br><span class="line">  <span class="attr">ram:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0x20000000</span>, <span class="attr">size:</span> <span class="number">0x51000</span>&#125;</span><br><span class="line"><span class="attr">peripherals:</span></span><br><span class="line">  <span class="attr">logger:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0x40000000</span>, <span class="attr">emulate:</span> <span class="string">GenericPeripheral</span>, <span class="attr">permissions:</span> <span class="string">rw-</span>, <span class="attr">size:</span> <span class="number">0x20000000</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>我们有<code>alias</code>、<code>flash</code>和<code>ram</code>内存以及一个称为<code>logger</code>的外设。每一个都指定一个<strong>基址、大小和权限</strong>。<code>alias</code>和<code>flash</code>指定包含固件的文件。在执行开始之前，文件的内容被复制到内存中。文件的路径与配置文件的路径是相对的（使用相对路径）（例如，<code>Uart_Hyperterminal_IT_O0_memory.yaml</code>）</p>
+<p>在这种情况下，文件被指定了两次，因为真实的硬件将0x800000处的内存<code>alias</code>设为地址0。由于存储器不是由固件里的信息确认写入哪里的，我们可以通过将固件同时放在两个位置来模拟这一点。</p>
+<p>您还会注意到，在外围设备下面有一个记录器。它使用Avatar 2的外设类来实现一个处理从0x 40000000开始的范围内的内存访问的外设。emulate参数指定处理此范围的类，它位于<code>~/halucinator/src/halucinator/peripheral_models/generic</code>中。GenericPeripheral仅对所有读取返回零，并忽略所有写入。这可以防止模拟器在某些东西试图访问外设时崩溃，并允许记录对MMIO的未处理访问。</p>
+<h4 id="地址文件"><a href="#地址文件" class="headerlink" title="地址文件"></a>地址文件</h4><p>接下来，打开地址文件<code>Uart_Hyperterminal_IT_O0_addrs.yaml</code>。此文件的示例如下所示。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">architecture:</span> <span class="string">ARMEL</span>  <span class="comment"># Ignored</span></span><br><span class="line"><span class="attr">base_address:</span> <span class="number">0</span>      <span class="comment"># Ignored on cortex-m</span></span><br><span class="line"><span class="attr">entry_point:</span> <span class="number">0</span>       <span class="comment"># Ignored on cortex-m</span></span><br><span class="line"><span class="attr">symbols:</span></span><br><span class="line">  <span class="attr">134218164:</span> <span class="string">deregister_tm_clones</span></span><br><span class="line">  <span class="attr">134218196:</span> <span class="string">register_tm_clones</span></span><br><span class="line">  <span class="attr">134218232:</span> <span class="string">__do_global_dtors_aux</span></span><br><span class="line">  <span class="attr">134218272:</span> <span class="string">frame_dummy</span></span><br></pre></td></tr></table></figure>
+<p>前三个选项在HALucinator中的cortex-m3上被忽略，它们源自固件，并且由于历史原因而存在。<code>symbols</code>条目包含一个将地址映射到函数名的字典。它们用于解析放置断点的地址。<strong>可以使用HALucinator工具<code>hal_make_addr</code>从elf文件中获取此文件</strong>。这个工具被用来创建这个例子中的文件，使用方法就是执行下面这行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hal_make_addr -b Uart_Hyperterminal_IT_O0.elf -o addrs.yaml</span><br></pre></td></tr></table></figure>
+<p>也可以通过传入csv文件并使用<code>-s</code>选项将其传递给HALucinator来提供符号。格式如下所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">symbol, start_addr, stop_addr</span><br></pre></td></tr></table></figure>
+<h4 id="拦截配置"><a href="#拦截配置" class="headerlink" title="拦截配置"></a>拦截配置</h4><p>现在打开拦截配置文件Uart_Hyperterminal_IT_O0_config.yaml。它包含在执行过程中放置在固件中的拦截列表，并定义每个拦截的处理程序。样本如下所示。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">intercepts:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.stm32f4.stm32f4_uart.STM32F4UART</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_UART_Init</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_UART_Init</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.stm32f4.stm32f4_uart.STM32F4UART</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_UART_Transmit_IT</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_UART_Transmit_IT</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.SkipFunc</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_Delay</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_Delay</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.ReturnZero</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_Init</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_Init</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.Counter</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_IncTick</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_IncTick</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.IPythonShell</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HardFault_Handler</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HardFault_Handler</span></span><br></pre></td></tr></table></figure>
+<p>每个handler指定 ：</p>
+<ul>
+<li><code>class</code>：<strong>python类的导入路径</strong>，该python类是<code>halucinator.bp_handlers.BPHandler</code>的子类：</li>
+<li><code>function</code>：标识<strong>python类中的</strong>用于此次截取的<strong>方法（method）</strong></li>
+<li><code>symbol</code>：此<strong>拦截所针对的固件中的函数名称</strong>。它用于<strong>在地址配置文件提供的符号中查找应设置断点的地址</strong>。</li>
+</ul>
+<p>HALucinator只实例化每个调用一次，即使多个拦截都指定了同一个类。在HALucinator README主文件中描述中，每个拦截中还有一些可选字段可以指定。</p>
+<p>我将其放在下面：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">intercepts:</span>  <span class="comment"># Optional, list of intercepts to places</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">class:</span>  <span class="string">&lt;BPHandler</span> <span class="string">subclass&gt;,</span>  <span class="comment"># Required use full import path</span></span><br><span class="line">    <span class="attr">function:</span> <span class="string">&lt;str&gt;</span>     <span class="comment"># Required: Function name in @bp_handler([]) used to</span></span><br><span class="line">                        <span class="comment">#   determine class method used to handle this intercept</span></span><br><span class="line">    <span class="attr">addr:</span> <span class="string">(from</span> <span class="string">symbols)&lt;int&gt;</span>  <span class="comment"># Optional, Address of where to place this intercept,</span></span><br><span class="line">                               <span class="comment"># generally recommend not setting this value, but</span></span><br><span class="line">                               <span class="comment"># instead setting symbol and adding entry to</span></span><br><span class="line">                               <span class="comment"># symbols for this makes config files more portable</span></span><br><span class="line">    <span class="attr">symbol:</span> <span class="string">(Value</span> <span class="string">of</span> <span class="string">function)&lt;str&gt;</span>  <span class="comment"># Optional, Symbol name use to determine address</span></span><br><span class="line">    <span class="attr">class_args:</span> <span class="string">(&#123;&#125;)&lt;dict&gt;</span>  <span class="comment"># Optional dictionary of args to pass to class&#x27;s</span></span><br><span class="line">                       <span class="comment"># __init__ method, keys are parameter names</span></span><br><span class="line">    <span class="attr">registration_args:</span> <span class="string">(&#123;&#125;)&lt;dict&gt;</span>  <span class="comment"># Optional: Arguments passed to register_handler</span></span><br><span class="line">                              <span class="comment"># method when adding this method</span></span><br><span class="line">    <span class="attr">run_once:</span> <span class="string">(false)&lt;bool&gt;</span> <span class="comment"># Optional: Set to true if only want intercept to run once</span></span><br><span class="line">    <span class="attr">watchpoint:</span> <span class="string">(false)&lt;bool&gt;</span> <span class="comment"># Optional: Set to true if this is a memory watch point</span></span><br></pre></td></tr></table></figure>
+<p>HALucinator为常用操作提供了许多通用handler，包括：</p>
+<ul>
+<li><code>halucinator.bp_handlers.SkipFunc</code>只从函数返回，而不执行它，也没有返回值。如果您只是想跳过返回void的函数，则该函数很有用。</li>
+<li><code>halucinator.bp_handlers.ReturnZero</code>从函数中返回零，而不执行该函数。</li>
+<li><code>halucinator.bp_handlers.Counter</code>返回值在每次调用递增。不执行函数。</li>
+<li><code>halucinator.bp_handlers.IPythonShell</code>放入IPython shell，在该点启用交互式控制。经常用于调试。</li>
+</ul>
+<p><strong>在HALucinator的repository中的<code>src/halucinator/bp_handler</code>中可以找到更多的内容</strong>。</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669033548991.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669033548991.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="src/halucinator/bp_handler中的内容"></p>
+<p>我们将在下一个教程中详细介绍UART处理程序。</p>
+<h2 id="深入探讨UART"><a href="#深入探讨UART" class="headerlink" title="深入探讨UART"></a>深入探讨UART</h2><p>在本教程中，我们将学习<strong>HALucinator如何通过UART发送和接收数据</strong>。首先，我们将讨论用于拦截UART HAL执行的bp处理程序。然后，我们将讨论这些bp处理程序使用的外设模型，以及用于与外围模型通信的外部设备。</p>
+<h3 id="深入探讨BPHandler"><a href="#深入探讨BPHandler" class="headerlink" title="深入探讨BPHandler"></a>深入探讨BPHandler</h3><p>回想一下，固件使用四个函数与UART交互。</p>
+<p>它们是：</p>
+<ul>
+<li>HAL_UART_Init</li>
+<li>HAL_UART_Transmit_IT</li>
+<li>HAL_UART_Receive_IT</li>
+<li>HAL_UART_GetState</li>
+</ul>
+<p>我们的拦截配置文件：<code>~/halucinator/src/test/STM32/example/Uart_Hyperterminal_IT_O0_config.yaml</code>为这些函数中的每一个指定了拦截。如下所示。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.stm32f4.stm32f4_uart.STM32F4UART</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_UART_Init</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_UART_Init</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.stm32f4.stm32f4_uart.STM32F4UART</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_UART_GetState</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_UART_GetState</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.stm32f4.stm32f4_uart.STM32F4UART</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_UART_Transmit_IT</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_UART_Transmit_IT</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">class:</span> <span class="string">halucinator.bp_handlers.stm32f4.stm32f4_uart.STM32F4UART</span></span><br><span class="line">  <span class="attr">function:</span> <span class="string">HAL_UART_Receive_IT</span></span><br><span class="line">  <span class="attr">symbol:</span> <span class="string">HAL_UART_Receive_IT</span></span><br></pre></td></tr></table></figure>
+<p>每个 UART 截取使用<code>halucinator.bp_handlers.stm32f4.stm32f4_uart.STM32F4UART</code>类，这个类被部署在<code>~/halucinator/src/halucinator/bp_handlers/stm32f4/stm32f4_uart.py</code>让我们打开它查看一下。</p>
+<p>从头开始 。首先它import了外设模型 <code>UartPublisher</code> 、 <code>BPHandler</code> 类 、 <code>bp _ handler</code> 装饰器 ， 并设置日志 (logging) 记录。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ...peripheral_models.uart <span class="keyword">import</span> UARTPublisher</span><br><span class="line"><span class="keyword">from</span> ..bp_handler <span class="keyword">import</span> BPHandler, bp_handler</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line">log = logging.getLogger(__name__)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> ... <span class="keyword">import</span> hal_log</span><br><span class="line">hal_log = hal_log.getHalLogger()</span><br></pre></td></tr></table></figure>
+<p>虽然我们应该以这种方式设置halucinator日志记录，并使用它来代替打印来进行调试，但这使得使用配置文件在每个文件的基础上打开和关闭它变得很容易。通常使用两种日志：log，它捕获与该文件相关的内容;以及hal_log，它记录在halucinator中感兴趣的内容。如有疑问，请使用<code>log</code>。</p>
+<p>然后，它创建一个子类（<code>BPHandler</code>的子类），并将<code>self.model</code>设置为<code>UARTPublisher</code>外设模型。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">STM32F4UART</span>(<span class="params">BPHandler</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, impl=UARTPublisher</span>):</span></span><br><span class="line">        self.model = impl</span><br></pre></td></tr></table></figure>
+<p>之后它部署了<code>HAL_UART_Init</code>的handler：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@bp_handler(<span class="params">[<span class="string">&#x27;HAL_UART_Init&#x27;</span>]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hal_ok</span>(<span class="params">self, qemu, bp_addr</span>):</span></span><br><span class="line">    log.info(<span class="string">&quot;Init Called&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span>, <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><strong>装饰器@bp_handler将此方法标识为bp处理程序方法</strong>。装饰器要么不接受参数（在这种情况下，每个类只能实现一个bp_handler），要么接受一个函数名列表。函数名称是拦截配置中<code>function</code>键的有效值。注意：由于历史原因，可以指定多个名称，但实际上一个名称就足够了。</p>
+<p>所有<code>@bp_handlers</code>方法都将以下内容作为参数（self、qemu、bp_addr）：</p>
+<ul>
+<li><code>self</code>：这个类的实例</li>
+<li><code>qemu</code>：是Avatar 2的qemu目标（target）的子类[<a target="_blank" rel="noopener" href="https://avatartwo.github.io/avatar2-docs/avatar2.targets.html#module-avatar2.targets.target]。我们的子类位于`src/halucinator/qemu_targets`中，抽象二进制约定的细节后面（and">https://avatartwo.github.io/avatar2-docs/avatar2.targets.html#module-avatar2.targets.target]。我们的子类位于`src/halucinator/qemu_targets`中，抽象二进制约定的细节后面（and</a> abstract binary convention details away）。这允许阅读和写入仿真器寄存器、内存，并控制仿真器</li>
+<li><code>bp_addr</code>：断点的地址</li>
+</ul>
+<p>handler返回两个值：布尔值（<code>Intercept</code>）和数字（<code>Ret_Val</code>）。</p>
+<ol>
+<li>如果<code>Intercept</code>为<code>True</code>，则会拦截函数，而且不会在仿真器中执行函数。函数的返回值将返回<code>Ret_Val</code>。这使它看起来像是执行了函数并返回<code>Ret_Val</code>。如果被拦截的函数不返回值，则将<code>Ret_Val</code>设置为<code>None</code>。</li>
+<li>如果<code>Intercept</code>为<code>False</code>，则继续执行，执行函数，并忽略<code>Ret_Val</code>。这种情况下的最佳做法是将<code>Ret_Val</code>设置为<code>None</code>。如果您想要监视函式的执行，但仍允许它执行，则不拦截执行会很有用。</li>
+</ol>
+<p>回顾<code>HAL_UART_Init</code>这个bp handler，您现在应该看到它<strong>记录对函数的调用，阻止函数执行并返回0</strong>。零表示<code>HAL_OK</code>，因此固件继续执行，就像UART已正确初始化一样。</p>
+<p>类似地，<code>HAL_UART_GetState</code>bp处理程序仅返回<code>0x20</code>，该值指示其已就绪。</p>
+<p><strong>现在让我们看看数据是如何传输的</strong>。<code>handle_tx</code>方法设计用于从STM的HAL中拦截任一种<code>HAL_UART_Transmit*</code> 变体。这些函数具有以下原型。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HAL_StatusTypeDef <span class="title">HAL_UART_Transmit</span><span class="params">(UART_HandleTypeDef *huart, <span class="keyword">uint8_t</span> *pData, <span class="keyword">uint16_t</span> Size)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>huart</code>是一个指向结构体的指针,这个结构体捕捉UART具体细节。最重要的是结构体中的第一个entry是一个，指向标明了“哪一个UART被使用了”的硬件地址。</li>
+<li><code>pData</code>指针指向传输数据的缓冲区（buffer）地址</li>
+<li><code>size</code>buffer中要传输的数据大小</li>
+</ul>
+<p>下面是用于替换在halucinator中执行此函数的处理程序。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@bp_handler(<span class="params">[<span class="string">&#x27;HAL_UART_Transmit&#x27;</span>, <span class="string">&#x27;HAL_UART_Transmit_IT&#x27;</span>, <span class="string">&#x27;HAL_UART_Transmit_DMA&#x27;</span>]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_tx</span>(<span class="params">self, qemu, bp_addr</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        Reads the frame out of the emulated device, returns it and an </span></span><br><span class="line"><span class="string">        id for the interface(id used if there are multiple ethernet devices)</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    huart = qemu.get_arg(<span class="number">0</span>)</span><br><span class="line">    hw_addr = qemu.read_memory(huart, <span class="number">4</span>, <span class="number">1</span>)</span><br><span class="line">    buf_addr = qemu.get_arg(<span class="number">1</span>)</span><br><span class="line">    buf_len = qemu.ret_arg(<span class="number">2</span>)</span><br><span class="line">    data = qemu.read_memory(buf_addr, <span class="number">1</span>, buf_len, raw=<span class="literal">True</span>)</span><br><span class="line">    hal_log.info(<span class="string">&quot;UART TX:%s&quot;</span> % data)</span><br><span class="line">    self.model.write(hw_addr, data)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span>, <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>您可以看到它从arg0获取<code>huart</code>指针，并通过阅读该位置的内存来解引用（解引用：C语言中的指针前的 * 就是“解引用运算符”）它，以获取硬件地址。然后从arg 1获取<code>buf_addr</code>，从arg 2获取<code>buf_len</code>，并从内存中读取缓冲区。它记录数据，并将其写入模型，使用硬件（我认为这里指的是我们规定的硬件号）作为消息的id。</p>
+<p>接收数据的工作方式与此类似。固件调用<code>HAL_UART_Receive_IT</code>，其C原型与其发送计数器部分相同。它被下面的<code>handle_rx</code>方法截获和处理。handler获取硬件地址和大小，然后调用模型获取数据，阻塞直到数据到达为止。然后将数据写入固件内存中的缓冲区。然后，handler返回<code>True，0</code>，导致跳过<code>HAL_UART_Receive_IT</code>的执行，并显示为已执行并返回0（<code>HAL_OK</code>）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@bp_handler(<span class="params">[<span class="string">&#x27;HAL_UART_Receive&#x27;</span>, <span class="string">&#x27;HAL_UART_Receive_IT&#x27;</span>, <span class="string">&#x27;HAL_UART_Receive_DMA&#x27;</span>]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_rx</span>(<span class="params">self, qemu, bp_handler</span>):</span></span><br><span class="line">    huart = qemu.get_arg(<span class="number">0</span>)</span><br><span class="line">    hw_addr = qemu.read_memory(huart, <span class="number">4</span>, <span class="number">1</span>)</span><br><span class="line">    size = qemu.get_arg(<span class="number">2</span>)</span><br><span class="line">    log.info(<span class="string">&quot;Waiting for data: %i&quot;</span> % size)</span><br><span class="line">    <span class="comment"># 调用外设模型（self.model）处理核心功能，获取返回的data</span></span><br><span class="line">    data = self.model.read(hw_addr, size, block=<span class="literal">True</span>)</span><br><span class="line">    hal_log.info(<span class="string">&quot;UART RX: %s&quot;</span> % data)</span><br><span class="line"></span><br><span class="line">    qemu.write_memory(qemu.get_arg(<span class="number">1</span>), <span class="number">1</span>, data, size, raw=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span>, <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h3 id="深入探讨UART外设模型"><a href="#深入探讨UART外设模型" class="headerlink" title="深入探讨UART外设模型"></a>深入探讨UART外设模型</h3><p>现在，让我们看一下<strong>外设模型。回想一下，该模型的目的是实现外设的核心组件</strong>。对于UART，这是发送和接收字符。有<strong>许多不同的HAL用于在UART上发送/接收数据</strong>，参数的顺序和参数的类型将有所不同。这些<strong>低级别细节在BP handler中实现，但发送/接收字节的核心功能在外设模型中实现</strong>。通过对设备进行抽象，我们减少了实现每个HAL的工作量。</p>
+<p>UART外设模型参见<code>~/halucinator/src/halucinator/peripheral_models/uart.py</code></p>
+<p>在创建该类之前，您会注意到它像<code>UART BP handler</code>一样设置日志记录。</p>
+<p>现在看一下类的创建。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Register the pub/sub calls and methods that need mapped</span></span><br><span class="line"><span class="meta">@peripheral_server.peripheral_model</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UARTPublisher</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    rx_buffers = defaultdict(deque)</span><br></pre></td></tr></table></figure>
+<p>该类以<code>@peripheral_server.peripheral_model</code>修饰。这告诉外设服务器该类将从外设服务器发送/接收数据。你还会注意到所有的方法都是<code>@classmethod</code>的，这是因为这些类从未被实例化。因此，需要在类级别保存诸如接收缓冲器（<code>rx_buffers</code>）之类的任何状态。</p>
+<p>该类中有四个方法write、read、read_line、rx_data。我们将首先讨论write和rx_data，然后讨论read方法。</p>
+<p>write方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@classmethod</span></span><br><span class="line"><span class="meta">@peripheral_server.tx_msg</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write</span>(<span class="params">cls, uart_id, chars</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">       Publishes the data to sub/pub server</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    log.info(<span class="string">&quot;Writing: %s&quot;</span> % chars)</span><br><span class="line">    msg = &#123;<span class="string">&#x27;id&#x27;</span>: uart_id, <span class="string">&#x27;chars&#x27;</span>: chars&#125;</span><br><span class="line">    <span class="keyword">return</span> msg</span><br></pre></td></tr></table></figure>
+<p>注意<code>write</code>方法被<code>@classmethod</code>和<code>@peripheral_server.tx_msg</code>修饰，这个<code>peripheral_server.tx_msg</code>修饰器，使得这个方法的返回值是序列化的，并由外设服务器用主题<code>Peripheral.&lt;ClassName&gt;.&lt;method_name&gt;</code>将其发布</p>
+<p>write将标识符（identifier）和数据（<code>chars</code>）作为参数，并将它们放入字典中，然后返回字典（<code>msg</code>）。因此，字典由外设服务器在主题<code>Peripheral.UARTPublisher.write</code>下发布。正如您稍后将看到的，我们的外部设备<code>hal_dev_uart</code>订阅此主题并打印出它接收到的内容。</p>
+<p>现在我们来看看<code>rx_data</code>方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@classmethod</span></span><br><span class="line"><span class="meta">@peripheral_server.reg_rx_handler</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rx_data</span>(<span class="params">cls, msg</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        Handles reception of these messages from the PeripheralServer</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    log.debug(<span class="string">&quot;rx_data got message: %s&quot;</span> % <span class="built_in">str</span>(msg))</span><br><span class="line">    uart_id = msg[<span class="string">&#x27;id&#x27;</span>]</span><br><span class="line">    data = msg[<span class="string">&#x27;chars&#x27;</span>]</span><br><span class="line">    cls.rx_buffers[uart_id].extend(data)</span><br></pre></td></tr></table></figure>
+<p>此方法使用<code>@peripheral_server.reg_rx_handler</code>装饰器进行装饰。这个装饰器用于方法时，它将此方法注册为作用于“向所有对应主题（topics）为<code>Peripheral.&lt;ClassName&gt;.&lt;method_name&gt;</code>的外设服务器发送”的主题的handler。</p>
+<p>因此，此方法将接收发送到主题<code>Peripheral.UARTPublisher.rx_data</code>的所有流量。在这种情况下，接收到的msg是一个字典，其中包含键<code>id</code>和字符<code>chars</code>，与通过<code>write</code>发送的键<code>id</code>和字符<code>chars</code>匹配。它将字符保存到deque字典（堆栈）中，<strong>所用的deque由id选择</strong>。通过将其保存到deque中，我们使接收数据与固件执行其UART接收函数（这个函数获取数据）异步。</p>
+<p>回想一下，模型的<code>read</code>函数是由作用在<code>HAL_UART_Receive_IT</code>的bp handler调用的。让我们看看它的功能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@classmethod</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span>(<span class="params">cls, uart_id, count=<span class="number">1</span>, block=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        Gets data previously received from the sub/pub server</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            uart_id:   A unique id for the uart</span></span><br><span class="line"><span class="string">            count:  Max number of chars to read</span></span><br><span class="line"><span class="string">            block(bool): Block if data is not available</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    log.debug(<span class="string">&quot;In: UARTPublisher.read id:%s count:%i, block:%s&quot;</span> %</span><br><span class="line">              (<span class="built_in">hex</span>(uart_id), count, <span class="built_in">str</span>(block)))</span><br><span class="line">    <span class="keyword">while</span> block <span class="keyword">and</span> (<span class="built_in">len</span>(cls.rx_buffers[uart_id]) &lt; count):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    log.debug(<span class="string">&quot;Done Blocking: UARTPublisher.read&quot;</span>)</span><br><span class="line">    buffer = cls.rx_buffers[uart_id]</span><br><span class="line">    chars_available = <span class="built_in">len</span>(buffer)</span><br><span class="line">    <span class="keyword">if</span> chars_available &gt;= count:</span><br><span class="line">        chars = [buffer.popleft() <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(count)]</span><br><span class="line">        chars = <span class="string">&#x27;&#x27;</span>.join(chars).encode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        chars = [buffer.popleft() <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(chars_available)]</span><br><span class="line">        chars = <span class="string">&#x27;&#x27;</span>.join(chars).encode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    log.info(<span class="string">&quot;Reading %s&quot;</span>% chars)</span><br><span class="line">    <span class="keyword">return</span> chars</span><br></pre></td></tr></table></figure>
+<p>它接受：</p>
+<ul>
+<li><code>UART_id</code>：UART的id</li>
+<li><code>count</code>：要读取的字节数。</li>
+<li><code>block</code>：一个布尔值，用于设置在数据不可用时此方法是否应阻止</li>
+</ul>
+<p>如果<code>block</code>为<code>True</code>，则此方法将在循环中等待，直到<code>rx_buffers</code>中为给定的<code>uart_id</code>提供（读取）的数据足够<code>count</code>字节。当数据可用（即字节数够数了）时，它会读取所有可用数据，直到count个字节，然后返回这些数据。如果<code>block</code>为<code>False</code>，则返回当前可用字符（包括零），最多count个字符。</p>
+<p>现在您应该了解了Halucinator如何执行固件、拦截函数、执行bp处理程序来替换那些函数，以及如何使用外设服务器发送和接收数据。</p>
+<p>现在，我们将了解外部设备如何与外围服务器通信。</p>
+<h3 id="外部设备"><a href="#外部设备" class="headerlink" title="外部设备"></a>外部设备</h3><p>为此，我们将查看<code>hal_dev_uart</code>命令的工作原理。这实际上是一个入口点设置，当我们安装了”调用<code>src/halucinator/external_devices/uart.py</code>的<code>main</code>函数”的<code>halucinator</code>时。让我们来看看。</p>
+<p><code>main</code>位于文件的末尾。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    <span class="keyword">from</span> argparse <span class="keyword">import</span> ArgumentParser</span><br><span class="line">    p = ArgumentParser()</span><br><span class="line">    p.add_argument(<span class="string">&#x27;-r&#x27;</span>, <span class="string">&#x27;--rx_port&#x27;</span>, default=<span class="number">5556</span>,</span><br><span class="line">                   <span class="built_in">help</span>=<span class="string">&#x27;Port number to receive zmq messages for IO on&#x27;</span>)</span><br><span class="line">    p.add_argument(<span class="string">&#x27;-t&#x27;</span>, <span class="string">&#x27;--tx_port&#x27;</span>, default=<span class="number">5555</span>,</span><br><span class="line">                   <span class="built_in">help</span>=<span class="string">&#x27;Port number to send IO messages via zmq&#x27;</span>)</span><br><span class="line">    p.add_argument(<span class="string">&#x27;-i&#x27;</span>, <span class="string">&#x27;--id&#x27;</span>, default=<span class="number">0x20000ab0</span>, <span class="built_in">type</span>=<span class="built_in">int</span>,</span><br><span class="line">                   <span class="built_in">help</span>=<span class="string">&quot;Id to use when sending data&quot;</span>)</span><br><span class="line">    p.add_argument(<span class="string">&#x27;-n&#x27;</span>, <span class="string">&#x27;--newline&#x27;</span>, default=<span class="literal">False</span>, action=<span class="string">&#x27;store_true&#x27;</span>,</span><br><span class="line">                   <span class="built_in">help</span>=<span class="string">&quot;Append Newline&quot;</span>)</span><br><span class="line">    args = p.parse_args()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">import</span> halucinator.hal_log <span class="keyword">as</span> hal_log</span><br><span class="line">    hal_log.setLogConfig()</span><br></pre></td></tr></table></figure>
+<p>它使用argparse来获取一些参数，除非你运行多个halucinator实例，否则这些参数的默认值应该起作用。</p>
+<ul>
+<li><code>-r</code>、<code>-t</code>选择用于与halucinator外设服务器接收和传输数据的端口。</li>
+<li><code>-i</code>指定要与之交互的uart ID。它必须与UART外设handler发送的msg中的<code>id</code>键匹配，以便在halucinator内部接收数据。</li>
+<li><code>-n</code>会将一个”new line”字符附加到中输入的数据。</li>
+</ul>
+<p>向下看<code>main</code>函数后面的部分：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">io_server = IOServer(args.rx_port, args.tx_port)</span><br><span class="line">uart = UARTPrintServer(io_server)</span><br><span class="line"></span><br><span class="line">io_server.start()</span><br></pre></td></tr></table></figure>
+<p>接下来，我们实例化<code>IOServer</code>类。这是一个helper类，它处理与halucinator的zero mq通信，并创建需要与之异步通信的线程。<strong>我们不会在本教程中介绍它，但请参考其源代码fsrc/halucinator/external_devices/io.server.py以获得更多信息</strong>。</p>
+<p><code>main</code>之后会实例化一个<code>UartPrintServer</code>类，将<code>IOServer</code>作为参数传递，并启动<code>IOServer</code>。</p>
+<p>然后我们进入 <code>while(1)</code>循环 ， 从终端读取输入并使用 uart 发送它 。用KeyboardInterrupt（如<code>Ctrl C</code>）或空输入将退出循环 。之后，<code>IOServer</code> 停止 ，程序退出 。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>):</span><br><span class="line">        data = <span class="built_in">input</span>()</span><br><span class="line">        log.debug(<span class="string">&quot;Got %s&quot;</span> % <span class="built_in">str</span>(data))</span><br><span class="line">        <span class="keyword">if</span> args.newline:</span><br><span class="line">            data +=<span class="string">&quot;\n&quot;</span></span><br><span class="line">        <span class="keyword">if</span> data == <span class="string">&#x27;\\n&#x27;</span>:</span><br><span class="line">            data = <span class="string">&#x27;\r\n&#x27;</span></span><br><span class="line">        <span class="keyword">elif</span> data == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="comment">#d = &#123;&#x27;id&#x27;:args.id, &#x27;data&#x27;: data&#125;</span></span><br><span class="line">        uart.send_data(args.<span class="built_in">id</span>, data)</span><br><span class="line"><span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">log.info(<span class="string">&quot;Shutting Down&quot;</span>)</span><br><span class="line">io_server.shutdown()</span><br></pre></td></tr></table></figure>
+<p>让我们现在来看 <code>UARTPrintServer</code> 类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UARTPrintServer</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, ioserver</span>):</span></span><br><span class="line">        self.ioserver = ioserver</span><br><span class="line">        ioserver.register_topic(</span><br><span class="line">            <span class="string">&#x27;Peripheral.UARTPublisher.write&#x27;</span>, self.write_handler)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">write_handler</span>(<span class="params">self, ioserver, msg</span>):</span></span><br><span class="line">        txt = msg[<span class="string">&#x27;chars&#x27;</span>].decode(<span class="string">&#x27;latin-1&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;%s&quot;</span> % txt, end=<span class="string">&#x27; &#x27;</span>, flush=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">send_data</span>(<span class="params">self, <span class="built_in">id</span>, chars</span>):</span></span><br><span class="line">        d = &#123;<span class="string">&#x27;id&#x27;</span>: <span class="built_in">id</span>, <span class="string">&#x27;chars&#x27;</span>: chars&#125;</span><br><span class="line">        log.debug(<span class="string">&quot;Sending Message %s&quot;</span> % (<span class="built_in">str</span>(d)))</span><br><span class="line">        self.ioserver.send_msg(<span class="string">&#x27;Peripheral.UARTPublisher.rx_data&#x27;</span>, d)</span><br></pre></td></tr></table></figure>
+<p>它具有三个方法：<code>__init__</code>，其向<code>IOServer</code>订阅<code>Peripheral.UartPublish.write</code>主题并注册其<code>write_handler</code>以处理接收到的消息。<code>write_handler</code>简单地打印出数据。最后，<code>send_data</code>采用id和字符进行发送，编写uart模型所需的字典，并使用IOServer以<code>Peripheral.UARTPublisher.rx_data</code>作为主题发送消息。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>现在，您应该了解了当halucinator调用HAL函数发送和接收数据时所执行的代码，以及数据如何进出halucinator。在下一个教程中，我们将实现新的bp处理程序、外设模型和外部设备。4_extending_deep_dive.md</p>
+<h2 id="扩展Halucinator"><a href="#扩展Halucinator" class="headerlink" title="扩展Halucinator"></a>扩展Halucinator</h2><p>除了在UART上打印消息之外，示例固件还打开LED以指示故障。尚未实现LED的处理程序。在本教程中，我们将实现它们，并将现有的<code>HAL_UART_Receive_IT</code>handler替换为不同的handler，以指示其失败。第一步是确定捕捉LED状态所需的函数调用及其参数。为此，我们将使用Ghidra查看固件的二进制文件。然后，我们将实现断点处理程序以捕获对LED的写入。测试完成后，我们将添加一个外设模型和外部设备，以便在外设服务器上发送和接收LED状态和UART数据。</p>
+<h3 id="找到要拦截的函数"><a href="#找到要拦截的函数" class="headerlink" title="找到要拦截的函数"></a>找到要拦截的函数</h3><p>我们需要做的第一件事是确定要截取的函数及其参数值。我们可以使用源代码，但目前我们将假装它不可用，并使用Ghidra来查找此信息。Ghidra是由NSA创建的软件逆向工程工具，并作为开源软件发布。在本教程中，我们将介绍它的一些用法，但只是简单介绍它的一些功能。</p>
+<p>注：即使我们使用二进制而不是源代码，我们仍然是在”作弊“，（而且可能比一些实战的情况简化很多），因为我们<strong>在固件中有符号和数据类型。如果我们正在分析另一个固件，我们可能不会有这个信息</strong>，就需要LibMatch和/或大量的逆向工程（intensive RE）。但是，即使在我有源代码的情况下，在HALucinator中实现东西时，我也经常使用Ghidra来查看固件。<strong>构建系统和编译器可以对源代码进行一些“神奇”的转换，这使得很难理解固件中实际最终的内容</strong>。当<strong>halucinator运行固件时，固件中的内容才是最重要的</strong>。因此，在Ghidra中查看二进制文件/固件获得一定程度的舒适感将值得您花时间。</p>
+<hr>
+<blockquote>
+<p>这里他们是用了ubuntu平台下的ghidra，我并没有这样做，直接在Windows平台下弄了</p>
+<p>因此下面这段参考我没有弄，在Windows上结果应该差不多</p>
+</blockquote>
+<p>现在让我们在一个新的终端启动Ghidra。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/ghidra_9.1.2/ghidraRun</span><br></pre></td></tr></table></figure>
+<p>创建新项目</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">File -&gt; New Project</span><br><span class="line">Select Non-Shared Project</span><br><span class="line">click Next</span><br></pre></td></tr></table></figure>
+<p>将项目目录和名称设置为halucinator_uart_example，现在，将elf文件与固件一起导入。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">File-&gt;Import File</span><br><span class="line">Browse to /home/ubuntu/halucinator/test/STM32/example and select Uart_Hyperterminal_IT_00.elf</span><br><span class="line">Click Select file to import</span><br></pre></td></tr></table></figure>
+<p>它将从ELF中的元数据检测格式、语言和其他设置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Click OK</span><br><span class="line">and</span><br><span class="line">Click OK again</span><br></pre></td></tr></table></figure>
+<p>现在，在CodeBrowser中双击导入的文件，将其打开。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Click yes to the Analyze prompt</span><br><span class="line">Leave the defaults checked and click Analyze</span><br></pre></td></tr></table></figure>
+<hr>
+<p>import的结果：</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669183898675.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669183898675.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1669183898675"></p>
+<p>Ghidra现在将使用ELF文件中的元数据信息和它自己的分析来帮助您理解二进制文件。当它完成时，点击反汇编（中间窗口）并按<code>G</code>（for goto），然后键入<code>main</code>，然后回车。</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669185324681.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669185324681.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1669185324681"></p>
+<p>看反编译器，这看起来应该很像C代码。</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669185348549.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669185348549.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1669185348549"></p>
+<p>在其中，您将注意到四个感兴趣的函数调用。三个用于<code>BSP_LED_Init</code>，一个用于<code>BSP_LED_On</code>。我们将实现<code>BSP_LED_Init</code>和<code>BSP_LED_On</code>函数的处理程序，在生产固件中，这一层很可能由编译器内联，我们将不得不更深入到<code>HAL_GPIO_Init</code>和<code>HAL_GPIO_WritePin</code>函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  HAL_StatusTypeDef HVar1;</span><br><span class="line">  HAL_UART_StateTypeDef HVar2;</span><br><span class="line">  </span><br><span class="line">  HAL_Init();</span><br><span class="line">  SystemClock_Config();</span><br><span class="line">  <span class="comment">// 这里可以看到BSP_LED_Init的调用</span></span><br><span class="line">  BSP_LED_Init(LED1);</span><br><span class="line">  BSP_LED_Init(LED2);</span><br><span class="line">  BSP_LED_Init(LED3);</span><br><span class="line">  UartHandle.Instance = (USART_TypeDef *)<span class="number">0x40011000</span>;</span><br><span class="line">  UartHandle.Init.BaudRate = <span class="number">0x2580</span>;</span><br><span class="line">  UartHandle.Init.WordLength = <span class="number">0</span>;</span><br><span class="line">  UartHandle.Init.StopBits = <span class="number">0</span>;</span><br><span class="line">  UartHandle.Init.Parity = <span class="number">0x600</span>;</span><br><span class="line">  UartHandle.Init.HwFlowCtl = <span class="number">0</span>;</span><br><span class="line">  UartHandle.Init.Mode = <span class="number">0xc</span>;</span><br><span class="line">  UartHandle.Init.OverSampling = <span class="number">0</span>;</span><br><span class="line">  HVar1 = HAL_UART_Init(&amp;UartHandle);</span><br><span class="line">  <span class="keyword">if</span> (HVar1 != HAL_OK) &#123;</span><br><span class="line">    Error_Handler();</span><br><span class="line">  &#125;</span><br><span class="line">  HVar1 = HAL_UART_Transmit_IT(&amp;UartHandle,aTxStartMessage,<span class="number">0x61</span>);</span><br><span class="line">  <span class="keyword">if</span> (HVar1 != HAL_OK) &#123;</span><br><span class="line">    Error_Handler();</span><br><span class="line">  &#125;</span><br><span class="line">  HVar1 = HAL_UART_Receive_IT(&amp;UartHandle,aRxBuffer,<span class="number">10</span>);</span><br><span class="line">  <span class="keyword">if</span> (HVar1 != HAL_OK) &#123;</span><br><span class="line">    Error_Handler();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">do</span> &#123;</span><br><span class="line">    HVar2 = HAL_UART_GetState(&amp;UartHandle);</span><br><span class="line">  &#125; <span class="keyword">while</span> (HVar2 != HAL_UART_STATE_READY);</span><br><span class="line">  HVar1 = HAL_UART_Transmit_IT(&amp;UartHandle,aRxBuffer,<span class="number">10</span>);</span><br><span class="line">  <span class="keyword">if</span> (HVar1 != HAL_OK) &#123;</span><br><span class="line">    Error_Handler();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">do</span> &#123;</span><br><span class="line">    HVar2 = HAL_UART_GetState(&amp;UartHandle);</span><br><span class="line">  &#125; <span class="keyword">while</span> (HVar2 != HAL_UART_STATE_READY);</span><br><span class="line">  HVar1 = HAL_UART_Transmit_IT(&amp;UartHandle,aTxEndMessage,<span class="number">0x15</span>);</span><br><span class="line">  <span class="keyword">if</span> (HVar1 != HAL_OK) &#123;</span><br><span class="line">    <span class="comment">// 这里可以看到BSP_LED_On的调用</span></span><br><span class="line">    BSP_LED_On(LED3);</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">                    <span class="comment">/* WARNING: Do nothing block with infinite loop */</span></span><br><span class="line">    &#125; <span class="keyword">while</span>( <span class="literal">true</span> );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">do</span> &#123;</span><br><span class="line">    HVar2 = HAL_UART_GetState(&amp;UartHandle);</span><br><span class="line">  &#125; <span class="keyword">while</span> (HVar2 != HAL_UART_STATE_READY);</span><br><span class="line">  <span class="keyword">do</span> &#123;</span><br><span class="line">                    <span class="comment">/* WARNING: Do nothing block with infinite loop */</span></span><br><span class="line">  &#125; <span class="keyword">while</span>( <span class="literal">true</span> );</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>双击<code>BSP_LED_Init</code>函数，转到其代码。</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669189205913.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669189205913.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1669189205913"></p>
+<p>要拦截<code>BSP_LED_Init</code>，我们将使用halucinator拦截<code>BSP_LED_Init</code>（0x080022cc）的第一条指令。然后，我们需要知道哪些值映射到哪个LED。幸运的是，文件中的符号使这变得很容易。将鼠标悬停在<code>BSP_LED_Init</code>函数签名中的<code>Led_TypeDef</code>上，工具提示将弹出，显示更多信息。</p>
+<p><img src="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669190614478.png" class="lazyload placeholder" data-srcset="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/uTools_1669190614478.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1669190614478"></p>
+<p>这告诉我们如何将数值映射到板上正确的LED。您可以单击后退箭头（左上角）返回到main，然后双击对<code>BSP_LED_On</code>的调用，并验证它是否采用类型为<code>Led_TypeDef</code>的单个参数。另请查看<code>Error_Handler()</code>，注意它会打开RED_LED并进入无限循环。</p>
+<p>下面是decompiler反汇编后的两个函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* WARNING: Globals starting with &#x27;_&#x27; overlap smaller symbols at the same address */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BSP_LED_Init</span><span class="params">(Led_TypeDef Led)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">uint32_t</span> tmpreg;</span><br><span class="line">  GPIO_InitTypeDef gpio_init_structure;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (Led &lt; <span class="number">4</span>) &#123;</span><br><span class="line">    _DAT_40023830 = _DAT_40023830 | <span class="number">0x400</span>;</span><br><span class="line">    gpio_init_structure.Pin = GPIO_PIN[Led];</span><br><span class="line">    gpio_init_structure.Mode = <span class="number">1</span>;</span><br><span class="line">    gpio_init_structure.Pull = <span class="number">1</span>;</span><br><span class="line">    gpio_init_structure.Speed = <span class="number">3</span>;</span><br><span class="line">    HAL_GPIO_Init((GPIO_TypeDef *)<span class="number">0x40022800</span>,&amp;gpio_init_structure);</span><br><span class="line">    HAL_GPIO_WritePin((GPIO_TypeDef *)<span class="number">0x40022800</span>,(<span class="keyword">uint16_t</span>)GPIO_PIN[Led],GPIO_PIN_SET);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BSP_LED_On</span><span class="params">(Led_TypeDef Led)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (Led &lt; <span class="number">4</span>) &#123;</span><br><span class="line">    HAL_GPIO_WritePin((GPIO_TypeDef *)<span class="number">0x40022800</span>,(<span class="keyword">uint16_t</span>)GPIO_PIN[Led],GPIO_PIN_RESET);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很好，现在我们知道了需要截取的函数以及它们将接收到的每个LED的值。让我们继续实现将用于拦截这些函数的<code>BPHandler</code>。</p>
+<h3 id="扩展HALucinator"><a href="#扩展HALucinator" class="headerlink" title="扩展HALucinator"></a>扩展HALucinator</h3><p>我们将为以下函数实现handler：</p>
+<ul>
+<li>BSP_LED_Init</li>
+<li>BSP_LED_On</li>
+<li>BSP_LED_Off — 在这个二进制文件中没有出现，但让我们做一个很好的措施</li>
+</ul>
+<p>它们都采用<code>Led_TypeDef</code>类型，该类型具有以下映射。</p>
+<ul>
+<li>LED_GREEN 0x0</li>
+<li>LED_ORANGE 0x1</li>
+<li>LED_RED 0x02</li>
+<li>LED_BLUE 0x03</li>
+</ul>
+<h4 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h4><p>将halucinator存储库中的tutorial文件夹复制到home目录中的新目录<code>halucinator_tutorial</code>中。这会使halucinator存储库的教程保持干净的状态。运行以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp -r ~/halucinator/tutorial ~/halucinator_tutorial</span><br><span class="line">cd ~/halucinator_tutorial</span><br></pre></td></tr></table></figure>
+<p>我们将把我们的扩展构建为自己的python模块。需要的 setup.py 已经为你创建好了。您只需要使用下面的命令安装它。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">workon halucinator # If you virtual environment isn&#x27;t already active</span><br><span class="line">pip install -e .</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul>
+<li><code>-e</code>选项告诉pip将模块包留在这里，您对python代码所做的任何更改都将反映在您的执行中，而无需重新安装包。</li>
+<li>但是，如果您在setup.py中添加了一个新的入口点，则必须重新运行<code>pip install</code>。</li>
+<li>您不必创建自己的模块，而是<strong>可以直接在相应的src/halucinator/（bp_handlers，external_devices，和peripheral_modules目录）下的halucinator存储库中进行开发</strong>。如果您开发的组件对更广泛的社区有用，那么我们欢迎拉取请求，并且最好在halucinator目录中构建它们。</li>
+</ul>
+<p>现在我们准备开始实施。打开您喜爱的编辑器，运行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code ~/halucinator_tutorial</span><br></pre></td></tr></table></figure>
+<p>如果您查看文件夹，我们将按以下顺序实现/修改五个文件：</p>
+<ul>
+<li><code>hal_tutorial/bp_handlers/led_bp_handlers.py</code>  LED 断点 handlers</li>
+<li><code>my_config.yaml</code>   加入新拦截的配置文件</li>
+<li><code>hal_tutorial/peripheral_models/led_peripheral.py</code>  我们的新LED外设模型</li>
+<li><code>hal_tutorial/external_devices/led_external_devices.py</code>  新外部模型</li>
+<li><code>logging.cfg</code>     halucinator 用来控制日志的文件</li>
+</ul>
+<p>这些文件中的每个文件都有需要完成的步骤，可以通过在文件中搜索STEP来找到这些步骤。</p>
+<h3 id="设置配置文件并运行"><a href="#设置配置文件并运行" class="headerlink" title="设置配置文件并运行"></a>设置配置文件并运行</h3><p>运行教程所需的一切都已为您准备好。让我们从完成截取描述开始，这样我们就可以使用存根(stubs)来运行示例。</p>
+<p>打开<code>my_config. yaml</code>并完成步骤。这包括两个步骤：</p>
+<ol>
+<li><p>在LEDHandler构造函数中添加一个map(映射)，这样我们就可以为LED取一个好名字，而不是数字。</p>
+<p>注意：<code>class_args</code>值使我们能够将参数传递给类构造函数。但是，为了确保它得到处理，它需要在每次拦截时都被使用到。</p>
+</li>
+<li><p>添加BSP_LED_On函数的拦截。</p>
+</li>
+</ol>
+<p>现在让我们使用新的配置运行，我们将使用与上次相同的配置文件，并将新的配置文件添加到末尾。这使得它优先于任何先前描述的拦截。</p>
+<p>运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">workon halucinator</span><br><span class="line">cd ~/halucinator_tutorial</span><br><span class="line">halucinator -c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_memory.yaml \</span><br><span class="line">-c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_config.yaml \</span><br><span class="line">-c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_addrs.yaml \</span><br><span class="line">-c my_config.yaml</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">```bash</span><br><span class="line">halucinator.main|INFO| Letting QEMU Run</span><br><span class="line">HAL_LOG|INFO| ReturnZero: HAL_Init</span><br><span class="line">HAL_LOG|INFO| ReturnZero: HAL_RCC_OscConfig</span><br><span class="line">HAL_LOG|INFO| ReturnZero: HAL_PWREx_EnableOverDrive</span><br><span class="line">HAL_LOG|INFO| ReturnZero: HAL_RCC_ClockConfig</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO| Init Called</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO| Init Called</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO| Init Called</span><br><span class="line">HAL_LOG|INFO| UART 1073811456 TX:b&#x27;\n\r ****UART-Hyperterminal communication based on IT ****\n\r</span><br><span class="line">Enter 10 characters using keyboard :\n\r&#x27;</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO| LED On Called</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctrl-c # To stop halucinator</span><br></pre></td></tr></table></figure>
+<p>您应该会得到类似上面的内容，请注意对<code>hal_tutorial.bp_handlers.led_bp_handler|INFO| Init Called</code>的三个调用和一个对<code>hal_tutorial.bp_handlers.led_bp_handler|INFO| LED On Called</code>的调用。这意味着我们的新断点处理程序正在被执行。让我们对它们进行扩展，使它们变得有用。</p>
+<h4 id="LED-BP-Handler类"><a href="#LED-BP-Handler类" class="headerlink" title="LED BP Handler类"></a>LED BP Handler类</h4><p>BP hanldler已经为你放在了<code>hal_tutorial/bp_handlers/led_bp_handlers.py</code>中，完成步骤以提取LED ID并将其传递给model。之后再次运行它。</p>
+<p>输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">halucinator -c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_memory.yaml \</span><br><span class="line">-c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_config.yaml \</span><br><span class="line">-c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_addrs.yaml \</span><br><span class="line">-c my_config.yaml</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">halucinator.main|INFO|  Letting QEMU Run</span><br><span class="line">HAL_LOG|INFO|  ReturnZero: HAL_Init </span><br><span class="line">HAL_LOG|INFO|  ReturnZero: HAL_RCC_OscConfig </span><br><span class="line">HAL_LOG|INFO|  ReturnZero: HAL_PWREx_EnableOverDrive </span><br><span class="line">HAL_LOG|INFO|  ReturnZero: HAL_RCC_ClockConfig </span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO|  Init Called</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Off GREEN</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO|  Init Called</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Off ORANGE</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO|  Init Called</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Off RED</span><br><span class="line">HAL_LOG|INFO|  UART 1073811456 TX:b&#x27;\n\r ****UART-Hyperterminal communication based on IT ****\n\r Enter 10 characters using keyboard :\n\r&#x27;</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO|  LED On Called</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED On RED</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctrl-c # To stop halucinator</span><br></pre></td></tr></table></figure>
+<p>请注意这个新的对<code>hal_tutorial.peripheral_models.led_peripheral|DEBUG|</code>的调用显示哪些LED被关闭和打开。现在让我们扩展外设模型和外部设备，以将此信息发送到halucinator外部。</p>
+<h4 id="外设模型"><a href="#外设模型" class="headerlink" title="外设模型"></a>外设模型</h4><p>在实施该模型之前，让我们考虑一下LED的模型。它是一个输出设备，这意味着halucinator将只发布有关其状态的消息。它有两个值on和off。<code>hal_tutorial/peripheral_models/led_peripheral.py</code>中提供了外围设备模型的模板，打开它，发现有5个任务需要完成。完成所有步骤，然后继续。</p>
+<h4 id="外部设备-1"><a href="#外部设备-1" class="headerlink" title="外部设备"></a>外部设备</h4><p>现在，您需要设置外部器件，以接收UART消息和LED状态消息。为此，我们将创建一个基于UART的新外部设备。它的模板在<code>hal_tutorial/external_devices/led_external_devices.py</code>中完成其中的步骤，然后打开一个新的终端。当pip安装了这个软件包后，<code>setup.py</code>在路径中添加了一个名为<code>my_led_device</code>的(<code>led_external_devices.py</code>的)主函数的入口点，打开一个新的终端并运行它。</p>
+<p>在新的终端中运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">workon halucinator</span><br><span class="line">my_led_device -i=1073811456</span><br></pre></td></tr></table></figure>
+<p>注意：如果没有入口点，则必须使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m hal_tutorial.external_devices.led_external_devices</span><br></pre></td></tr></table></figure>
+<p>在原终端中运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">halucinator -c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_memory.yaml \</span><br><span class="line">-c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_config.yaml \</span><br><span class="line">-c ~/halucinator/test/STM32/example/Uart_Hyperterminal_IT_O0_addrs.yaml \</span><br><span class="line">-c my_config.yaml</span><br></pre></td></tr></table></figure>
+<p>运行halucinator的终端的输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">halucinator.main|INFO|  Letting QEMU Run</span><br><span class="line">HAL_LOG|INFO|  ReturnZero: HAL_Init </span><br><span class="line">HAL_LOG|INFO|  ReturnZero: HAL_RCC_OscConfig </span><br><span class="line">HAL_LOG|INFO|  ReturnZero: HAL_PWREx_EnableOverDrive </span><br><span class="line">HAL_LOG|INFO|  ReturnZero: HAL_RCC_ClockConfig </span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO|  Init Called</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Off GREEN</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Status GREEN: False</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO|  Init Called</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Off ORANGE</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Status ORANGE: False</span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO|  Init Called</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Off RED</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Status RED: False</span><br><span class="line">HAL_LOG|INFO|  UART 1073811456 TX:b<span class="string">&#x27;\n\r ****UART-Hyperterminal communication based on IT ****\n\r Enter 10 characters using keyboard :\n\r&#x27;</span></span><br><span class="line">hal_tutorial.bp_handlers.led_bp_handler|INFO|  LED On Called</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED On RED</span><br><span class="line">hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Status RED: True</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctrl-c <span class="comment"># To stop halucinator, leave external device running</span></span><br></pre></td></tr></table></figure>
+<p>注意新的信息是下面这样的：<br><code>hal_tutorial.peripheral_models.led_peripheral|DEBUG|  LED Status RED: True</code>.</p>
+<p>现在我们来看LED外部设备的终端，您应该看到类似如下的信息：</p>
+<p>OUTPUT</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LED: GREEN is Off</span><br><span class="line">LED: ORANGE is Off</span><br><span class="line">LED: RED is Off</span><br><span class="line"></span><br><span class="line"> ****UART-Hyperterminal communication based on IT ****</span><br><span class="line"> Enter 10 characters using keyboard :</span><br><span class="line"> LED: RED is On</span><br></pre></td></tr></table></figure>
+<h4 id="Adjust-the-logging-output"><a href="#Adjust-the-logging-output" class="headerlink" title="Adjust the logging output"></a>Adjust the logging output</h4><p>随着LED的一切正常工作，我们不再需要看到调试消息。  Halucinator会自动在运行它的目录中查找名为<code>logging.cfg</code> 的文件。 This file has been create for you.  打开此文件并将hal_tutorial的记录器（logger）调整为INFO级别。</p>
+<p>之后重新运行halucinator</p>
+<p>在原终端运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">halucinator -c ~/halucinator/<span class="built_in">test</span>/STM32/example/Uart_Hyperterminal_IT_O0_memory.yaml \</span><br><span class="line">-c ~/halucinator/<span class="built_in">test</span>/STM32/example/Uart_Hyperterminal_IT_O0_config.yaml  \</span><br><span class="line">-c ~/halucinator/<span class="built_in">test</span>/STM32/example/Uart_Hyperterminal_IT_O0_addrs.yaml \</span><br><span class="line">-c my_config.yaml</span><br></pre></td></tr></table></figure>
+<p>在 <code>hal_tutorial</code> 的所有log信息将不再显示出来。<br>日志文件对于调试非常有用，熟悉它将有助于在halucinator中实现一些东西。</p>
+<p>查看 (<a target="_blank" rel="noopener" href="https://docs.python.org/3/library/logging.config.html#logging-config-fileformat)[https://docs.python.org/3/library/logging.config.html#logging-config-fileformat]可以找到工作的更多细节">https://docs.python.org/3/library/logging.config.html#logging-config-fileformat)[https://docs.python.org/3/library/logging.config.html#logging-config-fileformat]可以找到工作的更多细节</a><br> 每个文件的 <code>qualname</code> 会是它们的模块名。</p>
+<h3 id="结论-1"><a href="#结论-1" class="headerlink" title="结论"></a>结论</h3><p>本教程到此结束。现在，您应该了解了halucinator的工作原理以及如何实现其主要组件、BPHandlers、外围处理程序和外部设备。我们还演示了如何使用logging.cfg文件调整显示内容。</p>
+<h2 id="没有细说，可以细看"><a href="#没有细说，可以细看" class="headerlink" title="没有细说，可以细看"></a>没有细说，可以细看</h2><h3 id="深入探讨UART-外部设备-IOServer类"><a href="#深入探讨UART-外部设备-IOServer类" class="headerlink" title="深入探讨UART-外部设备-IOServer类"></a>深入探讨UART-外部设备-IOServer类</h3>
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/Ghidra/" class="">
+              Ghidra
+            </a>
+          
+            <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="">
+              嵌入式
+            </a>
+          
+            <a href="/tags/IoT/" class="">
+              IoT
+            </a>
+          
+            <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" class="">
+              逆向工程
+            </a>
+          
+            <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/" class="">
+              系统安全
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>作者:  </strong>fireknight</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>文章链接:  </strong>
+    <a href="/2022/11/23/Halucinator使用教程/" target="_blank" title="Halucinator使用教程">http://example.com/2022/11/23/Halucinator使用教程/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明:   </strong>
+      本网站所有文章除特别声明外,均采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      许可协议。转载请注明出处!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/rand4.jpg" class="lazyload placeholder" data-srcset="/medias/rand4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2022/11/18/BugKu-%E7%89%B9%E6%AE%8A%E7%9A%84Base64/" class="post-nav-link">
+      <div class="title">
+        下一篇: <i class="fas fa-angle-right"></i>
+        <div class="title-text">BugKu-特殊的Base64</div>
+      </div>
+      <!-- <div class="content">
+        Exeinfo PE查壳打开程序还是经典的输入flag
+
+先查壳，确认没壳
+
+利用Ghidra进行分析window-&g
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>本文目录</span>
+        
+          <div class="toc-open-close">本文目录</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin-left': 'auto', 'margin-right': 'auto',});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
+
+      </main>
+    </div>
+
+    <!-- 页脚 -->
+    
+  
+  
+    <!-- 底部鱼儿跳动效果，依赖于jquery-->
+<div id="j-fish-skip" style=" position: relative;height: 153px;width: auto;"></div>
+<script>
+  var RENDERER = {
+    POINT_INTERVAL: 5,
+    FISH_COUNT: 3,
+    MAX_INTERVAL_COUNT: 50,
+    INIT_HEIGHT_RATE: .5,
+    THRESHOLD: 50,
+    FISH_COLOR: '',
+    init: function () {
+      this.setFishColor(); this.setParameters(), this.reconstructMethods(), this.setup(), this.bindEvent(), this.render()
+    },
+    setFishColor: function () {
+      let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+      if (isDark) {
+        this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
+      } else {
+        this.FISH_COLOR = '' || '#453ead';
+      }
+    },
+    setParameters: function () {
+      this.$window = $(window), this.$container = $("#j-fish-skip"), this.$canvas = $("<canvas />"), this.context = this.$canvas.appendTo(this.$container).get(0).getContext("2d"), this.points = [], this.fishes = [], this.watchIds = []
+    },
+    createSurfacePoints: function () {
+      var t = Math.round(this.width / this.POINT_INTERVAL);
+      this.pointInterval = this.width / (t - 1), this.points.push(new SURFACE_POINT(this, 0));
+      for (var i = 1; i < t; i++) {
+        var e = new SURFACE_POINT(this, i * this.pointInterval),
+          h = this.points[i - 1];
+        e.setPreviousPoint(h), h.setNextPoint(e), this.points.push(e)
+      }
+    },
+    reconstructMethods: function () {
+      this.watchWindowSize = this.watchWindowSize.bind(this), this.jdugeToStopResize = this.jdugeToStopResize.bind(this), this.startEpicenter = this.startEpicenter.bind(this), this.moveEpicenter = this.moveEpicenter.bind(this), this.reverseVertical = this.reverseVertical.bind(this), this.render = this.render.bind(this)
+    },
+    setup: function () {
+      this.points.length = 0, this.fishes.length = 0, this.watchIds.length = 0, this.intervalCount = this.MAX_INTERVAL_COUNT, this.width = this.$container.width(), this.height = this.$container.height(), this.fishCount = this.FISH_COUNT * this.width / 500 * this.height / 500, this.$canvas.attr({
+        width: this.width,
+        height: this.height
+      }), this.reverse = !1, this.fishes.push(new FISH(this)), this.createSurfacePoints()
+    },
+    watchWindowSize: function () {
+      this.clearTimer(), this.tmpWidth = this.$window.width(), this.tmpHeight = this.$window.height(), this.watchIds.push(setTimeout(this.jdugeToStopResize, this.WATCH_INTERVAL))
+    },
+    clearTimer: function () {
+      for (; this.watchIds.length > 0;) clearTimeout(this.watchIds.pop())
+    },
+    jdugeToStopResize: function () {
+      var t = this.$window.width(),
+        i = this.$window.height(),
+        e = t == this.tmpWidth && i == this.tmpHeight;
+      this.tmpWidth = t, this.tmpHeight = i, e && this.setup()
+    },
+    bindEvent: function () {
+      this.$window.on("resize", this.watchWindowSize), this.$container.on("mouseenter", this.startEpicenter), this.$container.on("mousemove", this.moveEpicenter)
+    },
+    getAxis: function (t) {
+      var i = this.$container.offset();
+      return {
+        x: t.clientX - i.left + this.$window.scrollLeft(),
+        y: t.clientY - i.top + this.$window.scrollTop()
+      }
+    },
+    startEpicenter: function (t) {
+      this.axis = this.getAxis(t)
+    },
+    moveEpicenter: function (t) {
+      var i = this.getAxis(t);
+      this.axis || (this.axis = i), this.generateEpicenter(i.x, i.y, i.y - this.axis.y), this.axis = i
+    },
+    generateEpicenter: function (t, i, e) {
+      if (!(i < this.height / 2 - this.THRESHOLD || i > this.height / 2 + this.THRESHOLD)) {
+        var h = Math.round(t / this.pointInterval);
+        h < 0 || h >= this.points.length || this.points[h].interfere(i, e)
+      }
+    },
+    reverseVertical: function () {
+      this.reverse = !this.reverse;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].reverseVertical()
+    },
+    controlStatus: function () {
+      for (var t = 0, i = this.points.length; t < i; t++) this.points[t].updateSelf();
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].updateNeighbors();
+      this.fishes.length < this.fishCount && 0 == --this.intervalCount && (this.intervalCount = this.MAX_INTERVAL_COUNT, this.fishes.push(new FISH(this)))
+    },
+    render: function () {
+      requestAnimationFrame(this.render), this.controlStatus(), this.context.clearRect(0, 0, this.width, this.height), this.context.fillStyle = this.FISH_COLOR;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].render(this.context);
+      this.context.save(), this.context.globalCompositeOperation = "xor", this.context.beginPath(), this.context.moveTo(0, this.reverse ? 0 : this.height);
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].render(this.context);
+      this.context.lineTo(this.width, this.reverse ? 0 : this.height), this.context.closePath(), this.context.fill(), this.context.restore()
+    }
+  },
+  SURFACE_POINT = function (t, i) {
+    this.renderer = t, this.x = i, this.init()
+  };
+  SURFACE_POINT.prototype = {
+    SPRING_CONSTANT: .03,
+    SPRING_FRICTION: .9,
+    WAVE_SPREAD: .3,
+    ACCELARATION_RATE: .01,
+    init: function () {
+      this.initHeight = this.renderer.height * this.renderer.INIT_HEIGHT_RATE, this.height = this.initHeight, this.fy = 0, this.force = {
+        previous: 0,
+        next: 0
+      }
+    },
+    setPreviousPoint: function (t) {
+      this.previous = t
+    },
+    setNextPoint: function (t) {
+      this.next = t
+    },
+    interfere: function (t, i) {
+      this.fy = this.renderer.height * this.ACCELARATION_RATE * (this.renderer.height - this.height - t >= 0 ? -1 : 1) * Math.abs(i)
+    },
+    updateSelf: function () {
+      this.fy += this.SPRING_CONSTANT * (this.initHeight - this.height), this.fy *= this.SPRING_FRICTION, this.height += this.fy
+    },
+    updateNeighbors: function () {
+      this.previous && (this.force.previous = this.WAVE_SPREAD * (this.height - this.previous.height)), this.next && (this.force.next = this.WAVE_SPREAD * (this.height - this.next.height))
+    },
+    render: function (t) {
+      this.previous && (this.previous.height += this.force.previous, this.previous.fy += this.force.previous), this.next && (this.next.height += this.force.next, this.next.fy += this.force.next), t.lineTo(this.x, this.renderer.height - this.height)
+    }
+  };
+  var FISH = function (t) {
+    this.renderer = t, this.init()
+  };
+  FISH.prototype = {
+    GRAVITY: .4,
+    init: function () {
+      this.direction = Math.random() < .5, this.x = this.direction ? this.renderer.width + this.renderer.THRESHOLD : -this.renderer.THRESHOLD, this.previousY = this.y, this.vx = this.getRandomValue(4, 10) * (this.direction ? -1 : 1), this.renderer.reverse ? (this.y = this.getRandomValue(1 * this.renderer.height / 10, 4 * this.renderer.height / 10), this.vy = this.getRandomValue(2, 5), this.ay = this.getRandomValue(.05, .2)) : (this.y = this.getRandomValue(6 * this.renderer.height / 10, 9 * this.renderer.height / 10), this.vy = this.getRandomValue(-5, -2), this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1, this.theta = 0, this.phi = 0
+    },
+    getRandomValue: function (t, i) {
+      return t + (i - t) * Math.random()
+    },
+    reverseVertical: function () {
+      this.isOut = !this.isOut, this.ay *= -1
+    },
+    controlStatus: function (t) {
+      this.previousY = this.y, this.x += this.vx, this.y += this.vy, this.vy += this.ay, this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = !1) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1), this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI), this.renderer.generateEpicenter(this.x + (this.direction ? -1 : 1) * this.renderer.THRESHOLD, this.y, this.y - this.previousY), (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init()
+    },
+    render: function (t) {
+      t.save(), t.translate(this.x, this.y), t.rotate(Math.PI + Math.atan2(this.vy, this.vx)), t.scale(1, this.direction ? 1 : -1), t.beginPath(), t.moveTo(-30, 0), t.bezierCurveTo(-20, 15, 15, 10, 40, 0), t.bezierCurveTo(15, -10, -20, -15, -30, 0), t.fill(), t.save(), t.translate(40, 0), t.scale(.9 + .2 * Math.sin(this.theta), 1), t.beginPath(), t.moveTo(0, 0), t.quadraticCurveTo(5, 10, 20, 8), t.quadraticCurveTo(12, 5, 10, 0), t.quadraticCurveTo(12, -5, 20, -8), t.quadraticCurveTo(5, -10, 0, 0), t.fill(), t.restore(), t.save(), t.translate(-3, 0), t.rotate((Math.PI / 3 + Math.PI / 10 * Math.sin(this.phi)) * (this.renderer.reverse ? -1 : 1)), t.beginPath(), this.renderer.reverse ? (t.moveTo(5, 0), t.bezierCurveTo(10, 10, 10, 30, 0, 40), t.bezierCurveTo(-12, 25, -8, 10, 0, 0)) : (t.moveTo(-5, 0), t.bezierCurveTo(-10, -10, -10, -30, 0, -40), t.bezierCurveTo(12, -25, 8, -10, 0, 0)), t.closePath(), t.fill(), t.restore(), t.restore(), this.controlStatus(t)
+    }
+  }, $(function () {
+    RENDERER.init()
+    $('.dark').click(function () {
+      setTimeout(() => {
+        RENDERER.setFishColor();
+        RENDERER.context.fill();
+      });
+    })
+  });
+</script>
+  
+  <div class="footer bg-color">
+    <div class="footer-main">
+      
+        
+          <div class="link">
+            
+          </div>
+        
+      
+        
+          <div class="footer-copyright">
+            <p>Copyright © 2019 - 2020 <a target="_blank" rel="noopener" href="https://github.com/yuang01">yuang01</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/yuang01/theme">Bamboo</a> </p>
+
+          </div>
+        
+      
+        
+          
+            <!-- 不蒜子统计 -->
+            <!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+      <i class="fas fa-eye" aria-hidden="true"></i>本站总访问量：<span id="busuanzi_value_site_pv"></span> 次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+      <i class="fas fa-users" aria-hidden="true"></i>本站访客数：<span id="busuanzi_value_site_uv"></span> 人
+</span>
+
+          
+        
+      
+        
+          <div class="footer-custom">
+            
+          </div>
+        
+      
+    </div>
+  </div>
+
+
+
+    <!-- 渲染暗黑按钮 -->
+    
+      <div class="dark">
+  <div class="dark-content">
+    <i class="fas fa-moon" aria-hidden="true"></i>
+    <!-- <span>关灯</span> -->
+  </div>
+  
+</div>
+
+<script>
+  $(function() {
+    let isDark = JSON.parse(localStorage.getItem('dark'))  || JSON.parse('false');
+    if (isDark) {
+      $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+    }
+    $('.dark').click(function() {
+      if ($(document.body).is('.darkModel')) {
+        $(document.body).removeClass('darkModel');
+        localStorage.setItem('dark', false);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-moon" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      } else {
+        $(document.body).addClass('darkModel');
+        localStorage.setItem('dark', true);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      }
+    })
+  })
+</script>
+    
+    <!-- 渲染回到顶部按钮 -->
+    
+      <div class="goTop top-btn-color" pointer>
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</div>
+<script src="/js/goTop.js"></script>
+
+    
+    <!-- 渲染左下角音乐播放器 -->
+    
+      <link rel="stylesheet" href="/js/aplayer/APlayer@1.10.1.min.css">
+<style>
+.aplayer .aplayer-lrc p {
+  
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px !important;
+}
+
+.aplayer .aplayer-lrc p.aplayer-lrc-current {
+  
+  font-size: 15px;
+  color: #42b983;
+}
+
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+  left: -66px !important;
+}
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+  left: 0px !important;
+}
+
+
+</style>
+<meting-js  
+  class=""
+  server="tencent"
+  type="playlist"
+  id="8062553743"
+  fixed='true'
+  autoplay='true'
+  theme='#42b983'
+  loop='all'
+  order='random'
+  preload='auto'
+  volume='0.7'
+  list-folded='true'
+>
+</meting-js>
+
+<!-- <style>
+  #aplayer {
+    position: fixed;
+    left: 0;
+    bottom: 300px;
+  }
+</style> -->
+<script src="https://unpkg.com/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script src="https://unpkg.com/meting@2/dist/Meting.min.js"></script>
+    
+
+    <!-- 图片放大 -->
+    
+      <script src="/js/fancybox/jquery.fancybox.min.js"></script>
+    
+
+    <!-- 百度解析 -->
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <!-- 背景彩带 -->
+    
+      <script type="text/javascript" size="100" alpha='0.4' zIndex="-1" src="/js/ribbon.min.js"></script>
+    
+
+    <script src="/js/utils/index.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- 文章目录所需js -->
+<link href="/js/tocbot/tocbot.css" rel="stylesheet">
+<script src="/js/tocbot/tocbot.min.js"></script>
+
+<script>
+  var headerEl = 'h2, h3, h4',  //headers 
+    content = '.post-detail',//文章容器
+    idArr = {};  //标题数组以确定是否增加索引id
+  //add #id
+  var option = {
+    // Where to render the table of contents.
+    tocSelector: '.toc',
+    // Where to grab the headings to build the table of contents.
+    contentSelector: content,
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: headerEl,
+    scrollSmooth: true,
+    scrollSmoothOffset: -80,
+    headingsOffset: -($(window).height() * 0.4 - 45),
+    positionFixedSelector: '.toc-main',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    activeLinkClass: 'is-active-link',
+    // onClick: function (e) {},
+  }
+  if ($('.toc').length > 0) {
+
+    $(content).children(headerEl).each(function () {
+      //去除空格以及多余标点
+      var headerId = $(this).text().replace(/[\s|\~|`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\_|\+|\=|\||\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\：|\，|\。]/g, '');
+
+      headerId = headerId.toLowerCase();
+      if (idArr[headerId]) {
+        //id已经存在
+        $(this).attr('id', headerId + '-' + idArr[headerId]);
+        idArr[headerId]++;
+      }
+      else {
+        //id未存在
+        idArr[headerId] = 1;
+        $(this).attr('id', headerId);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      tocbot.init(option);
+      mobileTocClick();
+    });
+
+  }
+
+  window.tocScrollFn = function () {
+    return bamboo.throttle(function () {
+      findHeadPosition();
+    }, 100)()
+  }
+  window.addEventListener('scroll', tocScrollFn);
+
+  const findHeadPosition = function (top) {
+    if ($('.toc-list').length <= 0) {
+      return false;
+    }
+    setTimeout(() => {  // or DOMContentLoaded 
+      autoScrollToc();
+    }, 0);
+  }
+
+  const autoScrollToc = function () {
+    const $activeItem = document.querySelector('.is-active-link');
+    const $cardToc = document.querySelector('.toc-content');
+    const activePosition = $activeItem.getBoundingClientRect().top
+    const sidebarScrollTop = $cardToc.scrollTop
+    if (activePosition > (document.documentElement.clientHeight - 100)) {
+      $cardToc.scrollTop = sidebarScrollTop + 150
+    }
+    if (activePosition < 100) {
+      $cardToc.scrollTop = sidebarScrollTop - 150
+    }
+  }
+
+  document.addEventListener('pjax:send', function () {
+    if ($('.toc').length) {
+      tocbot.destroy();
+    }
+  });
+
+  document.addEventListener('pjax:complete', function () {
+    if ($('.toc').length) {
+      tocbot.init(option);
+      mobileTocClick();
+    }
+  });
+  
+  // 手机端toc按钮点击出现目录
+  const mobileTocClick = function () {
+    const $cardTocLayout = document.getElementsByClassName('toc-aside')[0];
+    const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0];
+    let right = '45px';
+    if (window.innerWidth >= 551 && window.innerWidth <= 992) {
+      right = '100px'
+    }
+    const mobileToc = {
+      open: () => {
+        $cardTocLayout.style.cssText = 'animation: toc-open .3s; opacity: 1; right: ' + right
+      },
+
+      close: () => {
+        $cardTocLayout.style.animation = 'toc-close .2s'
+        setTimeout(() => {
+          $cardTocLayout.style.cssText = "opacity:''; animation: ''; right: ''"
+        }, 100)
+      }
+    }
+    document.getElementById('toc-mobile-btn').addEventListener('click', () => {
+      if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
+      else mobileToc.close()
+    })
+
+    $cardToc.addEventListener('click', (e) => {
+      if (window.innerWidth < 992) { // 小于992px的时候
+        mobileToc.close()
+      }
+    })
+  }
+</script>
+
+<style>
+  .is-position-fixed {
+    position: sticky !important;
+    top: 74px;
+  }
+
+  .toc-main ul {
+    counter-reset: show-list;
+  }
+
+  .toc-main ul li::before {
+    content: counter(item)".";
+    display: block;
+    position: absolute;
+    left: 12px;
+    top: 0;
+  }
+</style> 
+
+<!-- 设置导航背景 -->
+<script>
+  let setHeaderClass = () => {
+    const headerMenuTransparent = true;
+    if (!headerMenuTransparent) { return; }
+    const nav = $('#navHeader');
+    const navTop = nav.outerHeight();
+    const winTop = $(window).scrollTop();
+    if(winTop > navTop) {
+      nav.addClass('header-bg-color');
+    }
+    else {
+      nav.removeClass('header-bg-color');
+    }
+  };
+
+  let scrollCollect = () => {
+    return bamboo.throttle(function (e) {
+      setHeaderClass();
+    }, 200)()
+  }
+
+  let initHeaderBg = () => {
+    setHeaderClass();
+  }
+
+  setHeaderClass();
+  window.addEventListener('scroll', scrollCollect);
+
+  document.addEventListener('pjax:send', function () {
+    window.removeEventListener('scroll', scrollCollect)
+  })
+  document.addEventListener('pjax:complete', function () {
+    window.addEventListener('scroll', scrollCollect);
+    setHeaderClass();
+  })
+</script> 
+
+<!-- 渲染issues标签里的内容 -->
+<script>
+  function loadIssuesJS() {
+    if ($(".post-detail").find(".issues-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/issues/index.js');
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof IssuesAPI == "undefined") {
+      loadIssuesJS();
+    }
+  })
+</script>
+
+<!-- 输入框打字特效 -->
+<!-- 输入框打字特效 -->
+
+  <script src="/js/activate-power-mode.js"></script>
+  <script>
+    POWERMODE.colorful = true;  // 打开随机颜色特效
+    POWERMODE.shake = false;    // 关闭输入框抖动
+    document.body.addEventListener('input', POWERMODE);//监听打字事件
+  </script>
+
+
+<!-- markdown代码一键复制功能 -->
+
+  <link rel="stylesheet" href="https://unpkg.com/v-plugs-ayu/lib/ayu.css">
+  <script src="https://unpkg.com/v-plugs-ayu/lib/ayu.umd.min.js"></script>
+  <script src="/js/clipboard/clipboard.min.js"></script>
+  <div id="appCopy">
+  </div>
+  <script data-pjax>
+    var vm = new Vue({
+      el: '#appCopy',
+      data: {
+      },
+      computed: {
+      },
+      mounted() {
+        const that = this;
+        var copy = '复制';
+        /* code */
+        var initCopyCode = function () {
+          var copyHtml = '';
+          copyHtml += '<button class="btn-copy" data-clipboard-snippet="" style="position:absolute;top:0;right:0;z-index:1;">';
+          copyHtml += '<i class="fas fa-copy"></i><span>' + copy + '</span>';
+          copyHtml += '</button>';
+          $(".post-detail pre").not('.gutter pre').wrap("<div class='codeBox' style='position:relative;width:100%;'></div>")
+          $(".post-detail pre").not('.gutter pre').before(copyHtml);
+          new ClipboardJS('.btn-copy', {
+            target: function (trigger) {
+              return trigger.nextElementSibling;
+            }
+          });
+        }
+        initCopyCode();
+        $('.btn-copy').unbind('click').bind('click', function () {
+          doSomething();
+        })
+        $(document).unbind('keypress').bind('keypress', function (e) {
+          if (e.ctrlKey && e.keyCode == 67) {
+            doSomething();
+          }
+        })
+
+        function doSomething() {
+          that.$notify({
+            title: "成功",
+            content: "代码已复制，请遵守相关授权协议。",
+            type: 'success'
+          })
+        }
+      },
+      methods: {
+      },
+      created() { }
+    })
+  </script>
+  
+
+<!-- 图片懒加载 -->
+<script defer src="https://unpkg.com/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+<!-- 卡片滚动动画 -->
+   
+
+<!-- 评论所需js -->
+
+  
+    <script type="text/javascript">
+  var utteranceCommon = {};
+
+  function check_utterance() {
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    if (isDark) {
+      utteranceCommon.Theme = 'github-dark';
+    } else {
+      utteranceCommon.Theme = 'github-light';
+    }
+
+    return document.getElementById("gitment-container");
+  }
+  comment_el = '#gitment-container';
+  load_utterance = function () {
+    if ($(comment_el).length) {
+      // 匿名函数，防止污染全局变量
+      const HEAD = check_utterance();
+
+      var utterances = document.createElement('script');
+      utterances.type = 'text/javascript';
+      utterances.async = true;
+      utterances.setAttribute('issue-term', 'pathname')
+      utterances.setAttribute('theme', utteranceCommon.Theme)
+      utterances.setAttribute('repo', '')
+      utterances.crossorigin = 'anonymous';
+      utterances.src = 'https://utteranc.es/client.js';
+      // content 是要插入评论的地方
+      document.getElementById('gitment-container').appendChild(utterances);
+
+    }
+  }
+
+  function dark_utterance() {
+    const HEAD = check_utterance();
+    if (!HEAD) return;
+    const message = {
+      type: 'set-theme',
+      theme: utteranceCommon.Theme
+    };
+    const utteranceIframe = document.querySelector('iframe');
+    utteranceIframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+
+  $(document).ready(load_utterance);
+  document.addEventListener('pjax:complete', function () {
+    load_utterance();
+  });
+
+  $('.dark').click(function () {
+    setTimeout(() => {
+      dark_utterance();
+    });
+  })
+
+</script>
+
+<style>
+  .utterances {
+    max-width: inherit !important;
+  }
+</style>
+  
+
+
+<!-- 鼠标点击特效 -->
+<!-- 爱心点击 -->
+
+  
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 999; pointer-events: none;" ></canvas>
+    <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/js/cursor/explosion.min.js"></script>
+  
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" data-pjax></script>
+
+
+    <!-- pjax -->
+    
+
+<!-- pjax -->
+
+
+  <script src="/js/pjax@0.2.8/index.js"></script>
+  
+    <!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
+
+<div class="pjax-animate">
+  
+    <div class="loading-circle"><div id="loader-circle"></div></div>
+    <script>
+      window.ShowLoading = function() {
+        $(".loading-circle").css("display", "block");
+      };
+      window.HideLoading = function() {
+        $(".loading-circle").css("display", "none");
+      }
+    </script>
+  
+	<script>
+    document.addEventListener('pjax:complete', function () {
+      window.HideLoading();
+    })
+    document.addEventListener('pjax:send', function () {
+      window.ShowLoading();
+    })
+    document.addEventListener('pjax:error', function () {
+      window.HideLoading();
+    })
+	</script>
+</div>
+
+  
+
+  <script>
+    var pjax = new Pjax({
+      elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([no-pjax])',   // 拦截正常带链接的 a 标签
+      selectors: ["#pjax-container","title"],                                   // 根据实际需要确认重载区域
+      cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+      timeout: 5000
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+
+    })
+    
+    document.addEventListener('pjax:complete', function () {
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.location.href = e.triggerElement.href;
+    })
+    
+    // 刷新不从顶部开始
+    document.addEventListener("DOMContentLoaded", function () {
+      history.scrollRestoration = 'auto';
+    })
+  </script>
+
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
