@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>归档: 2022 | FireKnight-HJ</title>
+  <title>RTOS学习-RTOS基础 | FireKnight-HJ</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -380,280 +380,601 @@
   
 </header>
         <!-- 内容区域 -->
-        <div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-archive" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
-<div class="archive-header" style="background-image:url('https://pic1.zhimg.com/80/v2-1414b3a4b205e19060db18a20d08723a_1440w.jpg?source=1940ef5c')">
-  <div class="archive-header-title">
-    archive
-  </div>
-  <div class="archive-header-desc">
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/rand15.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
-  <span class="title" id="archive-header-desc"></span>
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        RTOS学习-RTOS基础
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> 发表于：2022-12-14 |
+        </span>
+      
+
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="post-detail-content row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h1 id="RTOS基础"><a href="#RTOS基础" class="headerlink" title="RTOS基础"></a>RTOS基础</h1><h2 id="为什么要使用-RTOS"><a href="#为什么要使用-RTOS" class="headerlink" title="为什么要使用 RTOS"></a>为什么要使用 RTOS</h2><p>您不需要使用 RTOS 来编写好的嵌入式软件。但是在某些时候，随着您的应用程序的大小或复杂性的增加，RTOS 的服务可能会因为下面列出的一个或多个原因而变得有益。这些不是绝对的，而是一点建议。与其他一切一样，为手头的工作选择合适的工具是任何项目的重要第一步。</p>
+<p>简单来说：</p>
+<ul>
+<li><p>提取时间信息</p>
+<p>实时调度程序实际上是一段代码，允许您指定应用程序的时间特性 - 允许出现大大简化了的、更小（因此更容易理解）的应用程序代码。</p>
+</li>
+</ul>
+<ul>
+<li><p>可维护性/可扩展性</p>
+<p>代码中没有时间信息可以提高可维护性和可扩展性，因为软件模块之间的相互依赖性会减少。更改一个模块不应影响另一个模块的时间行为（取决于任务的优先级）。该软件也不太容易受到硬件变化的影响。例如，可以编写代码，使其暂时不受处理器频率变化的影响（在合理范围内）。</p>
+</li>
+</ul>
+<ul>
+<li><p>模块化</p>
+<p>将您的应用程序组织为一组自主任务可以实现更有效的模块化。任务应该是松散耦合和功能内聚的单元，它们在自身内部以顺序方式执行。例如，无需将功能分解为微型状态机，以防止它们执行完成所需的时间过长。</p>
+</li>
+</ul>
+<ul>
+<li><p>更清洁的界面</p>
+<p>明确定义的任务间通信接口有助于设计和团队开发。</p>
+</li>
+</ul>
+<ul>
+<li><p>更容易测试（在某些情况下）</p>
+<p>无需添加可能已更改被测模块行为的工具即可执行任务接口。</p>
+</li>
+</ul>
+<ul>
+<li><p>代码重用</p>
+<p>更大的模块化和更少的模块相互依赖性有助于跨项目重用代码。任务本身有助于项目内的代码重用。对于后者的示例，请考虑一个从 TCP/IP 堆栈接收连接的应用程序 - 可以生成相同的任务代码来处理每个连接 - 每个连接一个任务。</p>
+</li>
+</ul>
+<ul>
+<li><p>提高效率？</p>
+<p>使用 FreeRTOS 允许任务阻塞事件 - 无论是临时事件还是系统外部事件。这意味着当实际上没有需要处理的事件时，不会浪费时间轮询或检查计时器。这可以大大节省处理器的使用。代码只在需要时执行。然而，与此相反的是需要运行 RTOS tick 以及在任务之间切换所花费的时间。节省是否超过开销或反之亦然取决于应用程序。大多数应用程序无论如何都会运行某种形式的 tick，因此将它与 tick 挂钩函数一起使用可以消除任何额外的开销。</p>
+</li>
+</ul>
+<ul>
+<li><p>空闲时间</p>
+<p>使用 FreeRTOS.org 时很容易测量处理器负载。每当空闲任务运行时，您就知道处理器无事可做。空闲任务还提供了一种将处理器置于低功耗模式的非常简单和自动的方法。</p>
+</li>
+</ul>
+<ul>
+<li><p>灵活的中断处理</p>
+<p>将中断触发的处理推迟到任务级别允许中断处理程序本身非常短 - 并且在任务级别处理完成时中断保持启用。此外，任务级别的处理允许灵活的优先级排序 - 比使用硬件本身分配给每个外设的优先级（取决于所使用的架构）更能实现。</p>
+</li>
+</ul>
+<ul>
+<li><p>混合处理要求</p>
+<p>简单的设计模式可用于在您的应用程序中实现周期性、连续性和事件驱动处理的混合。此外，可以通过使用中断和任务优先级来满足硬实时和软实时要求。</p>
+</li>
+</ul>
+<ul>
+<li><p>更容易控制外围设备</p>
+<p>Gatekeeper 任务促进了对外围设备访问的序列化 - 并提供了良好的互斥机制。</p>
+</li>
+</ul>
+<ul>
+<li>等等</li>
+</ul>
+<h2 id="多任务处理"><a href="#多任务处理" class="headerlink" title="多任务处理"></a>多任务处理</h2><p>内核是操作系统中的核心组件<strong>。</strong>Linux 等操作系统采用内核，允许用户看似同时访问计算机。多个用户显然可以同时执行多个程序。</p>
+<p>每个正在执行的程序都是操作系统控制下的<strong>任务（或线程）。</strong>如果操作系统可以以这种方式执行多个任务，则称其为<strong>多任务处理</strong>。</p>
+<p>使用多任务操作系统可以简化原本复杂的软件应用程序的设计：</p>
+<ul>
+<li>操作系统的<strong>多任务和任务间通信功能</strong>允许将复杂的应用程序划分为一组更小且更易于管理的任务。</li>
+<li>分区可以导致更容易的软件测试、团队内的工作分解和代码重用。</li>
+<li><strong>复杂的时序和排序细节可以从应用程序代码中删除</strong>，并成为操作系统的责任。</li>
+</ul>
+<h3 id="多任务与并发"><a href="#多任务与并发" class="headerlink" title="多任务与并发"></a>多任务与并发</h3><p>传统的处理器一次只能执行一个任务——但通过在任务之间快速切换，多任务操作系统可以让它看起来<strong>好像</strong>每个任务都在同时执行。下图对此进行了描述，该图显示了三个任务相对于时间的执行模式。任务名称用颜色编码并写在左手边。时间从左向右移动，彩色线条显示在任何特定时间正在执行的任务。上图展示了感知到的并发执行模式，下图展示了实际的多任务执行模式。</p>
+<p><img src="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E5%9F%BA%E7%A1%80/TaskExecution.gif" class="lazyload placeholder" data-srcset="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E5%9F%BA%E7%A1%80/TaskExecution.gif" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="任务执行.gif"></p>
+<h2 id="调度-Scheduling"><a href="#调度-Scheduling" class="headerlink" title="调度 Scheduling"></a>调度 Scheduling</h2><p><strong>调度程序</strong>是内核的一部分，负责决定在任何特定时间应该执行哪个任务。内核可以在任务生命周期内多次暂停和稍后恢复任务。</p>
+<p>调度<strong>策略</strong>是调度程序用来决定在任何时间点执行哪个任务的算法。（非实时）多用户系统的策略很可能允许每个任务“公平”分配处理器时间。实时/嵌入式系统中使用的策略在后面描述。</p>
+<p>除了被内核非自愿地挂起之外，任务还可以选择挂起自己。如果它想要延迟 ( <strong>sleep</strong> ) 一段固定的时间，或者等待 ( <strong>block</strong> ) 资源可用（例如串行端口）或事件发生（例如按键），它将执行此操作。阻塞或睡眠任务无法执行，并且不会分配任何处理时间。</p>
+<p><img src="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E5%9F%BA%E7%A1%80/suspending.gif" class="lazyload placeholder" data-srcset="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E5%9F%BA%E7%A1%80/suspending.gif" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="暂停.gif"></p>
+<p>参考上图中的数字：</p>
+<ul>
+<li>在 (1) 处，任务 1 正在执行。</li>
+<li>在 (2) 处，内核挂起（换出）任务 1 … 并在 (3) 处恢复任务 2。</li>
+<li>当任务 2 正在执行 (4) 时，它会锁定处理器外设以供其独占访问。</li>
+<li>在 (5) 处，内核挂起任务 2 … 并在 (6) 处恢复任务 3。</li>
+<li>任务 3 尝试访问同一个处理器外设，发现它已锁定任务 3 无法继续，因此在 (7) 处挂起。</li>
+<li>在 (8) 处，内核恢复任务 1。</li>
+<li>等等。</li>
+<li>下一次任务 2 执行时 (9)，它完成处理器外设并将其解锁。</li>
+<li>下一次任务 3 执行 (10) 时，它发现它现在可以访问处理器外围设备，并且这次执行直到被内核挂起。</li>
+</ul>
+<h2 id="上下文切换Context-Switching"><a href="#上下文切换Context-Switching" class="headerlink" title="上下文切换Context Switching"></a>上下文切换Context Switching</h2><p>当任务执行时，它会像任何其他程序一样利用处理器/微控制器寄存器并访问 RAM 和 ROM。这些资源（处理器寄存器、堆栈等）一起构成了任务执行<strong>上下文</strong>。</p>
+<p><img src="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E5%9F%BA%E7%A1%80/ExeContext.gif" class="lazyload placeholder" data-srcset="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E5%9F%BA%E7%A1%80/ExeContext.gif" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="执行上下文.gif"></p>
+<p>任务是一段连续的代码——它不知道它何时会被内核挂起（换出或切换出）或恢复（换入或切换入），甚至不知道何时发生。考虑一个任务在执行一条指令之前被挂起的例子，该指令将包含在两个处理器寄存器中的值相加。当任务挂起时，其他任务将执行并可能修改处理器寄存器值。恢复后，任务将不知道处理器寄存器已被更改——如果它使用修改后的值，则求和将导致不正确的值。</p>
+<p>为了防止这种类型的错误，<strong>任务在恢复时必须具有与其暂停之前相同的上下文</strong>。操作系统内核负责确保这种情况 - 并通过在任务挂起时保存任务的上下文来做到这一点。当任务恢复时，其保存的上下文在执行之前由操作系统内核恢复。<strong>保存被挂起任务的上下文和恢复被恢复任务上下文的过程</strong>称为<strong>上下文切换</strong>。</p>
+<h2 id="实时应用程序-Real-Time-Applications"><a href="#实时应用程序-Real-Time-Applications" class="headerlink" title="实时应用程序 Real Time Applications"></a>实时应用程序 Real Time Applications</h2><p>实时操作系统 ( <strong>RTOSes</strong> ) 使用这些相同的原理实现多任务处理 - 但它们的目标与非实时系统的目标截然不同。<strong>不同的目标反映在调度策略中</strong>。<strong>实时/嵌入式系统旨在提供对现实世界事件的及时响应</strong>。现实世界中发生的事件可能有截止日期，实时/嵌入式系统必须在截止日期之前做出响应，并且 <strong>RTOS 调度策略必须确保满足这些截止日期</strong>。</p>
+<p>为了实现这个目标，<strong>软件工程师必须首先为每个任务分配优先级</strong>。RTOS 的调度策略是<strong>简单地确保能够执行的最高优先级任务是给定处理时间的任务</strong>。如果它们准备好同时运行，这可能需要在具有相同优先级的任务之间“公平地”共享处理时间。</p>
+<p><strong>例子：</strong></p>
+<p>最基本的示例是包含键盘和 LCD 的实时系统。用户必须在合理的时间内获得每次按键的视觉反馈——如果用户在这段时间内看不到按键已被接受，则软件产品最多使用起来会很尴尬。如果最长的可接受时间段是 100 毫秒 - 0 到 100 毫秒之间的任何响应都是可以接受的。此功能可以作为具有以下结构的自主任务来实现： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vKeyHandlerTask</span><span class="params">( <span class="keyword">void</span> *pvParameters )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Key handling is a continuous process and as such the task</span></span><br><span class="line">    <span class="comment">// is implemented using an infinite loop (as most real time</span></span><br><span class="line">    <span class="comment">// tasks are).</span></span><br><span class="line">    <span class="comment">// 按键处理是一个连续的过程，因此任务是使用无限循环实现的（就像大多数实时任务一样）。</span></span><br><span class="line">    <span class="keyword">for</span>( ;; )</span><br><span class="line">    &#123;</span><br><span class="line">        [Suspend waiting <span class="keyword">for</span> a key press]	<span class="comment">// 暂停等待按键</span></span><br><span class="line"></span><br><span class="line">        [Process the key press]			<span class="comment">// 处理按键</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在假设实时系统也在执行依赖于智能过滤的(digitally filtered)输入控制功能。必须对输入进行采样、过滤，并且控制周期每 2 毫秒执行一次。为了filter的正确操作，采样的时间规律性必须精确到 0.5ms。此功能可以作为具有以下结构的自主任务来实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vControlTask</span><span class="params">( <span class="keyword">void</span> *pvParameters )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>( ;; )</span><br><span class="line">    &#123;</span><br><span class="line">        [Suspend waiting <span class="keyword">for</span> <span class="number">2</span>ms since the start of the previous</span><br><span class="line">        cycle]	<span class="comment">//自上一个周期开始后暂停等待 2ms</span></span><br><span class="line"></span><br><span class="line">        [Sample the input]	<span class="comment">// 对输入进行采样</span></span><br><span class="line">        [Filter the sampled input]	<span class="comment">// 对采样输入进行滤波</span></span><br><span class="line">        [Perform control algorithm]	<span class="comment">// 执行控制算法</span></span><br><span class="line">        [Output result]	<span class="comment">// 输出结果</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>软件工程师必须为控制任务分配最高优先级，如下所示：</p>
+<ol>
+<li>控制任务的期限比密钥处理任务的期限更严格。 </li>
+<li>错过最后期限对控制任务的影响比对关键处理任务的影响更大。</li>
+</ol>
+<h2 id="实时调度-Real-Time-Scheduling"><a href="#实时调度-Real-Time-Scheduling" class="headerlink" title="实时调度 Real Time Scheduling"></a>实时调度 Real Time Scheduling</h2><p>下图演示了上面定义的任务将如何被实时操作系统调度。RTOS 自己创建了一个任务——<strong>空闲（idle）</strong>任务——只有当没有其他任务可以执行时才会执行。RTOS 空闲任务始终处于能够执行的状态。</p>
+<p><img src="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E5%9F%BA%E7%A1%80/RTExample.gif" class="lazyload placeholder" data-srcset="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E5%9F%BA%E7%A1%80/RTExample.gif" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="RT例子.gif"></p>
+<p>参考上图：</p>
+<ul>
+<li>一开始，我们的两个任务都无法运行——vControlTask 正在等待正确的时间来开始一个新的控制周期，而 vKeyHandlerTask 正在等待一个键被按下。处理器时间分配给 RTOS 空闲任务。</li>
+<li><strong>在时间 t1，发生按键按下。</strong>vKeyHandlerTask 现在可以执行了——它比 RTOS 的idle 任务具有更高的优先级，因此获得了处理器时间。</li>
+<li><strong>在时间 t2，vKeyHandlerTask 已完成处理密钥并更新 LCD</strong>。在按下另一个键之前它无法继续，因此会自行挂起并再次恢复 RTOS 空闲（idle）任务。</li>
+<li><strong>在时间 t3，定时器事件指示是时候执行下一个控制周期了</strong>。vControlTask 现在可以执行，并且作为最高优先级任务立即安排处理器时间。</li>
+<li><strong>在时间 t3 和 t4 之间，当 vControlTask 仍在执行时，发生按键按下。</strong>vKeyHandlerTask 现在可以执行了，但是因为它的优先级低于 vControlTask，所以它没有安排任何处理器时间。</li>
+<li><strong>在 t4 时刻，vControlTask 完成了控制周期的处理，并且在下一个计时器事件之前无法重新启动 - 它会自行挂起</strong>。vKeyHandlerTask 现在是能够运行的具有最高优先级的任务，因此安排了处理器时间来处理之前的按键操作。</li>
+<li><strong>在 t5 时，按键已被处理，并且 vKeyHandlerTask 暂停自身以等待下一个按键事件</strong>。同样，我们的任务都无法执行，并且 RTOS 空闲任务是预定的处理器时间。</li>
+<li><strong>在 t5 和 t6 之间，一个定时器事件被处理，但是没有进一步的按键操作发生</strong>。</li>
+<li><strong>下一次按键发生在时间 t6，但在 vKeyHandlerTask 完成处理该键之前，会发生一个计时器事件</strong>。现在这两个任务都可以执行了。由于 vControlTask 具有更高的优先级，vKeyHandlerTask 在完成处理密钥之前被挂起，并且 vControlTask 是预定的处理器时间。</li>
+<li><strong>在 t8 时刻，vControlTask 完成控制周期的处理并暂停自身等待下一个</strong>。vKeyHandlerTask 再次是能够运行的最高优先级任务，因此安排了处理器时间，以便可以完成按键处理。</li>
+</ul>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/RTOS/" class="">
+              RTOS
+            </a>
+          
+            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="">
+              操作系统
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>作者:  </strong>fireknight</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>文章链接:  </strong>
+    <a href="/2022/12/14/RTOS学习-RTOS基础/" target="_blank" title="RTOS学习-RTOS基础">http://example.com/2022/12/14/RTOS学习-RTOS基础/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明:   </strong>
+      本网站所有文章除特别声明外,均采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      许可协议。转载请注明出处!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/rand2.jpg" class="lazyload placeholder" data-srcset="/medias/rand2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2022/12/14/RTOS%E5%AD%A6%E4%B9%A0-RTOS%E6%9E%84%E5%BB%BA/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> 上一篇:
+        <div class="title-text">RTOS学习-RTOS构建</div>
+      </div>
+      
+      <!-- <div class="content">
+        RTOS构建构建块 Building BlocksThe RTOS Tick休眠时，RTOS 任务将指定一个时间，之后它
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/rand7.jpg" class="lazyload placeholder" data-srcset="/medias/rand7.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2022/11/23/Halucinator%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="post-nav-link">
+      <div class="title">
+        下一篇: <i class="fas fa-angle-right"></i>
+        <div class="title-text">Halucinator使用教程</div>
+      </div>
+      <!-- <div class="content">
+        前言本教程假设您已经在Ubuntu18.04上安装了HALucinator，并且位于名为halucinator的虚拟环境
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>本文目录</span>
+        
+          <div class="toc-open-close">本文目录</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin-left': 'auto', 'margin-right': 'auto',});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
   <script>
-  function typedFn() {
-    const el = '#archive-header-desc';
-    const type = 'archive';
-    let desc = '世界无穷愿无尽，海天寥廓立多时。 ——梁启超'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
-</script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
   
-  </div>
-  <div class="mask-box"></div>
-</div>
-
-<div class="archive-video">
-  <video class="full-video" autoplay loop muted>
-      <source style="width: 100%;height: 100vh;" src="/">
-  </video>
-  <div class="video-header-title">
-    archive
-  </div>
-  <div class="video-header-desc">
-  
-      <span class="title" id="archive-video-header-desc"></span>
-      <script>
-  function typedFn() {
-    const el = '#archive-video-header-desc';
-    const type = 'archive';
-    let desc = '世界无穷愿无尽，海天寥廓立多时。 ——梁启超'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
 </script>
-      
-  </div>
-  <div class="mask-box"></div>
-</div>
 
-<!-- hash算法 -->
-
-
-<div class="archive-main">
-  <section class="archive">
-    <div class="archive-content">
-      <ul class="post-archive">
-        
-        
-          
-            
-            <div class="year" data-aos="zoom-in-up">
-                <div class="bullet"></div>
-                <a href="/archives/2022">2022</a>
-            </div>
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand4.jpg" class="lazyload placeholder" data-srcset="/medias/rand4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">07-22</span>
-              </div>
-              <a class="post-title" href="/2022/07/22/Upload-Labs-%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/">Upload Labs 做题记录</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand4.jpg" class="lazyload placeholder" data-srcset="/medias/rand4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">06-28</span>
-              </div>
-              <a class="post-title" href="/2022/06/28/AFL-%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/">AFL 模糊测试实验</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/05/12/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand13.jpg" class="lazyload placeholder" data-srcset="/medias/rand13.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-12</span>
-              </div>
-              <a class="post-title" href="/2022/05/12/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">二叉树的序列化与反序列化</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/05/11/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B04/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand5.jpg" class="lazyload placeholder" data-srcset="/medias/rand5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-11</span>
-              </div>
-              <a class="post-title" href="/2022/05/11/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B04/">今日C++起步小记4</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand8.jpg" class="lazyload placeholder" data-srcset="/medias/rand8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-11</span>
-              </div>
-              <a class="post-title" href="/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">二分查找</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/05/10/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B03/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand4.jpg" class="lazyload placeholder" data-srcset="/medias/rand4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-10</span>
-              </div>
-              <a class="post-title" href="/2022/05/10/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B03/">今日C++起步小记3</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/05/09/%E5%BA%94%E7%94%A8AddressSanitizer%E5%8F%91%E7%8E%B0%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand13.jpg" class="lazyload placeholder" data-srcset="/medias/rand13.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-09</span>
-              </div>
-              <a class="post-title" href="/2022/05/09/%E5%BA%94%E7%94%A8AddressSanitizer%E5%8F%91%E7%8E%B0%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF/">应用AddressSanitizer发现程序内存错误</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/05/09/AddressSanitizer/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand1.jpg" class="lazyload placeholder" data-srcset="/medias/rand1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-09</span>
-              </div>
-              <a class="post-title" href="/2022/05/09/AddressSanitizer/">AddressSanitizer 原理</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/05/09/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B02/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand3.jpg" class="lazyload placeholder" data-srcset="/medias/rand3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-09</span>
-              </div>
-              <a class="post-title" href="/2022/05/09/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B02/">今日C++起步小记2</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/rand13.jpg" class="lazyload placeholder" data-srcset="/medias/rand13.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-08</span>
-              </div>
-              <a class="post-title" href="/2022/05/08/%E4%BB%8A%E6%97%A5C-%E8%B5%B7%E6%AD%A5%E5%B0%8F%E8%AE%B0/">今日C++起步小记</a>
-            </div>
-          </li>
-        
-      </ul>
-    </div>
-  </section>
-  <div class="w-70">
-    
-  <!-- <nav class="page-nav">
-    <a class="extend prev" rel="prev" href="/archives/2022/">上一页</a><a class="page-number" href="/archives/2022/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/2022/page/3/">3</a><a class="extend next" rel="next" href="/archives/2022/page/3/">下一页</a>
-  </nav> -->
-  <div class="page-nav">
-    
-      <a href="/archives/2022/"
-         class="page-nav-pre">
-         <i class="fas fa-angle-left"></i><span class="ml-5">上一页</span>
-      </a>
-    
-    <div class="page-info">
-        <div class="page-info-text">2 / 3</div>
-    </div>
-    
-      <a href="/archives/2022/page/3/"
-         class="page-nav-next">
-          <span class="mr-5">下一页</span><i class="fas fa-angle-right"></i>
-      </a>
-      
-  </div>
-
-  </div>
-</div>
 
       </main>
     </div>
