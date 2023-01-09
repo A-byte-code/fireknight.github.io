@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html>
+  <!-- meta/link... -->
+  
+
+
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+  <title>hal-fuzz学习笔记--part 1 | FireKnight-HJ</title>
+
+  <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
+  <link href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/js/swiper/swiper@5.4.1.min.css" rel="stylesheet">
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/animate.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/shareJs/share.min.css">
+
+  
+  <style>
+        @media (max-width: 992px) {
+            #waifu {
+                display: none;
+            }
+        }
+    </style>
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+    
+
+    <!-- import link -->
+    
+        
+            
+        
+            
+        
+    
+    <!-- import script -->
+    
+        
+            
+        
+            
+        
+    
+
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="FireKnight-HJ" type="application/atom+xml">
+</head>
+
+  
+  <!-- 依赖于jquery和vue -->
+  
+    
+<script src="https://unpkg.com/jquery@3.5.1/dist/jquery.min.js"></script>
+
+  
+
+  
+    
+<script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
+
+  
+  
+  <body>
+    <!-- 预加载动画 -->
+    <!-- 页面预加载动画 -->
+
+<div id='loader'>
+  <link rel="stylesheet" href="/js/loaded/index.css" >
+  <div class="loading-left-bg"></div>
+  <div class="loading-right-bg"></div>
+  <div class="spinner-box">
+    <div class="configure-border-1">
+      <div class="configure-core"></div>
+    </div>
+    <div class="configure-border-2">
+      <div class="configure-core"></div>
+    </div>
+    <div class="loading-word">加载中...</div>
+  </div>
+</div>
+
+<script>
+  var endLoading = function () {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loader').classList.add("loading");
+  }
+  window.addEventListener('DOMContentLoaded',endLoading);
+  
+</script>
+
+    
+    <!-- 判断是否为暗黑风格 -->
+    <!-- 判断是否为黑夜模式 -->
+<script>
+  let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+
+  if (isDark) {
+    $(document.body).addClass('darkModel');
+  }
+</script>
+
+    <!-- 需要在上面加载的js -->
+    <script>
+  function loadScript(src, cb) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+
+  //https://github.com/filamentgroup/loadCSS
+  var loadCSS = function (href, before, media, attributes) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  };
+
+</script> 
+
+<!-- 轮播图所需要的js -->
+<script src="/js/swiper/swiper.min.js"></script>
+<script src="/js/swiper/vue-awesome-swiper.js"></script>
+<script src="/js/swiper/swiper.animate1.0.3.min.js"></script>
+
+<script type="text/javascript">
+  Vue.use(window.VueAwesomeSwiper)
+</script>
+
+
+  <script src="/js/vue-typed-js/index.js"></script>
+
+
+<!-- 首页的公告滚动插件的js需要重新加载 -->
+<script src="/js/vue-seamless-scroll/index.js"></script>
+
+<!-- 打字机效果js -->
+<script src="https://unpkg.com/typed.js@2.0.11"></script>
+
+
+    <div id="safearea">
+      <main class="main" id="pjax-container">
+        <!-- 头部导航 -->
+        
+<header class="header   " 
+  id="navHeader"
+  style="position: fixed;
+  left: 0; top: 0; z-index: 10;width: 100%;"
+>
+  <div class="header-content">
+    <div class="bars">
+      <div id="appDrawer" class="sidebar-image">
+  <div class="drawer-box-icon">
+    <i class="fas fa-bars" aria-hidden="true" @click="showDialogDrawer"></i>
+  </div>
+  
+  <transition name="fade">
+    <div class="drawer-box_mask" v-cloak style="display: none;" v-show="visible" @click.self="cancelDialogDrawer">
+    </div>
+  </transition>
+  <div class="drawer-box" :class="{'active': visible}">
+    <div class="drawer-box-head bg-color">
+      <img class="drawer-box-head_logo lazyload placeholder" src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+      <h3 class="drawer-box-head_title">FireKnight-HJ</h3>
+      <h5 class="drawer-box-head_desc">fireknight-hJ的博客</h5>
+    </div>
+    
+    <div class="drawer-box-content">
+      <ul class="drawer-box-content_menu">
+        
+        
+          <li class="drawer-box-content_item">
+            <a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo">
+              <i class="fas fa-github" aria-hidden="true"></i>
+              <span>Github</span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDrawer',
+    data: {
+      visible: false,
+      top: 0,
+      openArr: [],
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      isOpen(index) {
+        if (this.openArr.includes(index)) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      openOrCloseMenu(curIndex) {
+        const index = this.openArr.indexOf(curIndex);
+        if (index !== -1) {
+          this.openArr.splice(index, 1);
+        } else {
+          this.openArr.push(curIndex);
+        }
+      },
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'width: 100%; height: 100%;overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      }
+    },
+    created() {}
+  })
+</script>
+
+    </div>
+    <div class="blog-title" id="author-avatar">
+      
+        <div class="avatar">
+          <img src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+        </div>
+      
+      <a href="/" class="logo">FireKnight-HJ</a>
+    </div>
+    <nav class="navbar">
+      <ul class="menu">
+        
+      </ul>
+      
+      
+        <div id="appSearch">
+  <div class="search"  @click="showDialog()"><i class="fas fa-search" aria-hidden="true"></i></div>
+  <transition name="fade">
+    <div class="message-box_wrapper" style="display: none;" v-cloak v-show="dialogVisible" @click.self="cancelDialogVisible()">
+      <div class="message-box animated bounceInDown">
+        <h2>
+          <span>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <span class="title">本地搜索</span>
+          </span>
+          <i class="fas fa-times close" pointer style="float:right;" aria-hidden="true" @click.self="cancelDialogVisible()"></i>
+        </h2>
+        <form class="site-search-form">
+          <input type="text"
+            placeholder="请输入关键字"
+            id="local-search-input" 
+            @click="getSearchFile()"
+            class="st-search-input"
+            v-model="searchInput"
+          />
+        </form>
+        <div class="result-wrapper">
+          <div id="local-search-result" class="local-search-result-cls"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+<script src="/js/local_search.js"></script>
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appSearch',
+    data: {
+      dialogVisible: false,
+      searchInput: '',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+      window.addEventListener('pjax:complete', () => {
+        this.cancelDialogVisible();
+      })
+    },
+    methods: {
+      showDialog() {
+        this.dialogVisible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'overflow: hidden;';
+      },
+      getSearchFile() {
+        if (!this.searchInput) {
+          getSearchFile("/search.xml");
+        }
+      },
+      cancelDialogVisible() {
+        this.dialogVisible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+    },
+    created() {}
+  })
+</script>
+<!-- 解决刷新页面闪烁问题，可以在元素上添加display: none, 或者用vue.extend方法，详情：https://blog.csdn.net/qq_31393401/article/details/81017912 -->
+<!-- 下面是搜索基本写法 -->
+<!-- <script type="text/javascript" id="local.search.active">
+  var inputArea = document.querySelector("#local-search-input");
+  inputArea.onclick   = function(){ getSearchFile(); this.onclick = null }
+  inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
+</script> -->
+
+      
+
+    </nav>
+  </div>
+  
+    <a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo" class="github-corner color-primary" aria-label="View source on GitHub"><svg width="60" height="60" viewBox="0 0 250 250" style="fill:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+  
+  
+</header>
+        <!-- 内容区域 -->
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/rand9.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        hal-fuzz学习笔记--part 1
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> 发表于：2023-01-09 |
+        </span>
+      
+
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="post-detail-content row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h1 id="hal-fuzz学习笔记—part-1"><a href="#hal-fuzz学习笔记—part-1" class="headerlink" title="hal-fuzz学习笔记—part 1"></a>hal-fuzz学习笔记—part 1</h1><h2 id="关于-test-stm32-tcp-echo-sh"><a href="#关于-test-stm32-tcp-echo-sh" class="headerlink" title="关于 test_stm32_tcp_echo.sh"></a>关于 test_stm32_tcp_echo.sh</h2><p>看一下<code>test_stm32_tcp_echo.sh</code>的内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">BINARY=./tests/stm32_tcp_echo/stm32_tcp_echo_server.yml</span><br><span class="line">INPUTS=./tests/stm32_tcp_echo/inputs</span><br><span class="line">OUTPUTS=./tests/stm32_tcp_echo/output/</span><br><span class="line">HARNESS=&quot;python -m hal_fuzz.harness -c $BINARY&quot;</span><br><span class="line"><span class="meta">#</span><span class="bash">./afl-fuzz -U -m none -i <span class="variable">$INPUTS</span> -o <span class="variable">$OUTPUTS</span> -- <span class="variable">$HARNESS</span> @@</span></span><br><span class="line"><span class="meta">$</span><span class="bash">HARNESS <span class="variable">$INPUTS</span>/TCP_Echo_Server_Client.pcapng.input</span></span><br></pre></td></tr></table></figure>
+<p>也就是使用afl运行的一个程序：</p>
+<p>关键语句：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./afl-fuzz -U -m none -i $INPUTS -o $OUTPUTS -- $HARNESS @@</span><br></pre></td></tr></table></figure>
+<p>其中</p>
+<ul>
+<li><code>-U</code>是使用了“Unicorn mode”，</li>
+<li><code>-m</code>是子进程的内存限制，这里规定为 none ，</li>
+<li><code>-i</code>是输入测试样例的目录，这里是 ./tests/stm32_tcp_echo/inputs</li>
+<li><code>-o</code>是输出内容的目录，这里是 ./tests/stm32_tcp_echo/output/</li>
+<li><code>--</code>之后跟着 python -m hal_fuzz.harness -c ./tests/stm32_tcp_echo/stm32_tcp_echo_server.yml @@，这个是 Unicorn 模式下的 test_harness 。</li>
+</ul>
+<blockquote>
+<p>基于Unicorn的测试线束 Unicorn-based <strong>test harness</strong> which:</p>
+<ul>
+<li>添加内存映射区域</li>
+<li>将二进制代码加载到内存</li>
+<li>至少模拟一条指令 *<ul>
+<li>是啊，这个描述很模糊。有关更多详细信息，请参见下面的“Gotchas（陷阱）”部分</li>
+</ul>
+</li>
+<li>从命令行指定的文件加载并验证要fuzz的数据<ul>
+<li>AFL将通过更改传递给测试工具的文件来提供变异输入</li>
+<li>假定要模糊化的数据位于固定的缓冲器地址</li>
+<li>如果输入约束(大小、无效的字节,等等)是已知的，应该在文件加载后对其进行检查。如果一个约束失败（错误了）,退出测试工具。AFL将输入为“uninteresting”,继续前进。</li>
+</ul>
+</li>
+<li>设置寄存器和内存状态（memory state）以开始测试</li>
+<li>从头到尾模拟 interested 的代码</li>
+<li>如果检测到crash，测试线束必须通过发出信号（SIGSEGV、SIGKILL、SIGABORT等）来产生“crash”</li>
+</ul>
+</blockquote>
+<h2 id="关于test-harness"><a href="#关于test-harness" class="headerlink" title="关于test harness"></a>关于test harness</h2><p>看一下这个 test harness ：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m hal_fuzz.harness -c ./tests/stm32_tcp_echo/stm32_tcp_echo_server.yml @@</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>python 的 -m选项：run library module as a script (terminates option list) 相当于import,叫做当做模块来启动</p>
+</blockquote>
+<h2 id="关于test-harness-main函数"><a href="#关于test-harness-main函数" class="headerlink" title="关于test_harness.main函数"></a>关于test_harness.main函数</h2><p>我们来看一看这个hal_fuzz下面这个harness.py文件，它的main里面有一些详细内容</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;HALFuzz execution harness&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;input_file&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&quot;Path to the file containing the mutated input to load&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-s&#x27;</span>, <span class="string">&#x27;--single&#x27;</span>, default=<span class="literal">False</span>, action=<span class="string">&#x27;store_true&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-d&#x27;</span>, <span class="string">&#x27;--debug&#x27;</span>, default=<span class="literal">False</span>, action=<span class="string">&quot;store_true&quot;</span>, <span class="built_in">help</span>=<span class="string">&quot;Enables debug mode (required for -t and -M) (SLOW!)&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;--config&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-M&#x27;</span>, <span class="string">&#x27;--trace-memory&#x27;</span>, default=<span class="literal">False</span>, action=<span class="string">&quot;store_true&quot;</span>, dest=<span class="string">&#x27;trace_memory&#x27;</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&quot;Enables memory tracing&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-t&#x27;</span>, <span class="string">&#x27;--trace-funcs&#x27;</span>, dest=<span class="string">&#x27;trace_funcs&#x27;</span>, default=<span class="literal">False</span>, action=<span class="string">&#x27;store_true&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-l&#x27;</span>, <span class="string">&#x27;--instr-limit&#x27;</span>, dest=<span class="string">&#x27;instr_limit&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=globs.DEFAULT_BASIC_BLOCK_LIMIT, <span class="built_in">help</span>=<span class="string">&quot;Maximum number of instructions to execute. 0: no limit. Default: &#123;:d&#125;&quot;</span>.<span class="built_in">format</span>(globs.DEFAULT_BASIC_BLOCK_LIMIT))</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-n&#x27;</span>, <span class="string">&#x27;--use-native&#x27;</span>, dest=<span class="string">&#x27;use_native&#x27;</span>, default=<span class="literal">True</span>, action=<span class="string">&#x27;store_true&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-b&quot;</span>, <span class="string">&#x27;--breakpoint&#x27;</span>, dest=<span class="string">&#x27;breakpoint&#x27;</span>, <span class="built_in">type</span>=auto_int)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--native-lib&#x27;</span>, dest=<span class="string">&#x27;native_lib&#x27;</span>, default=os.path.dirname(os.path.realpath(__file__))+<span class="string">&#x27;/native/native_hooks.so&#x27;</span>, <span class="built_in">help</span>=<span class="string">&quot;Specify the path of the native library&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--mmio-trace-out&#x27;</span>, dest=<span class="string">&#x27;mmio_trace_file&#x27;</span>, default=<span class="literal">None</span>)<span class="comment">#, type=argparse.FileType(&quot;w&quot;))</span></span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--ram-trace-out&#x27;</span>, dest=<span class="string">&#x27;ram_trace_file&#x27;</span>, default=<span class="literal">None</span>)<span class="comment">#, type=argparse.FileType(&quot;w&quot;))</span></span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--bb-trace-out&#x27;</span>, dest=<span class="string">&#x27;bb_trace_file&#x27;</span>, default=<span class="literal">None</span>)<span class="comment">#, type=argparse.FileType(&quot;w&quot;))</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    globs.input_file_name = os.path.basename(args.input_file)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> args.use_native:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Not using native mode is no longer supported&quot;</span>)</span><br><span class="line">        exit(-<span class="number">1</span>)</span><br><span class="line">	<span class="comment"># 设置一个default的基本块限制</span></span><br><span class="line">    <span class="comment"># In case tracing is requested but a basic block limit is not set, set a limit anyways</span></span><br><span class="line">    <span class="keyword">if</span> (args.bb_trace_file <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">or</span> args.ram_trace_file <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">or</span> args.mmio_trace_file <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>) <span class="keyword">and</span> (args.instr_limit == <span class="number">0</span> <span class="keyword">or</span> args.instr_limit == globs.DEFAULT_BASIC_BLOCK_LIMIT):</span><br><span class="line">        args.instr_limit = <span class="number">1</span>&lt;&lt;<span class="number">20</span></span><br><span class="line"></span><br><span class="line">    globs.debug_enabled = args.debug</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 在configure中设置这些use case</span></span><br><span class="line">    uc = configure_unicorn(args)</span><br><span class="line">    globs.uc = uc</span><br><span class="line"></span><br><span class="line">    <span class="comment">#-----------------------------------------------------</span></span><br><span class="line">    <span class="comment"># Emulate 1 instruction to kick off AFL&#x27;s fork server</span></span><br><span class="line">    <span class="comment">#   THIS MUST BE DONE BEFORE LOADING USER DATA! </span></span><br><span class="line">    <span class="comment">#   If this isn&#x27;t done every single run, the AFL fork server </span></span><br><span class="line">    <span class="comment">#   will not be started appropriately and you&#x27;ll get erratic results!</span></span><br><span class="line">    <span class="comment">#   It doesn&#x27;t matter what this returns with, it just has to execute at</span></span><br><span class="line">    <span class="comment">#   least one instruction in order to get the fork server started.</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Execute 1 instruction just to startup the forkserver</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Starting the AFL forkserver by executing 1 instruction&quot;</span>)</span><br><span class="line">	<span class="comment"># 使用垃圾回收的库</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    python不会对已经销毁的对象所占据的内存做自动的释放内存空间的工作。</span></span><br><span class="line"><span class="string">    Python中，主要依靠gc（garbage collector）模块的引用计数技术来进行垃圾回收。所谓引用计数，就是考虑到Python中变量的本质不是内存中一块存储数据的区域，而是对一块内存数据区域的引用。所以python可以给所有的对象（内存中的区域）维护一个引用计数的属性，在一个引用被创建或复制的时候，让python,把相关对象的引用计数+1；相反当引用被销毁的时候就把相关对象的引用计数-1。当对象的引用计数减到0时，自然就可以认为整个python中不会再有变量引用这个对象，所以就可以把这个对象所占据的内存空间释放出来了。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Collect garbage once in order to avoid doing so while fuzzing</span></span><br><span class="line">    gc.collect()</span><br><span class="line">    <span class="comment"># gc.set_threshold(0, 0, 0)</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        uc.emu_start(uc.reg_read(UC_ARM_REG_PC)|<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, count=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">except</span> UcError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;ERROR: Failed to execute a single instruction (error: &#123;&#125;)!&quot;</span>.<span class="built_in">format</span>(e))</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#-----------------------------------------------</span></span><br><span class="line">    <span class="comment"># Load the mutated input and map it into memory</span></span><br><span class="line">    native.load_fuzz(args.input_file)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#------------------------------------------------------------</span></span><br><span class="line">    <span class="comment"># Emulate the code, allowing it to process the mutated input</span></span><br><span class="line">    <span class="keyword">if</span> args.single:</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                result = uc.emu_start(uc.reg_read(UC_ARM_REG_PC) | <span class="number">1</span>, <span class="number">0</span>, timeout=<span class="number">0</span>, count=<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">except</span> UcError <span class="keyword">as</span> e:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;Execution failed with error: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(e))</span><br><span class="line">                force_crash(e)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Executing until a crash&quot;</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        result = uc.emu_start(uc.reg_read(UC_ARM_REG_PC)|<span class="number">1</span>, <span class="number">0</span>, timeout=<span class="number">0</span>, count=args.instr_limit)</span><br><span class="line">    <span class="keyword">except</span> UcError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Execution failed with error: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(e))</span><br><span class="line">        force_crash(e)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Done.&quot;</span>)</span><br><span class="line">    do_exit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="关于test-harness-configure-unicorn函数"><a href="#关于test-harness-configure-unicorn函数" class="headerlink" title="关于test_harness.configure_unicorn函数"></a>关于test_harness.configure_unicorn函数</h2><p>这个是configure_unicorn函数，这个函数运行完成后产生uc对象，这个函数将args中的设置都设置入uc中</p>
+<h3 id="yaml配置文件加载"><a href="#yaml配置文件加载" class="headerlink" title="yaml配置文件加载"></a>yaml配置文件加载</h3><p>加载配置文件部分内容如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">configure_unicorn</span>(<span class="params">args</span>):</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Loading configuration in %s&quot;</span> % args.config)</span><br><span class="line">    <span class="comment"># 加载配置文件，即对应yaml文件</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(args.config, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> infile:</span><br><span class="line">        config = yaml.load(infile, Loader=yaml.FullLoader)</span><br><span class="line">    <span class="comment"># 处理include，加载include中涉及的yaml文件</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;include&#x27;</span> <span class="keyword">in</span> config:</span><br><span class="line">        <span class="comment"># Merge config files listed in &#x27;include&#x27; in listed order</span></span><br><span class="line">        <span class="comment"># Root file gets priority</span></span><br><span class="line">        newconfig = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> f <span class="keyword">in</span> config[<span class="string">&#x27;include&#x27;</span>]:</span><br><span class="line">            <span class="comment"># Make configs relative to the including file</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> f.startswith(<span class="string">&quot;/&quot;</span>):</span><br><span class="line">                cur_dir = os.path.dirname(args.config)</span><br><span class="line">                f = os.path.abspath(os.path.join(cur_dir, f))</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\tIncluding configuration from %s&quot;</span> % f)</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(f, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> infile:</span><br><span class="line">                _merge_dict(newconfig, yaml.load(infile, Loader=yaml.FullLoader))</span><br><span class="line">        _merge_dict(newconfig, config)</span><br><span class="line">        config = newconfig</span><br></pre></td></tr></table></figure>
+<p>配置文件中include的内容</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">include:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">./../../configs/hw/cortexm_memory.yml</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">./../../configs/hals/stm32f4_hal.yml</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">./stm32_tcp_echo_server_addrs.yml</span></span><br></pre></td></tr></table></figure>
+<h3 id="加载内存映射"><a href="#加载内存映射" class="headerlink" title="加载内存映射"></a>加载内存映射</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 是否有memory_map项目，加载内存映射</span></span><br><span class="line">   <span class="comment"># Step 2: Set up the memory map</span></span><br><span class="line">   <span class="keyword">if</span> <span class="string">&#x27;memory_map&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> config:</span><br><span class="line">       <span class="built_in">print</span>(<span class="string">&quot;Memory Configuration must be in config file&quot;</span>)</span><br><span class="line">       quit(-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">   <span class="comment"># Create the unicorn 创建一个Unicorn对象，使用ARM架构，THUMB模式的指令集</span></span><br><span class="line">   <span class="comment"># <span class="doctag">TODO:</span> Parse the arch, using archinfo</span></span><br><span class="line">   uc = Uc(UC_ARCH_ARM, UC_MODE_THUMB | UC_MODE_MCLASS)</span><br><span class="line"></span><br><span class="line">   <span class="comment"># 读取memory_map部分的内容，将其中内容填入字典regions中格式为：&#123;rname:(base_addr, size, 权限rwx)&#125;</span></span><br><span class="line">   regions = &#123;&#125;</span><br><span class="line">   <span class="keyword">for</span> rname, region <span class="keyword">in</span> config[<span class="string">&#x27;memory_map&#x27;</span>].items():</span><br><span class="line">       prot = <span class="number">0</span></span><br><span class="line">       <span class="keyword">if</span> <span class="string">&#x27;permissions&#x27;</span> <span class="keyword">in</span> region:</span><br><span class="line">           prot = <span class="number">7</span> <span class="comment"># UC_PROT_ALL</span></span><br><span class="line">       <span class="keyword">if</span> <span class="string">&#x27;r&#x27;</span> <span class="keyword">in</span> region[<span class="string">&#x27;permissions&#x27;</span>]:</span><br><span class="line">           prot |= <span class="number">1</span></span><br><span class="line">       <span class="keyword">if</span> <span class="string">&#x27;w&#x27;</span> <span class="keyword">in</span> region[<span class="string">&#x27;permissions&#x27;</span>]:</span><br><span class="line">           prot |= <span class="number">2</span></span><br><span class="line">       <span class="keyword">if</span> <span class="string">&#x27;x&#x27;</span> <span class="keyword">in</span> region[<span class="string">&#x27;permissions&#x27;</span>]:</span><br><span class="line">           prot |= <span class="number">4</span></span><br><span class="line">       <span class="built_in">print</span>(<span class="string">&quot;Mapping region %s at %#08x, size %#08x, perms: %d&quot;</span> % (rname, region[<span class="string">&#x27;base_addr&#x27;</span>], region[<span class="string">&#x27;size&#x27;</span>], prot))</span><br><span class="line">       regions[rname] = (region[<span class="string">&#x27;base_addr&#x27;</span>], region[<span class="string">&#x27;size&#x27;</span>], prot)</span><br><span class="line">       uc.mem_map(region[<span class="string">&#x27;base_addr&#x27;</span>], region[<span class="string">&#x27;size&#x27;</span>], prot)</span><br><span class="line">       <span class="comment"># 如果有file选项，这个file指明的是地址处要装载的二进制代码</span></span><br><span class="line">       <span class="keyword">if</span> <span class="string">&#x27;file&#x27;</span> <span class="keyword">in</span> region:</span><br><span class="line">           file_offset = <span class="number">0</span></span><br><span class="line">           load_offset = <span class="number">0</span></span><br><span class="line">           file_size = region[<span class="string">&#x27;size&#x27;</span>]</span><br><span class="line">           <span class="keyword">if</span> <span class="string">&#x27;file_offset&#x27;</span> <span class="keyword">in</span> region:</span><br><span class="line">               file_offset = region[<span class="string">&#x27;file_offset&#x27;</span>]</span><br><span class="line">           <span class="keyword">if</span> <span class="string">&#x27;load_offset&#x27;</span> <span class="keyword">in</span> region:</span><br><span class="line">               load_offset = region[<span class="string">&#x27;load_offset&#x27;</span>]</span><br><span class="line">           <span class="keyword">if</span> <span class="string">&#x27;file_size&#x27;</span> <span class="keyword">in</span> region:</span><br><span class="line">               file_size = region[<span class="string">&#x27;file_size&#x27;</span>]</span><br><span class="line">           <span class="keyword">if</span> <span class="keyword">not</span> region[<span class="string">&#x27;file&#x27;</span>].startswith(<span class="string">&quot;/&quot;</span>):</span><br><span class="line">               cur_dir = os.path.dirname(args.config)</span><br><span class="line">               f = os.path.join(cur_dir, region[<span class="string">&#x27;file&#x27;</span>])</span><br><span class="line">           <span class="built_in">print</span>(<span class="string">&quot;Using file %s, offset %#08x, load offset: %#08x, file_size: %#08x&quot;</span> % (f, file_offset, load_offset, file_size))</span><br><span class="line">           <span class="keyword">with</span> <span class="built_in">open</span>(f, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">               fp.seek(file_offset)</span><br><span class="line">               region_data = fp.read(file_size)</span><br><span class="line">               <span class="built_in">print</span>(<span class="string">&quot;Loading %#08x bytes at %#08x&quot;</span> % (<span class="built_in">len</span>(region_data), region[<span class="string">&#x27;base_addr&#x27;</span>] + load_offset))</span><br><span class="line">               <span class="comment"># uc.mem_write跟4或2个参数，这里为(代码加载地址，代码内容比特串)</span></span><br><span class="line">               uc.mem_write(region[<span class="string">&#x27;base_addr&#x27;</span>] + load_offset, region_data)</span><br><span class="line">   globs.regions = regions</span><br><span class="line"></span><br><span class="line">   <span class="comment"># args.native_lib有设置默认值为：&#x27;/native/native_hooks.so&#x27;，native为本地库</span></span><br><span class="line">   <span class="comment"># Native mmio fuzzing</span></span><br><span class="line">   <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(args.native_lib):</span><br><span class="line">       <span class="built_in">print</span>(<span class="string">&quot;Native library %s does not exist!&quot;</span> % args.native_lib)</span><br><span class="line">       exit(<span class="number">1</span>)</span><br><span class="line">   <span class="comment"># native模式是加载本地C库的hook</span></span><br><span class="line">   native.init(uc, args.native_lib, <span class="literal">False</span>, [], <span class="number">0</span>, <span class="literal">None</span>, [])</span><br></pre></td></tr></table></figure>
+<p>配置文件中memory_map的内容</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 cortexm_memory.yml 中，是基本的设置</span></span><br><span class="line"><span class="attr">memory_map:</span></span><br><span class="line">  <span class="attr">ram:</span>  &#123;<span class="attr">base_addr:</span>  <span class="number">0x20000000</span>, <span class="attr">size:</span> <span class="number">0x00400000</span>, <span class="attr">permissions:</span> <span class="string">rwx</span>&#125;</span><br><span class="line">  <span class="attr">mmio:</span> &#123;<span class="attr">base_addr:</span>  <span class="number">0x40000000</span>, <span class="attr">size:</span> <span class="number">0x10000000</span>, <span class="attr">permissions:</span> <span class="string">rw-</span>&#125;</span><br><span class="line">  <span class="attr">nvic:</span> &#123;<span class="attr">base_addr:</span>  <span class="number">0xe0000000</span>, <span class="attr">size:</span> <span class="number">0x10000000</span>, <span class="attr">permissions:</span> <span class="string">rw-</span>&#125;</span><br><span class="line">  <span class="attr">irq_ret:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0xfffff000</span>, <span class="attr">size:</span> <span class="number">0x1000</span>, <span class="attr">permissions:</span> <span class="string">rwx</span>&#125; </span><br><span class="line"><span class="attr">initial_sp:</span> <span class="number">0x20014000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在主配置文件./tests/stm32_tcp_echo/stm32_tcp_echo_server.yml中，这个是我们加载了自己的二进制代码的地方，可以看到它们不可写，可执行</span></span><br><span class="line"><span class="attr">memory_map:</span></span><br><span class="line">  <span class="attr">ivt:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0x0</span>, <span class="attr">file:</span> <span class="string">./stm32_tcp_echo_server.bin</span>,</span><br><span class="line">    <span class="attr">permissions:</span> <span class="string">r-x</span>, <span class="attr">size:</span> <span class="number">0x800000</span>&#125;</span><br><span class="line">  <span class="attr">rom:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0x08000000</span>, <span class="attr">file:</span> <span class="string">./stm32_tcp_echo_server.bin</span>,</span><br><span class="line">    <span class="attr">permissions:</span> <span class="string">r-x</span>, <span class="attr">size:</span> <span class="number">0x800000</span>&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="符号表创建"><a href="#符号表创建" class="headerlink" title="符号表创建"></a>符号表创建</h3><p>将name-&gt;addr和addr-&gt;name的映射都创建出来，字典形式存储</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;符号表创建&#x27;&#x27;&#x27;</span></span><br><span class="line">name_to_addr = &#123;&#125;</span><br><span class="line">addr_to_name = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create the symbol table</span></span><br><span class="line"><span class="keyword">if</span> <span class="string">&#x27;symbols&#x27;</span> <span class="keyword">in</span> config:</span><br><span class="line">    addr_to_name = &#123;k&amp;<span class="number">0xFFFFFFFE</span>: v <span class="keyword">for</span> k, v <span class="keyword">in</span> config[<span class="string">&#x27;symbols&#x27;</span>].items()&#125;</span><br><span class="line">    name_to_addr = &#123;v: k <span class="keyword">for</span> k, v <span class="keyword">in</span> config[<span class="string">&#x27;symbols&#x27;</span>].items()&#125;</span><br></pre></td></tr></table></figure>
+<p>配置文件中符号表部分的内容如下，都是 address : symbol_name 的格式：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">symbols:</span> &#123;</span><br><span class="line">  <span class="attr">134218333:</span> <span class="string">__aeabi_uldivmod</span>, <span class="attr">134219789:</span> <span class="string">memcpy</span>, <span class="attr">134222317:</span> <span class="string">Reset_Handler</span>,</span><br><span class="line">  <span class="attr">134222621:</span> <span class="string">_isatty</span>, <span class="attr">134222645:</span> <span class="string">_lseek</span>, <span class="attr">134222733:</span> <span class="string">User_notification</span>, <span class="attr">134222777:</span> <span class="string">ethernetif_notify_conn_changed</span>,</span><br><span class="line">  <span class="attr">134222885:</span> <span class="string">HAL_ETH_MspInit</span>, <span class="attr">134223349:</span> <span class="string">low_level_init</span>, <span class="attr">134223685:</span> <span class="string">low_level_output</span>,</span><br><span class="line">  <span class="attr">134224009:</span> <span class="string">low_level_input</span>, <span class="attr">134224365:</span> <span class="string">ethernetif_input</span>, <span class="attr">134224429:</span> <span class="string">ethernetif_init</span>,</span><br><span class="line">  <span class="attr">134224525:</span> <span class="string">sys_now</span>, <span class="attr">134224541:</span> <span class="string">ethernetif_set_link</span>, <span class="attr">134224625:</span> <span class="string">ethernetif_update_config</span>,</span><br></pre></td></tr></table></figure>
+<h3 id="handlers设置"><a href="#handlers设置" class="headerlink" title="handlers设置"></a>handlers设置</h3><p>设置handlers的过程</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="string">&quot;&quot;&quot;设置handlers&quot;&quot;&quot;</span></span><br><span class="line"> <span class="comment"># Step 3: Set the handlers</span></span><br><span class="line"> <span class="keyword">if</span> <span class="string">&#x27;handlers&#x27;</span> <span class="keyword">in</span> config <span class="keyword">and</span> config[<span class="string">&#x27;handlers&#x27;</span>]:</span><br><span class="line">     <span class="comment"># 函数名fname，对应handler_desc为：&#123;handler: hal_fuzz.handlers.generic.return_zero ...()...&#125;</span></span><br><span class="line">     <span class="keyword">for</span> fname, handler_desc <span class="keyword">in</span> config[<span class="string">&#x27;handlers&#x27;</span>].items():</span><br><span class="line">         <span class="comment"># 如果这个handler的地址总是固定的，它会自带addr这个信息，就用这个handler地址</span></span><br><span class="line">         <span class="keyword">if</span> <span class="string">&#x27;addr&#x27;</span> <span class="keyword">in</span> handler_desc <span class="keyword">and</span> <span class="built_in">isinstance</span>(handler_desc[<span class="string">&#x27;addr&#x27;</span>], <span class="built_in">int</span>):</span><br><span class="line">             <span class="comment"># This handler is always at a fixed address</span></span><br><span class="line">             handler_desc[<span class="string">&#x27;addr&#x27;</span>] = handler_desc[<span class="string">&#x27;addr&#x27;</span>] &amp; <span class="number">0xFFFFFFFE</span>  <span class="comment"># Clear thumb bit</span></span><br><span class="line">             addr_to_name[handler_desc[<span class="string">&#x27;addr&#x27;</span>]] = fname</span><br><span class="line">         <span class="comment"># 然而大部分情况是只有符号名跟对应的handler是信息，没有固定地址的情况下，需要查找符号表</span></span><br><span class="line">         <span class="keyword">else</span>:</span><br><span class="line">             <span class="comment"># No static address specified, look in the symbol table</span></span><br><span class="line">             <span class="keyword">if</span> <span class="keyword">not</span> name_to_addr:</span><br><span class="line">                 <span class="built_in">print</span>(<span class="string">&quot;Need symbol table in order to hook named functions!&quot;</span>)</span><br><span class="line">                 sys.exit(<span class="number">1</span>)</span><br><span class="line">             <span class="comment"># 如果没有在符号表对应找到项目，这个hook就做不出来</span></span><br><span class="line">             <span class="keyword">if</span> fname <span class="keyword">not</span> <span class="keyword">in</span> name_to_addr:</span><br><span class="line">                 <span class="comment"># We can&#x27;t hook this</span></span><br><span class="line">                 <span class="built_in">print</span>(<span class="string">&quot;No symbol found for %s&quot;</span> % fname)</span><br><span class="line">                 <span class="keyword">continue</span></span><br><span class="line">             <span class="comment"># 添加addr项目，填入对应的符号表的address数字</span></span><br><span class="line">             handler_desc[<span class="string">&#x27;addr&#x27;</span>] = name_to_addr[fname]</span><br><span class="line">         <span class="comment"># 默认设置do_return选项为true</span></span><br><span class="line">         <span class="keyword">if</span> <span class="keyword">not</span> <span class="string">&#x27;do_return&#x27;</span> <span class="keyword">in</span> handler_desc:</span><br><span class="line">             handler_desc[<span class="string">&#x27;do_return&#x27;</span>] = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 如果没有handler就设置为None</span></span><br><span class="line">         <span class="keyword">if</span> <span class="string">&#x27;handler&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> handler_desc:</span><br><span class="line">             handler_desc[<span class="string">&#x27;handler&#x27;</span>] = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">         <span class="comment"># Hook 的具体操作发生在这个add_func_hook函数中</span></span><br><span class="line">         <span class="comment"># Actually hook the thing</span></span><br><span class="line">         <span class="built_in">print</span>(<span class="string">&quot;Handling function %s at %#08x with %s&quot;</span> % (fname, handler_desc[<span class="string">&#x27;addr&#x27;</span>], handler_desc[<span class="string">&#x27;handler&#x27;</span>]))</span><br><span class="line">         add_func_hook(uc, handler_desc[<span class="string">&#x27;addr&#x27;</span>], handler_desc[<span class="string">&#x27;handler&#x27;</span>], do_return=handler_desc[<span class="string">&#x27;do_return&#x27;</span>])</span><br></pre></td></tr></table></figure>
+<p>/configs/hals/stm32f4_hal.yml中的handlers配置的部分内容，这里应该是一些针对这个stm32板子的比较通用的基础的handler替换，我们也可以看到hal_fuzz.handlers中有很多针对各种stm32板子的写好了的handler函数</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">handlers:</span></span><br><span class="line">  <span class="attr">HAL_Init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_InitTick:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">SystemClock_Config:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">SystemInit:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_RCC_ClockConfig:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_RCC_OscConfig:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">    </span><br><span class="line">  <span class="attr">HAL_SYSTICK_Config:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_base.systick_config</span></span><br><span class="line">  <span class="attr">HAL_SYSTICK_CLKSourceConfig:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">HAL_TIM_ConfigClockSource:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_TIMEx_MasterConfigSynchronization:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_TIM_Base_Start_IT:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_tim.tim_base_start_it</span></span><br><span class="line">  <span class="attr">HAL_TIM_Base_Stop_IT:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_tim.tim_base_stop_it</span></span><br><span class="line">  <span class="attr">HAL_TIM_IRQHandler:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_tim.tim_irq_handler</span></span><br><span class="line">    </span><br><span class="line">  <span class="attr">HAL_ETH_Init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">wifi_init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_wifi.wifi_init</span></span><br><span class="line">  <span class="attr">wifi_wakeup:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">Wifi_SysTick_Isr:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">Wifi_TIM_Handler:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_wifi.wifi_tim_handler</span></span><br><span class="line">  <span class="attr">wifi_socket_server_open:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_wifi.wifi_socket_server_open</span></span><br><span class="line">  <span class="attr">wifi_socket_server_write:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_wifi.wifi_socket_server_write</span></span><br><span class="line">  <span class="attr">wifi_ap_start:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">Receive_Data:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br></pre></td></tr></table></figure>
+<p>主配置文件./tests/stm32_tcp_echo/stm32_tcp_echo_server.yml中的handlers内容如下，这里应该是自主添加的一些handler配置</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">handlers:</span></span><br><span class="line">  <span class="attr">BSP_IO_ConfigPin:</span></span><br><span class="line">    <span class="attr">handler:</span> </span><br><span class="line">  <span class="attr">tcp_next_iss:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.lwip.tcp_next_iss_hack</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">I2C_WaitOnFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">I2C_WaitOnMasterAddressFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">I2C_WaitOnTXEFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">I2C_WaitOnBTFFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">I2C_WaitOnRXNEFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br></pre></td></tr></table></figure>
+<h3 id="其他设置"><a href="#其他设置" class="headerlink" title="其他设置"></a>其他设置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">if args.ram_trace_file is not None:</span></span><br><span class="line">    <span class="string">trace_mem.init_ram_tracing(uc,</span> <span class="string">args.ram_trace_file,</span> <span class="string">config)</span></span><br><span class="line"></span><br><span class="line"><span class="attr">if args.bb_trace_file is not None:</span></span><br><span class="line">    <span class="string">trace_bbs.register_handler(uc,</span> <span class="string">args.bb_trace_file)</span></span><br><span class="line"></span><br><span class="line"><span class="attr">if args.debug and args.trace_memory:</span></span><br><span class="line">    <span class="string">add_block_hook(unicorn_debug_block)</span></span><br><span class="line">    <span class="string">uc.hook_add(UC_HOOK_MEM_WRITE</span> <span class="string">|</span> <span class="string">UC_HOOK_MEM_READ,</span> <span class="string">unicorn_debug_mem_access)</span></span><br><span class="line"></span><br><span class="line"><span class="attr">if args.debug and args.trace_funcs:</span></span><br><span class="line">    <span class="string">add_block_hook(unicorn_trace_syms)</span></span><br></pre></td></tr></table></figure>
+<h3 id="Crash-Detector设置"><a href="#Crash-Detector设置" class="headerlink" title="Crash Detector设置"></a>Crash Detector设置</h3><p>碰撞检测问题，使用hal-fuzz写的超级变态的detector工具</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is our super nasty crash detector</span></span><br><span class="line">uc.hook_add(UC_HOOK_MEM_WRITE_UNMAPPED | UC_HOOK_MEM_READ_INVALID, unicorn_debug_mem_invalid_access)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>？？？？？</p>
+<h3 id="入口点设置"><a href="#入口点设置" class="headerlink" title="入口点设置"></a>入口点设置</h3><p>通过修改uc的PC和SP两个寄存器的值来设置程序到该起始的位置。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set the program entry point</span></span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span> Make this arch-independent</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="string">&#x27;entry_point&#x27;</span> <span class="keyword">in</span> config:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Binary entry point missing! Make sure &#x27;entry_point is in your configuration&quot;</span>)</span><br><span class="line">    sys.exit(<span class="number">1</span>)</span><br><span class="line"><span class="comment"># Set the initial stack pointer</span></span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span> make this arch-independent</span></span><br><span class="line">uc.reg_write(UC_ARM_REG_PC, config[<span class="string">&#x27;entry_point&#x27;</span>])</span><br><span class="line">uc.reg_write(UC_ARM_REG_SP, config[<span class="string">&#x27;initial_sp&#x27;</span>])</span><br></pre></td></tr></table></figure>
+<p>这个是在stm32_tcp_echo_server_addrs.yml配置文件，其中就有 entry_point 和 symbols 的内容，可以看到这个entry point就是Reset Handler的符号位置</p>
+<p><img src="/2023/01/09/hal-fuzz%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-part-1/uTools_1673194920693.png" class="lazyload placeholder" data-srcset="/2023/01/09/hal-fuzz%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-part-1/uTools_1673194920693.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="uTools_1673194920693"></p>
+<p>这里这个handler会被模拟用来正确执行afl-unicorn??</p>
+<h3 id="中断触发器"><a href="#中断触发器" class="headerlink" title="中断触发器"></a>中断触发器</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment"># Implementation detail: Interrupt triggers need to be configured before the nvic (to enable multiple interrupt enabling)</span></span><br><span class="line">   <span class="keyword">if</span> <span class="string">&#x27;interrupt_triggers&#x27;</span> <span class="keyword">in</span> config:</span><br><span class="line">       interrupt_triggers.init_triggers(uc, config[<span class="string">&#x27;interrupt_triggers&#x27;</span>])</span><br><span class="line"><span class="comment"># nvic为内嵌向量中断控制器，如果使用nvic，将vtor设置为默认量</span></span><br><span class="line">   use_nvic = (<span class="string">&#x27;use_nvic&#x27;</span> <span class="keyword">in</span> config <span class="keyword">and</span> config[<span class="string">&#x27;use_nvic&#x27;</span>] <span class="keyword">is</span> <span class="literal">True</span>)</span><br><span class="line">   <span class="keyword">if</span> use_nvic:</span><br><span class="line">       <span class="comment"># NVIC_VTOR_NONE = 0xffffffff</span></span><br><span class="line">       vtor = globs.NVIC_VTOR_NONE</span><br><span class="line">       <span class="comment"># DEFAULT_NUM_NVIC_VECS = 128</span></span><br><span class="line">       num_vecs = globs.DEFAULT_NUM_NVIC_VECS</span><br><span class="line">       <span class="keyword">if</span> <span class="string">&#x27;nvic&#x27;</span> <span class="keyword">in</span> config:</span><br><span class="line">           num_vecs = config[<span class="string">&#x27;nvic&#x27;</span>][<span class="string">&#x27;num_vecs&#x27;</span>] <span class="keyword">if</span> <span class="string">&#x27;num_vecs&#x27;</span> <span class="keyword">in</span> config[<span class="string">&#x27;nvic&#x27;</span>] <span class="keyword">else</span> globs.DEFAULT_NUM_NVIC_VECS</span><br><span class="line">	</span><br><span class="line">       native.init_nvic(uc, vtor, num_vecs, <span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p>这里还是要求native模式开启，有native_lib存在才能成功init_nvic，使用中断触发器</p>
+<h3 id="配置抽象语义模型"><a href="#配置抽象语义模型" class="headerlink" title="配置抽象语义模型"></a>配置抽象语义模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">def configure_models(uc, config):</span></span><br><span class="line"><span class="string">    for mdl in models:</span></span><br><span class="line"><span class="string">        mdl.configure(uc, config)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">class Model:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    @classmethod</span></span><br><span class="line"><span class="string">    def configure(cls, uc, config):</span></span><br><span class="line"><span class="string">        pass</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    def __init__(self, *args, **kwargs):</span></span><br><span class="line"><span class="string">        pass</span></span><br><span class="line"><span class="string">???所以configure_models这个玩意有个锤子用???</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Configure abstract peripheral models</span></span><br><span class="line">    configure_models(uc, config)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>？？？？</p>
+<h3 id="注册non-native的hook函数"><a href="#注册non-native的hook函数" class="headerlink" title="注册non-native的hook函数"></a>注册non-native的hook函数</h3><p>在add_func_hook函数中address : hook_function_object的映射存在func_hooks字典中，现在我们加载这个字典</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># At the end register the non-native accumulating block hook if any unconditional hooks have been registered</span></span><br><span class="line"><span class="keyword">if</span> handlers.func_hooks:</span><br><span class="line">    <span class="comment"># In the native version we use a native check wrapper to avoid unconditional python block hooks</span></span><br><span class="line">    <span class="comment"># 这个handlers.func_hooks.keys()就是要替换的address列表</span></span><br><span class="line">    native.register_cond_py_handler_hook(uc, handlers.func_hooks.keys())</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;No function hooks found. Registering no native basic block hook for that&quot;</span>)</span><br><span class="line"></span><br><span class="line">uc.symbols = name_to_addr</span><br><span class="line">uc.syms_by_addr = addr_to_name</span><br><span class="line">uc = add_sparkles(uc, args)</span><br><span class="line">register_global_block_hook(uc)</span><br><span class="line"><span class="keyword">return</span> uc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="关于handlers-add-func-hook-func-hook-handler函数"><a href="#关于handlers-add-func-hook-func-hook-handler函数" class="headerlink" title="关于handlers.add_func_hook func_hook_handler函数"></a>关于handlers.add_func_hook func_hook_handler函数</h2><p>该函数位于<code>hal_fuzz/handlers/__init__.py</code>文件中，实际上就是将address : hook_function_object的映射存在func_hooks字典中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_func_hook</span>(<span class="params">uc, addr, func, do_return=<span class="literal">True</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Add a function hook.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    If func is None (and do_return is True) this is effectively a nop-out without using a real hook!</span></span><br><span class="line"><span class="string">    Makes it faster to not have to call into python for hooks we don&#x27;t need.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    real_addr = addr &amp; <span class="number">0xFFFFFFFE</span>  <span class="comment"># Drop the thumb bit</span></span><br><span class="line">    <span class="keyword">if</span> func:</span><br><span class="line">        <span class="comment"># 根据模块名从相应的python模块加载函数对象</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(func, <span class="built_in">str</span>):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="comment"># Resolve the function name</span></span><br><span class="line">                mod_name, func_name = func.rsplit(<span class="string">&#x27;.&#x27;</span>, <span class="number">1</span>)</span><br><span class="line">                mod = importlib.import_module(mod_name)</span><br><span class="line">                func_obj = <span class="built_in">getattr</span>(mod, func_name)</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">import</span> traceback</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;Unable to hook function %s at address %#08x&quot;</span> % (<span class="built_in">repr</span>(func), addr))</span><br><span class="line">                traceback.print_exc()</span><br><span class="line">                do_exit(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            func_obj = func</span><br><span class="line">		<span class="comment"># func_hooks字典：&#123;real_addr : func_obj&#125;，在func_hooks字典中添加新的对象（后面会统一集中处理）</span></span><br><span class="line">        <span class="keyword">if</span> real_addr <span class="keyword">not</span> <span class="keyword">in</span> func_hooks:</span><br><span class="line">            func_hooks[real_addr] = []</span><br><span class="line">        func_hooks[real_addr].append(func_obj)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> do_return:</span><br><span class="line">        <span class="comment"># <span class="doctag">TODO:</span> Make this arch-independent.  Hint, use archinfo</span></span><br><span class="line">        bxlr = <span class="string">b&#x27;\x70\x47&#x27;</span></span><br><span class="line">        uc.mem_write(real_addr, bxlr)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="关于native-init函数"><a href="#关于native-init函数" class="headerlink" title="关于native.init函数"></a>关于native.init函数</h2><p>native.py中的init函数如下，这个函数中，可以看到所有的东西实际上都要从这个native_lib_path加载native_lib来处理，这个native_lib是使用ctyps库加载兼容的C函数dll。</p>
+<p>默认的native_lib的代码位置是 /native/native_hooks.so </p>
+<blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span>(<span class="params">uc, native_lib_path, fuzz_mmio, mmio_regions, max_num_dynamically_added_mmio_pages, exit_at_bbls, allowed_fuzzed_irqs</span>):</span></span><br><span class="line">    <span class="keyword">global</span> native_lib</span><br><span class="line">    <span class="keyword">global</span> mmio_cb_wrapper</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Native init...&quot;</span>)</span><br><span class="line">    sys.stdout.flush()</span><br><span class="line">    native_lib = _load_lib(native_lib_path)</span><br><span class="line">    <span class="keyword">assert</span> (native_lib <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># GENERAL</span></span><br><span class="line">    <span class="comment"># uc_err init(uc_engine *uc, int fuzz_mmio, exit_hook_t p_exit_hook, mmio_region_added_cb_t p_mmio_region_added_cb, int p_num_mmio_regions, uint64_t *p_mmio_starts, uint64_t *p_mmio_ends, void *p_py_default_mmio_user_data, int max_num_dynamically_added_mmio_pages, uint32_t num_exit_at_bbls, uint64_t *exit_at_bbls, uint32_t num_allowed_irq_numbers, uint8_t *allowed_irq_numbers);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;init&quot;</span>, ctypes.c_int, uc_engine, ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int, ctypes.c_uint, ctypes.c_void_p, ctypes.c_uint, ctypes.c_void_p)</span><br><span class="line">    <span class="comment"># uc_err register_cond_py_handler_hook(uc_cb_hookcode_t py_callback, uint64_t *addrs, int num_addrs)</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;register_cond_py_handler_hook&quot;</span>, ctypes.c_int, uc_engine, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int)</span><br><span class="line">    <span class="comment"># uc_err remove_function_handler_hook_address(uc_engine * uc, uint64_t address);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;remove_function_handler_hook_address&quot;</span>, ctypes.c_int, uc_engine, ctypes.c_uint64)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># FUZZING</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;load_fuzz&quot;</span>, ctypes.c_int, ctypes.c_char_p)</span><br><span class="line">    <span class="comment"># uint32_t fuzz_remaining();</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;fuzz_remaining&quot;</span>, ctypes.c_int)</span><br><span class="line">    <span class="comment"># char *get_fuzz_ptr(uint32_t size);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;get_fuzz_ptr&quot;</span>, ctypes.c_void_p, ctypes.c_uint32)</span><br><span class="line">    <span class="comment"># uc_err add_unmapped_mem_hook(uc_engine *uc)</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;add_unmapped_mem_hook&quot;</span>, ctypes.c_int, uc_engine)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># NVIC</span></span><br><span class="line">    <span class="comment"># extern uc_err init_nvic(uc_engine *uc, uint32_t vtor, uint32_t num_vectors, uint32_t is_oneshot)</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;init_nvic&quot;</span>, ctypes.c_int, uc_engine, ctypes.c_uint, ctypes.c_uint, ctypes.c_uint)</span><br><span class="line">    <span class="comment"># extern void nvic_set_pending(int num)</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;nvic_set_pending&quot;</span>, ctypes.c_int, ctypes.c_int)</span><br><span class="line">    <span class="comment"># extern static void nvic_enter_exception(uc_engine *uc, uint32_t num)</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;nvic_enter_exception&quot;</span>, ctypes.c_int, uc_engine, ctypes.c_uint)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># TIMER</span></span><br><span class="line">    <span class="comment"># extern uint64_t get_global_ticker();</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&#x27;get_global_ticker&#x27;</span>, ctypes.c_int64)</span><br><span class="line">    <span class="comment"># extern uc_err init_timer_hook(uc_engine *uc, uint32_t global_timer_scale);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;init_timer_hook&quot;</span>, ctypes.c_int, uc_engine, ctypes.c_uint)</span><br><span class="line">    <span class="comment"># extern uint32_t add_timer(int64_t reload_val, void *trigger_callback, uint32_t isr_num);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;add_timer&quot;</span>, ctypes.c_int, ctypes.c_uint64, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint32)</span><br><span class="line">    <span class="comment"># extern uc_err rem_timer(uint32_t id);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;rem_timer&quot;</span>, ctypes.c_int, ctypes.c_uint32)</span><br><span class="line">    <span class="comment"># extern uc_err reset_timer(uint32_t id);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;reset_timer&quot;</span>, ctypes.c_int, ctypes.c_uint32)</span><br><span class="line">    <span class="comment"># extern uc_err start_timer(uint32_t id);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;start_timer&quot;</span>, ctypes.c_int, ctypes.c_uint32)</span><br><span class="line">    <span class="comment"># extern uint32_t is_running(uint32_t id)</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;is_running&quot;</span>, ctypes.c_int, ctypes.c_uint32)</span><br><span class="line">    <span class="comment"># extern uc_err stop_timer(uint32_t id);</span></span><br><span class="line">    _setup_prototype(native_lib, <span class="string">&quot;stop_timer&quot;</span>, ctypes.c_int, ctypes.c_uint32)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span> (native_lib.init(uc._uch, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>) == <span class="number">0</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="关于native的大部分函数"><a href="#关于native的大部分函数" class="headerlink" title="关于native的大部分函数"></a>关于native的大部分函数</h2><p>这里的 native.load_fuzz 函数就是调用了native_lib.load_fuzz函数，实际上就是C语言写出的二进制文件native_hook.so里面带的函数的调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_fuzz</span>(<span class="params">file_path</span>):</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Loading fuzz from: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(file_path))</span><br><span class="line">    <span class="keyword">assert</span>(native_lib.load_fuzz(file_path.encode())==<span class="number">0</span>)</span><br><span class="line">    sys.stdout.flush()</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_nvic</span>(<span class="params">uc, vtor, num_vecs, is_oneshot=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="keyword">global</span> native_lib</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Calling init_nvic with vtor=0x&#123;:08x&#125;, num_vecs: &#123;&#125;, is_oneshot: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(vtor, num_vecs, is_oneshot))</span><br><span class="line">    <span class="keyword">assert</span> ( native_lib.init_nvic(uc._uch, vtor, num_vecs, is_oneshot) == <span class="number">0</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="关于配置文件"><a href="#关于配置文件" class="headerlink" title="关于配置文件"></a>关于配置文件</h2><p>配置文件为/tests/stm32_tcp_echo/stm32_tcp_echo_server.yml，这个文件中include了另外三个配置文件，分别为：</p>
+<p>/configs/hw/cortexm_memory.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">memory_map:</span></span><br><span class="line">  <span class="attr">ram:</span>  &#123;<span class="attr">base_addr:</span>  <span class="number">0x20000000</span>, <span class="attr">size:</span> <span class="number">0x00400000</span>, <span class="attr">permissions:</span> <span class="string">rwx</span>&#125;</span><br><span class="line">  <span class="attr">mmio:</span> &#123;<span class="attr">base_addr:</span>  <span class="number">0x40000000</span>, <span class="attr">size:</span> <span class="number">0x10000000</span>, <span class="attr">permissions:</span> <span class="string">rw-</span>&#125;</span><br><span class="line">  <span class="attr">nvic:</span> &#123;<span class="attr">base_addr:</span>  <span class="number">0xe0000000</span>, <span class="attr">size:</span> <span class="number">0x10000000</span>, <span class="attr">permissions:</span> <span class="string">rw-</span>&#125;</span><br><span class="line">  <span class="attr">irq_ret:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0xfffff000</span>, <span class="attr">size:</span> <span class="number">0x1000</span>, <span class="attr">permissions:</span> <span class="string">rwx</span>&#125; </span><br><span class="line"><span class="attr">initial_sp:</span> <span class="number">0x20014000</span></span><br></pre></td></tr></table></figure>
+<p>/configs/hals/stm32f4_hal.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">handlers:</span></span><br><span class="line">  <span class="attr">HAL_Init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_InitTick:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">SystemClock_Config:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">SystemInit:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_RCC_ClockConfig:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_RCC_OscConfig:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">HAL_PWREx_EnableOverDrive:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">HAL_SYSTICK_Config:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_base.systick_config</span></span><br><span class="line">  <span class="attr">HAL_SYSTICK_CLKSourceConfig:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">HAL_TIM_ConfigClockSource:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_TIMEx_MasterConfigSynchronization:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_TIM_Base_Start_IT:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_tim.tim_base_start_it</span></span><br><span class="line">  <span class="attr">HAL_TIM_Base_Stop_IT:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_tim.tim_base_stop_it</span></span><br><span class="line">  <span class="attr">HAL_TIM_IRQHandler:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_tim.tim_irq_handler</span></span><br><span class="line">  <span class="attr">HAL_Delay:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">delay_ms:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">HAL_TIM_PWM_Init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_TIMEx_MasterConfigSynchronization:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_TIM_PWM_ConfigChannel:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_TIM_PWM_Start:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_TIMEx_ConfigBreakDeadTime:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="attr">HAL_ETH_Init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">wifi_init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_wifi.wifi_init</span></span><br><span class="line">  <span class="attr">wifi_wakeup:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">Wifi_SysTick_Isr:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">Wifi_TIM_Handler:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_wifi.wifi_tim_handler</span></span><br><span class="line">  <span class="attr">wifi_socket_server_open:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_wifi.wifi_socket_server_open</span></span><br><span class="line">  <span class="attr">wifi_socket_server_write:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_wifi.wifi_socket_server_write</span></span><br><span class="line">  <span class="attr">wifi_ap_start:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">Receive_Data:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">UART_WaitOnFlagUntilTimeout:</span></span><br><span class="line">     <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">HAL_I2C_Init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_I2C_Mem_Read:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_i2c.HAL_I2C_Mem_Read</span></span><br><span class="line">  <span class="attr">HAL_I2C_Mem_Write:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">HAL_GPIO_Init:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line">  <span class="attr">HAL_GPIO_WritePin:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">HAL_UART_Init:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">HAL_UART_Receive_IT:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_uart.HAL_UART_Receive_IT</span></span><br><span class="line">  <span class="attr">HAL_UART_Transmit:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_uart.HAL_UART_Transmit</span></span><br><span class="line">  <span class="attr">HAL_UART_IRQHandler:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_uart.HAL_UART_IRQHandler</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">HAL_ADCEx_Calibration_Start:</span></span><br><span class="line">    <span class="attr">handler:</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>/tests/stm32_tcp_echo/stm32_tcp_echo_server_addrs.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">architecture:</span> <span class="string">arm</span></span><br><span class="line"><span class="attr">base_address:</span> <span class="number">134217728</span></span><br><span class="line"><span class="attr">entry_point:</span> <span class="number">134222317</span></span><br><span class="line"><span class="attr">symbols:</span> &#123;<span class="attr">134218333:</span> <span class="string">__aeabi_uldivmod</span>, <span class="attr">134219789:</span> <span class="string">memcpy</span>, <span class="attr">134222317:</span> <span class="string">Reset_Handler</span>,</span><br><span class="line">  <span class="attr">134222621:</span> <span class="string">_isatty</span>, <span class="attr">134222645:</span> <span class="string">_lseek</span>, <span class="attr">134222733:</span> <span class="string">User_notification</span>, <span class="attr">134222777:</span> <span class="string">ethernetif_notify_conn_changed</span>,</span><br><span class="line">  <span class="attr">134222885:</span> <span class="string">HAL_ETH_MspInit</span>, <span class="attr">134223349:</span> <span class="string">low_level_init</span>, <span class="attr">134223685:</span> <span class="string">low_level_output</span>,</span><br><span class="line">  <span class="attr">134224009:</span> <span class="string">low_level_input</span>, <span class="attr">134224365:</span> <span class="string">ethernetif_input</span>, <span class="attr">134224429:</span> <span class="string">ethernetif_init</span>,</span><br><span class="line">  <span class="attr">134224525:</span> <span class="string">sys_now</span>, <span class="attr">134224541:</span> <span class="string">ethernetif_set_link</span>, <span class="attr">134224625:</span> <span class="string">ethernetif_update_config</span>,</span><br><span class="line">  <span class="attr">134225089:</span> <span class="string">HAL_GPIO_EXTI_Callback</span>, <span class="attr">134225437:</span> <span class="string">SysTick_Handler</span>, <span class="attr">134225449:</span> <span class="string">EXTI9_5_IRQHandler</span>,</span><br><span class="line">  <span class="attr">134225465:</span> <span class="string">tcp_echoserver_init</span>, <span class="attr">134225577:</span> <span class="string">tcp_echoserver_accept</span>, <span class="attr">134225713:</span> <span class="string">tcp_echoserver_recv</span>,</span><br><span class="line">  <span class="attr">134226021:</span> <span class="string">tcp_echoserver_error</span>, <span class="attr">134226057:</span> <span class="string">tcp_echoserver_poll</span>, <span class="attr">134226153:</span> <span class="string">tcp_echoserver_sent</span>,</span><br><span class="line">  <span class="attr">134226237:</span> <span class="string">tcp_echoserver_send</span>, <span class="attr">134226405:</span> <span class="string">tcp_echoserver_connection_close</span>, <span class="attr">134226481:</span> <span class="string">__io_putchar</span>,</span><br><span class="line">  <span class="attr">134226929:</span> <span class="string">LCD_LOG_UpdateDisplay</span>, <span class="attr">134227201:</span> <span class="string">SystemInit</span>, <span class="attr">134227293:</span> <span class="string">HAL_Init</span>, <span class="attr">134227373:</span> <span class="string">HAL_InitTick</span>,</span><br><span class="line">  <span class="attr">134227469:</span> <span class="string">HAL_IncTick</span>, <span class="attr">134227505:</span> <span class="string">HAL_GetTick</span>, <span class="attr">134227529:</span> <span class="string">HAL_Delay</span>, <span class="attr">134227597:</span> <span class="string">NVIC_SetPriorityGrouping</span>,</span><br><span class="line">  <span class="attr">134227669:</span> <span class="string">NVIC_GetPriorityGrouping</span>, <span class="attr">134227697:</span> <span class="string">NVIC_EnableIRQ</span>, <span class="attr">134227745:</span> <span class="string">NVIC_SetPriority</span>,</span><br><span class="line">  <span class="attr">134227829:</span> <span class="string">NVIC_EncodePriority</span>, <span class="attr">134227929:</span> <span class="string">SysTick_Config</span>, <span class="attr">134227997:</span> <span class="string">HAL_NVIC_SetPriorityGrouping</span>,</span><br><span class="line">  <span class="attr">134228017:</span> <span class="string">HAL_NVIC_SetPriority</span>, <span class="attr">134228073:</span> <span class="string">HAL_NVIC_EnableIRQ</span>, <span class="attr">134228101:</span> <span class="string">HAL_SYSTICK_Config</span>,</span><br><span class="line">  <span class="attr">134228125:</span> <span class="string">HAL_ETH_Init</span>, <span class="attr">134228949:</span> <span class="string">HAL_ETH_DMATxDescListInit</span>, <span class="attr">134229161:</span> <span class="string">HAL_ETH_DMARxDescListInit</span>,</span><br><span class="line">  <span class="attr">134229381:</span> <span class="string">HAL_ETH_TransmitFrame</span>, <span class="attr">134229849:</span> <span class="string">HAL_ETH_GetReceivedFrame</span>, <span class="attr">134230117:</span> <span class="string">HAL_ETH_ReadPHYRegister</span>,</span><br><span class="line">  <span class="attr">134230325:</span> <span class="string">HAL_ETH_WritePHYRegister</span>, <span class="attr">134230529:</span> <span class="string">HAL_ETH_Start</span>, <span class="attr">134230625:</span> <span class="string">HAL_ETH_Stop</span>,</span><br><span class="line">  <span class="attr">134230721:</span> <span class="string">HAL_ETH_ConfigMAC</span>, <span class="attr">134231217:</span> <span class="string">ETH_MACDMAConfig</span>, <span class="attr">134232129:</span> <span class="string">ETH_MACAddressConfig</span>,</span><br><span class="line">  <span class="attr">134232237:</span> <span class="string">ETH_MACTransmissionEnable</span>, <span class="attr">134232293:</span> <span class="string">ETH_MACTransmissionDisable</span>, <span class="attr">134232349:</span> <span class="string">ETH_MACReceptionEnable</span>,</span><br><span class="line">  <span class="attr">134232405:</span> <span class="string">ETH_MACReceptionDisable</span>, <span class="attr">134232461:</span> <span class="string">ETH_DMATransmissionEnable</span>, <span class="attr">134232509:</span> <span class="string">ETH_DMATransmissionDisable</span>,</span><br><span class="line">  <span class="attr">134232557:</span> <span class="string">ETH_DMAReceptionEnable</span>, <span class="attr">134232605:</span> <span class="string">ETH_DMAReceptionDisable</span>, <span class="attr">134232653:</span> <span class="string">ETH_FlushTransmitFIFO</span>,</span><br><span class="line">  <span class="attr">134232733:</span> <span class="string">ETH_Delay</span>, <span class="attr">134232793:</span> <span class="string">HAL_GPIO_Init</span>, <span class="attr">134233637:</span> <span class="string">HAL_GPIO_WritePin</span>, <span class="attr">134233685:</span> <span class="string">HAL_GPIO_EXTI_IRQHandler</span>,</span><br><span class="line">  <span class="attr">134233733:</span> <span class="string">HAL_I2C_Init</span>, <span class="attr">134234181:</span> <span class="string">HAL_I2C_DeInit</span>, <span class="attr">134234277:</span> <span class="string">HAL_I2C_MspInit</span>,</span><br><span class="line">  <span class="attr">134234297:</span> <span class="string">HAL_I2C_MspDeInit</span>, <span class="attr">134234317:</span> <span class="string">HAL_I2C_Mem_Write</span>, <span class="attr">134234849:</span> <span class="string">HAL_I2C_Mem_Read</span>,</span><br><span class="line">  <span class="attr">134235973:</span> <span class="string">HAL_I2C_GetState</span>, <span class="attr">134236001:</span> <span class="string">I2C_RequestMemoryWrite</span>, <span class="attr">134236293:</span> <span class="string">I2C_RequestMemoryRead</span>,</span><br><span class="line">  <span class="attr">134236745:</span> <span class="string">I2C_WaitOnFlagUntilTimeout</span>, <span class="attr">134236909:</span> <span class="string">I2C_WaitOnMasterAddressFlagUntilTimeout</span>,</span><br><span class="line">  <span class="attr">134237129:</span> <span class="string">I2C_WaitOnTXEFlagUntilTimeout</span>, <span class="attr">134237253:</span> <span class="string">I2C_WaitOnBTFFlagUntilTimeout</span>,</span><br><span class="line">  <span class="attr">134237377:</span> <span class="string">I2C_WaitOnRXNEFlagUntilTimeout</span>, <span class="attr">134237525:</span> <span class="string">I2C_IsAcknowledgeFailed</span>, <span class="attr">134237605:</span> <span class="string">HAL_PWREx_EnableOverDrive</span>,</span><br><span class="line">  <span class="attr">134237761:</span> <span class="string">HAL_RCC_ClockConfig</span>, <span class="attr">134238213:</span> <span class="string">HAL_RCC_GetSysClockFreq</span>, <span class="attr">134238545:</span> <span class="string">HAL_RCC_GetHCLKFreq</span>,</span><br><span class="line">  <span class="attr">134238569:</span> <span class="string">HAL_RCC_GetPCLK1Freq</span>, <span class="attr">134238609:</span> <span class="string">HAL_RCC_OscConfig</span>, <span class="attr">134239761:</span> <span class="string">mfxstm32l152_Init</span>,</span><br><span class="line">  <span class="attr">134239849:</span> <span class="string">mfxstm32l152_DeInit</span>, <span class="attr">134239889:</span> <span class="string">mfxstm32l152_Reset</span>, <span class="attr">134239925:</span> <span class="string">mfxstm32l152_LowPower</span>,</span><br><span class="line">  <span class="attr">134239957:</span> <span class="string">mfxstm32l152_WakeUp</span>, <span class="attr">134240001:</span> <span class="string">mfxstm32l152_ReadID</span>, <span class="attr">134240181:</span> <span class="string">mfxstm32l152_GlobalITStatus</span>,</span><br><span class="line">  <span class="attr">134240225:</span> <span class="string">mfxstm32l152_ClearGlobalIT</span>, <span class="attr">134240413:</span> <span class="string">mfxstm32l152_IO_Start</span>, <span class="attr">134240501:</span> <span class="string">mfxstm32l152_IO_Config</span>,</span><br><span class="line">  <span class="attr">134242073:</span> <span class="string">mfxstm32l152_IO_InitPin</span>, <span class="attr">134242109:</span> <span class="string">mfxstm32l152_IO_SetIrqEvtMode</span>, <span class="attr">134242153:</span> <span class="string">mfxstm32l152_IO_SetIrqTypeMode</span>,</span><br><span class="line">  <span class="attr">134242197:</span> <span class="string">mfxstm32l152_IO_WritePin</span>, <span class="attr">134242257:</span> <span class="string">mfxstm32l152_IO_ReadPin</span>, <span class="attr">134242377:</span> <span class="string">mfxstm32l152_IO_DisableIT</span>,</span><br><span class="line">  <span class="attr">134242405:</span> <span class="string">mfxstm32l152_IO_EnablePinIT</span>, <span class="attr">134242437:</span> <span class="string">mfxstm32l152_IO_DisablePinIT</span>,</span><br><span class="line">  <span class="attr">134242469:</span> <span class="string">mfxstm32l152_IO_ITStatus</span>, <span class="attr">134242557:</span> <span class="string">mfxstm32l152_IO_ClearIT</span>, <span class="attr">134242653:</span> <span class="string">mfxstm32l152_TS_Start</span>,</span><br><span class="line">  <span class="attr">134242801:</span> <span class="string">mfxstm32l152_TS_DetectTouch</span>, <span class="attr">134242885:</span> <span class="string">mfxstm32l152_TS_GetXY</span>, <span class="attr">134243017:</span> <span class="string">mfxstm32l152_TS_DisableIT</span>,</span><br><span class="line">  <span class="attr">134243045:</span> <span class="string">mfxstm32l152_TS_ITStatus</span>, <span class="attr">134243077:</span> <span class="string">mfxstm32l152_TS_ClearIT</span>, <span class="attr">134243105:</span> <span class="string">mfxstm32l152_IDD_Start</span>,</span><br><span class="line">  <span class="attr">134243169:</span> <span class="string">mfxstm32l152_IDD_Config</span>, <span class="attr">134243929:</span> <span class="string">mfxstm32l152_IDD_GetValue</span>, <span class="attr">134244021:</span> <span class="string">mfxstm32l152_IDD_ClearIT</span>,</span><br><span class="line">  <span class="attr">134244049:</span> <span class="string">mfxstm32l152_IDD_GetITStatus</span>, <span class="attr">134244081:</span> <span class="string">mfxstm32l152_IDD_DisableIT</span>,</span><br><span class="line">  <span class="attr">134244109:</span> <span class="string">mfxstm32l152_Error_ReadSrc</span>, <span class="attr">134244145:</span> <span class="string">mfxstm32l152_Error_ReadMsg</span>, <span class="attr">134244213:</span> <span class="string">mfxstm32l152_Error_ClearIT</span>,</span><br><span class="line">  <span class="attr">134244241:</span> <span class="string">mfxstm32l152_Error_GetITStatus</span>, <span class="attr">134244273:</span> <span class="string">mfxstm32l152_Error_DisableIT</span>,</span><br><span class="line">  <span class="attr">134244301:</span> <span class="string">mfxstm32l152_GetInstance</span>, <span class="attr">134244369:</span> <span class="string">mfxstm32l152_ReleaseInstance</span>, <span class="attr">134244445:</span> <span class="string">mfxstm32l152_reg24_setPinValue</span>,</span><br><span class="line">  <span class="attr">134244713:</span> <span class="string">BSP_LED_Init</span>, <span class="attr">134244829:</span> <span class="string">BSP_LED_On</span>, <span class="attr">134244881:</span> <span class="string">BSP_LED_Off</span>, <span class="attr">134244933:</span> <span class="string">I2Cx_MspInit</span>,</span><br><span class="line">  <span class="attr">134245117:</span> <span class="string">I2Cx_Init</span>, <span class="attr">134245213:</span> <span class="string">I2Cx_Write</span>, <span class="attr">134245293:</span> <span class="string">I2Cx_Read</span>, <span class="attr">134245381:</span> <span class="string">I2Cx_ReadMultiple</span>,</span><br><span class="line">  <span class="attr">134245469:</span> <span class="string">I2Cx_Error</span>, <span class="attr">134245525:</span> <span class="string">MFX_IO_ITConfig</span>, <span class="attr">134245669:</span> <span class="string">MFX_IO_Write</span>, <span class="attr">134245713:</span> <span class="string">MFX_IO_Read</span>,</span><br><span class="line">  <span class="attr">134245753:</span> <span class="string">MFX_IO_ReadMultiple</span>, <span class="attr">134245813:</span> <span class="string">MFX_IO_Delay</span>, <span class="attr">134245961:</span> <span class="string">BSP_IO_ITGetStatus</span>,</span><br><span class="line">  <span class="attr">134245997:</span> <span class="string">BSP_IO_ITClear</span>, <span class="attr">134246021:</span> <span class="string">BSP_IO_ConfigPin</span>, <span class="attr">134246061:</span> <span class="string">BSP_LCD_GetXSize</span>,</span><br><span class="line">  <span class="attr">134246085:</span> <span class="string">BSP_LCD_SetTextColor</span>, <span class="attr">134246133:</span> <span class="string">BSP_LCD_GetFont</span>, <span class="attr">134246177:</span> <span class="string">BSP_LCD_DisplayChar</span>,</span><br><span class="line">  <span class="attr">134246317:</span> <span class="string">BSP_LCD_DisplayStringAt</span>, <span class="attr">134246709:</span> <span class="string">BSP_LCD_DisplayStringAtLine</span>, <span class="attr">134246757:</span> <span class="string">BSP_LCD_DrawPixel</span>,</span><br><span class="line">  <span class="attr">134246833:</span> <span class="string">DrawChar</span>, <span class="attr">134247201:</span> <span class="string">lwip_htons</span>, <span class="attr">134247237:</span> <span class="string">lwip_htonl</span>, <span class="attr">134247289:</span> <span class="string">lwip_standard_chksum</span>,</span><br><span class="line">  <span class="attr">134247477:</span> <span class="string">inet_chksum_pbuf</span>, <span class="attr">134247629:</span> <span class="string">lwip_init</span>, <span class="attr">134247669:</span> <span class="string">plug_holes</span>, <span class="attr">134247973:</span> <span class="string">mem_init</span>,</span><br><span class="line">  <span class="attr">134248093:</span> <span class="string">mem_free</span>, <span class="attr">134248285:</span> <span class="string">mem_trim</span>, <span class="attr">134248725:</span> <span class="string">mem_malloc</span>, <span class="attr">134249193:</span> <span class="string">memp_init_pool</span>,</span><br><span class="line">  <span class="attr">134249285:</span> <span class="string">memp_init</span>, <span class="attr">134249333:</span> <span class="string">do_memp_malloc_pool</span>, <span class="attr">134249417:</span> <span class="string">memp_malloc</span>, <span class="attr">134249493:</span> <span class="string">do_memp_free_pool</span>,</span><br><span class="line">  <span class="attr">134249569:</span> <span class="string">memp_free</span>, <span class="attr">134249661:</span> <span class="string">netif_add</span>, <span class="attr">134249849:</span> <span class="string">netif_set_addr</span>, <span class="attr">134249933:</span> <span class="string">netif_set_ipaddr</span>,</span><br><span class="line">  <span class="attr">134250045:</span> <span class="string">netif_set_gw</span>, <span class="attr">134250085:</span> <span class="string">netif_set_netmask</span>, <span class="attr">134250153:</span> <span class="string">netif_set_up</span>,</span><br><span class="line">  <span class="attr">134250221:</span> <span class="string">netif_issue_reports</span>, <span class="attr">134250285:</span> <span class="string">netif_set_down</span>, <span class="attr">134250353:</span> <span class="string">netif_set_link_up</span>,</span><br><span class="line">  <span class="attr">134250445:</span> <span class="string">netif_set_link_down</span>, <span class="attr">134250509:</span> <span class="string">netif_set_link_callback</span>, <span class="attr">134250541:</span> <span class="string">pbuf_alloc</span>,</span><br><span class="line">  <span class="attr">134251341:</span> <span class="string">pbuf_alloced_custom</span>, <span class="attr">134251553:</span> <span class="string">pbuf_realloc</span>, <span class="attr">134251901:</span> <span class="string">pbuf_header_impl</span>,</span><br><span class="line">  <span class="attr">134252229:</span> <span class="string">pbuf_header</span>, <span class="attr">134252265:</span> <span class="string">pbuf_header_force</span>, <span class="attr">134252301:</span> <span class="string">pbuf_free</span>, <span class="attr">134252597:</span> <span class="string">pbuf_clen</span>,</span><br><span class="line">  <span class="attr">134252645:</span> <span class="string">pbuf_ref</span>, <span class="attr">134252713:</span> <span class="string">pbuf_cat</span>, <span class="attr">134252885:</span> <span class="string">pbuf_chain</span>, <span class="attr">134252917:</span> <span class="string">pbuf_copy</span>,</span><br><span class="line">  <span class="attr">134253321:</span> <span class="string">pbuf_copy_partial</span>, <span class="attr">134253581:</span> <span class="string">tcp_tmr</span>, <span class="attr">134253625:</span> <span class="string">tcp_remove_listener</span>,</span><br><span class="line">  <span class="attr">134253681:</span> <span class="string">tcp_listen_closed</span>, <span class="attr">134253789:</span> <span class="string">tcp_close_shutdown</span>, <span class="attr">134254253:</span> <span class="string">tcp_close_shutdown_fin</span>,</span><br><span class="line">  <span class="attr">134254453:</span> <span class="string">tcp_close</span>, <span class="attr">134254501:</span> <span class="string">tcp_abandon</span>, <span class="attr">134254837:</span> <span class="string">tcp_abort</span>, <span class="attr">134254861:</span> <span class="string">tcp_bind</span>,</span><br><span class="line">  <span class="attr">134255149:</span> <span class="string">tcp_accept_null</span>, <span class="attr">134255181:</span> <span class="string">tcp_listen_with_backlog</span>, <span class="attr">134255217:</span> <span class="string">tcp_listen_with_backlog_and_err</span>,</span><br><span class="line">  <span class="attr">134255521:</span> <span class="string">tcp_update_rcv_ann_wnd</span>, <span class="attr">134255681:</span> <span class="string">tcp_recved</span>, <span class="attr">134255861:</span> <span class="string">tcp_new_port</span>,</span><br><span class="line">  <span class="attr">134256001:</span> <span class="string">tcp_slowtmr</span>, <span class="attr">134257345:</span> <span class="string">tcp_fasttmr</span>, <span class="attr">134257541:</span> <span class="string">tcp_process_refused_data</span>,</span><br><span class="line">  <span class="attr">134257745:</span> <span class="string">tcp_segs_free</span>, <span class="attr">134257785:</span> <span class="string">tcp_seg_free</span>, <span class="attr">134257833:</span> <span class="string">tcp_setprio</span>, <span class="attr">134257861:</span> <span class="string">tcp_recv_null</span>,</span><br><span class="line">  <span class="attr">134257933:</span> <span class="string">tcp_kill_prio</span>, <span class="attr">134258061:</span> <span class="string">tcp_kill_state</span>, <span class="attr">134258209:</span> <span class="string">tcp_kill_timewait</span>,</span><br><span class="line">  <span class="attr">134258301:</span> <span class="string">tcp_alloc</span>, <span class="attr">134258557:</span> <span class="string">tcp_new</span>, <span class="attr">134258573:</span> <span class="string">tcp_arg</span>, <span class="attr">134258605:</span> <span class="string">tcp_recv</span>,</span><br><span class="line">  <span class="attr">134258669:</span> <span class="string">tcp_sent</span>, <span class="attr">134258733:</span> <span class="string">tcp_err</span>, <span class="attr">134258797:</span> <span class="string">tcp_accept</span>, <span class="attr">134258841:</span> <span class="string">tcp_poll</span>,</span><br><span class="line">  <span class="attr">134258909:</span> <span class="string">tcp_pcb_purge</span>, <span class="attr">134259021:</span> <span class="string">tcp_pcb_remove</span>, <span class="attr">134259241:</span> <span class="string">tcp_next_iss</span>, <span class="attr">134259289:</span> <span class="string">tcp_eff_send_mss_impl</span>,</span><br><span class="line">  <span class="attr">134259361:</span> <span class="string">tcp_netif_ip_addr_changed_pcblist</span>, <span class="attr">134259425:</span> <span class="string">tcp_netif_ip_addr_changed</span>,</span><br><span class="line">  <span class="attr">134259549:</span> <span class="string">tcp_input</span>, <span class="attr">134261445:</span> <span class="string">tcp_input_delayed_close</span>, <span class="attr">134261545:</span> <span class="string">tcp_listen_input</span>,</span><br><span class="line">  <span class="attr">134261989:</span> <span class="string">tcp_timewait_input</span>, <span class="attr">134262193:</span> <span class="string">tcp_process</span>, <span class="attr">134264065:</span> <span class="string">tcp_receive</span>, <span class="attr">134266585:</span> <span class="string">tcp_getoptbyte</span>,</span><br><span class="line">  <span class="attr">134266705:</span> <span class="string">tcp_parseopt</span>, <span class="attr">134266901:</span> <span class="string">tcp_trigger_input_pcb_close</span>, <span class="attr">134266933:</span> <span class="string">tcp_output_alloc_header</span>,</span><br><span class="line">  <span class="attr">134267181:</span> <span class="string">tcp_send_fin</span>, <span class="attr">134267309:</span> <span class="string">tcp_create_segment</span>, <span class="attr">134267585:</span> <span class="string">tcp_pbuf_prealloc</span>,</span><br><span class="line">  <span class="attr">134267785:</span> <span class="string">tcp_write_checks</span>, <span class="attr">134268017:</span> <span class="string">tcp_write</span>, <span class="attr">134269729:</span> <span class="string">tcp_enqueue_flags</span>,</span><br><span class="line">  <span class="attr">134270233:</span> <span class="string">tcp_send_empty_ack</span>, <span class="attr">134270413:</span> <span class="string">tcp_output</span>, <span class="attr">134271361:</span> <span class="string">tcp_output_segment</span>,</span><br><span class="line">  <span class="attr">134271677:</span> <span class="string">tcp_rst</span>, <span class="attr">134271913:</span> <span class="string">tcp_rexmit_rto</span>, <span class="attr">134272021:</span> <span class="string">tcp_rexmit</span>, <span class="attr">134272181:</span> <span class="string">tcp_rexmit_fast</span>,</span><br><span class="line">  <span class="attr">134272337:</span> <span class="string">tcp_keepalive</span>, <span class="attr">134272457:</span> <span class="string">tcp_zero_window_probe</span>, <span class="attr">134272841:</span> <span class="string">tcp_timer_needed</span>,</span><br><span class="line">  <span class="attr">134272905:</span> <span class="string">cyclic_timer</span>, <span class="attr">134272949:</span> <span class="string">sys_timeouts_init</span>, <span class="attr">134273029:</span> <span class="string">sys_timeout</span>, <span class="attr">134273353:</span> <span class="string">sys_check_timeouts</span>,</span><br><span class="line">  <span class="attr">134273509:</span> <span class="string">udp_new_port</span>, <span class="attr">134273625:</span> <span class="string">udp_input_local_match</span>, <span class="attr">134273745:</span> <span class="string">udp_input</span>,</span><br><span class="line">  <span class="attr">134274205:</span> <span class="string">udp_sendto_if</span>, <span class="attr">134274325:</span> <span class="string">udp_sendto_if_src</span>, <span class="attr">134274629:</span> <span class="string">udp_bind</span>, <span class="attr">134274849:</span> <span class="string">udp_netif_ip_addr_changed</span>,</span><br><span class="line">  <span class="attr">134274941:</span> <span class="string">ethernet_input</span>, <span class="attr">134275237:</span> <span class="string">ethernet_output</span>, <span class="attr">134275381:</span> <span class="string">dhcp_check</span>, <span class="attr">134275481:</span> <span class="string">dhcp_select</span>,</span><br><span class="line">  <span class="attr">134275817:</span> <span class="string">dhcp_coarse_tmr</span>, <span class="attr">134275981:</span> <span class="string">dhcp_fine_tmr</span>, <span class="attr">134276077:</span> <span class="string">dhcp_timeout</span>, <span class="attr">134276221:</span> <span class="string">dhcp_t1_timeout</span>,</span><br><span class="line">  <span class="attr">134276313:</span> <span class="string">dhcp_t2_timeout</span>, <span class="attr">134276413:</span> <span class="string">dhcp_network_changed</span>, <span class="attr">134276533:</span> <span class="string">dhcp_arp_reply</span>,</span><br><span class="line">  <span class="attr">134276621:</span> <span class="string">dhcp_decline</span>, <span class="attr">134276837:</span> <span class="string">dhcp_discover</span>, <span class="attr">134277121:</span> <span class="string">dhcp_bind</span>, <span class="attr">134277557:</span> <span class="string">dhcp_renew</span>,</span><br><span class="line">  <span class="attr">134277825:</span> <span class="string">dhcp_rebind</span>, <span class="attr">134278097:</span> <span class="string">dhcp_reboot</span>, <span class="attr">134278397:</span> <span class="string">dhcp_release</span>, <span class="attr">134278669:</span> <span class="string">dhcp_set_state</span>,</span><br><span class="line">  <span class="attr">134278721:</span> <span class="string">dhcp_option</span>, <span class="attr">134278833:</span> <span class="string">dhcp_option_byte</span>, <span class="attr">134278909:</span> <span class="string">dhcp_option_short</span>,</span><br><span class="line">  <span class="attr">134279025:</span> <span class="string">dhcp_option_long</span>, <span class="attr">134279209:</span> <span class="string">dhcp_create_msg</span>, <span class="attr">134279913:</span> <span class="string">dhcp_delete_msg</span>,</span><br><span class="line">  <span class="attr">134280045:</span> <span class="string">dhcp_option_trailer</span>, <span class="attr">134280225:</span> <span class="string">dhcp_supplied_address</span>, <span class="attr">134280301:</span> <span class="string">etharp_free_entry</span>,</span><br><span class="line">  <span class="attr">134280401:</span> <span class="string">etharp_tmr</span>, <span class="attr">134280737:</span> <span class="string">etharp_find_entry</span>, <span class="attr">134281385:</span> <span class="string">etharp_update_arp_entry</span>,</span><br><span class="line">  <span class="attr">134281713:</span> <span class="string">etharp_cleanup_netif</span>, <span class="attr">134281809:</span> <span class="string">etharp_input</span>, <span class="attr">134282109:</span> <span class="string">etharp_output_to_arp_index</span>,</span><br><span class="line">  <span class="attr">134282417:</span> <span class="string">etharp_output</span>, <span class="attr">134282889:</span> <span class="string">etharp_query</span>, <span class="attr">134283545:</span> <span class="string">etharp_raw</span>, <span class="attr">134283829:</span> <span class="string">etharp_request_dst</span>,</span><br><span class="line">  <span class="attr">134283897:</span> <span class="string">etharp_request</span>, <span class="attr">134283933:</span> <span class="string">icmp_input</span>, <span class="attr">134284461:</span> <span class="string">icmp_dest_unreach</span>,</span><br><span class="line">  <span class="attr">134284493:</span> <span class="string">icmp_time_exceeded</span>, <span class="attr">134284525:</span> <span class="string">icmp_send_response</span>, <span class="attr">134284733:</span> <span class="string">ip4_route</span>,</span><br><span class="line">  <span class="attr">134284941:</span> <span class="string">ip4_input</span>, <span class="attr">134285637:</span> <span class="string">ip4_output_if</span>, <span class="attr">134285721:</span> <span class="string">ip4_output_if_src</span>, <span class="attr">134286057:</span> <span class="string">ip4_addr_isbroadcast_u32</span>,</span><br><span class="line">  <span class="attr">134286189:</span> <span class="string">ip_reass_tmr</span>, <span class="attr">134286273:</span> <span class="string">ip_reass_free_complete_datagram</span>, <span class="attr">134286601:</span> <span class="string">ip_reass_remove_oldest_datagram</span>,</span><br><span class="line">  <span class="attr">134286797:</span> <span class="string">ip_reass_enqueue_new_datagram</span>, <span class="attr">134286913:</span> <span class="string">ip_reass_dequeue_datagram</span>,</span><br><span class="line">  <span class="attr">134287001:</span> <span class="string">ip_reass_chain_frag_into_datagram_and_validate</span>, <span class="attr">134287717:</span> <span class="string">ip4_reass</span>,</span><br><span class="line">  <span class="attr">134288385:</span> <span class="string">ip_frag_alloc_pbuf_custom_ref</span>, <span class="attr">134288401:</span> <span class="string">ip_frag_free_pbuf_custom_ref</span>,</span><br><span class="line">  <span class="attr">134288457:</span> <span class="string">ipfrag_free_pbuf_custom</span>, <span class="attr">134288557:</span> <span class="string">ip4_frag</span>, <span class="attr">134289373:</span> <span class="string">memset</span>, <span class="attr">134289529:</span> <span class="string">printf</span>,</span><br><span class="line">  <span class="attr">134289569:</span> <span class="string">rand</span>&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>主配置文件：/tests/stm32_tcp_echo/stm32_tcp_echo_server.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">include:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">./../../configs/hw/cortexm_memory.yml</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">./../../configs/hals/stm32f4_hal.yml</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">./stm32_tcp_echo_server_addrs.yml</span></span><br><span class="line"></span><br><span class="line"><span class="attr">use_nvic:</span> <span class="literal">False</span></span><br><span class="line"><span class="attr">use_timers:</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="attr">memory_map:</span></span><br><span class="line">  <span class="attr">ivt:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0x0</span>, <span class="attr">file:</span> <span class="string">./stm32_tcp_echo_server.bin</span>,</span><br><span class="line">    <span class="attr">permissions:</span> <span class="string">r-x</span>, <span class="attr">size:</span> <span class="number">0x800000</span>&#125;</span><br><span class="line">  <span class="attr">rom:</span> &#123;<span class="attr">base_addr:</span> <span class="number">0x08000000</span>, <span class="attr">file:</span> <span class="string">./stm32_tcp_echo_server.bin</span>,</span><br><span class="line">    <span class="attr">permissions:</span> <span class="string">r-x</span>, <span class="attr">size:</span> <span class="number">0x800000</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="attr">handlers:</span></span><br><span class="line">  <span class="attr">BSP_IO_ConfigPin:</span></span><br><span class="line">    <span class="attr">handler:</span> </span><br><span class="line">  <span class="attr">tcp_next_iss:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.lwip.tcp_next_iss_hack</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">I2C_WaitOnFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">I2C_WaitOnMasterAddressFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">I2C_WaitOnTXEFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">I2C_WaitOnBTFFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line">  <span class="attr">I2C_WaitOnRXNEFlagUntilTimeout:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.generic.return_zero</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">HAL_ETH_TransmitFrame:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_eth.HAL_ETH_TransmitFrame</span></span><br><span class="line">  <span class="attr">HAL_ETH_GetReceivedFrame:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_eth.HAL_ETH_GetReceivedFrame</span></span><br><span class="line">  <span class="attr">HAL_ETH_WritePHYRegister:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_eth.HAL_ETH_WritePHYRegister</span></span><br><span class="line">  <span class="attr">HAL_ETH_ReadPHYRegister:</span></span><br><span class="line">    <span class="attr">handler:</span> <span class="string">hal_fuzz.handlers.stm32f4_hal.stm32f4_eth.HAL_ETH_ReadPHYRegister</span></span><br></pre></td></tr></table></figure>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/hal/" class="">
+              hal
+            </a>
+          
+            <a href="/tags/fuzz/" class="">
+              fuzz
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>作者:  </strong>fireknight</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>文章链接:  </strong>
+    <a href="/2023/01/09/hal-fuzz学习笔记-part-1/" target="_blank" title="hal-fuzz学习笔记--part 1">http://example.com/2023/01/09/hal-fuzz学习笔记-part-1/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明:   </strong>
+      本网站所有文章除特别声明外,均采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      许可协议。转载请注明出处!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/rand10.jpg" class="lazyload placeholder" data-srcset="/medias/rand10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2023/01/07/AFL-Unicorn%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-nav-link">
+      <div class="title">
+        下一篇: <i class="fas fa-angle-right"></i>
+        <div class="title-text">AFL-Unicorn模式学习笔记</div>
+      </div>
+      <!-- <div class="content">
+        AFL-Unicorn模式学习笔记AFL-选项及含义这个是一部分AFL源码，指示了AFL键入选项的含义：
+1234567
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>本文目录</span>
+        
+          <div class="toc-open-close">本文目录</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin-left': 'auto', 'margin-right': 'auto',});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
+
+      </main>
+    </div>
+
+    <!-- 页脚 -->
+    
+  
+  
+    <!-- 底部鱼儿跳动效果，依赖于jquery-->
+<div id="j-fish-skip" style=" position: relative;height: 153px;width: auto;"></div>
+<script>
+  var RENDERER = {
+    POINT_INTERVAL: 5,
+    FISH_COUNT: 3,
+    MAX_INTERVAL_COUNT: 50,
+    INIT_HEIGHT_RATE: .5,
+    THRESHOLD: 50,
+    FISH_COLOR: '',
+    init: function () {
+      this.setFishColor(); this.setParameters(), this.reconstructMethods(), this.setup(), this.bindEvent(), this.render()
+    },
+    setFishColor: function () {
+      let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+      if (isDark) {
+        this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
+      } else {
+        this.FISH_COLOR = '' || '#453ead';
+      }
+    },
+    setParameters: function () {
+      this.$window = $(window), this.$container = $("#j-fish-skip"), this.$canvas = $("<canvas />"), this.context = this.$canvas.appendTo(this.$container).get(0).getContext("2d"), this.points = [], this.fishes = [], this.watchIds = []
+    },
+    createSurfacePoints: function () {
+      var t = Math.round(this.width / this.POINT_INTERVAL);
+      this.pointInterval = this.width / (t - 1), this.points.push(new SURFACE_POINT(this, 0));
+      for (var i = 1; i < t; i++) {
+        var e = new SURFACE_POINT(this, i * this.pointInterval),
+          h = this.points[i - 1];
+        e.setPreviousPoint(h), h.setNextPoint(e), this.points.push(e)
+      }
+    },
+    reconstructMethods: function () {
+      this.watchWindowSize = this.watchWindowSize.bind(this), this.jdugeToStopResize = this.jdugeToStopResize.bind(this), this.startEpicenter = this.startEpicenter.bind(this), this.moveEpicenter = this.moveEpicenter.bind(this), this.reverseVertical = this.reverseVertical.bind(this), this.render = this.render.bind(this)
+    },
+    setup: function () {
+      this.points.length = 0, this.fishes.length = 0, this.watchIds.length = 0, this.intervalCount = this.MAX_INTERVAL_COUNT, this.width = this.$container.width(), this.height = this.$container.height(), this.fishCount = this.FISH_COUNT * this.width / 500 * this.height / 500, this.$canvas.attr({
+        width: this.width,
+        height: this.height
+      }), this.reverse = !1, this.fishes.push(new FISH(this)), this.createSurfacePoints()
+    },
+    watchWindowSize: function () {
+      this.clearTimer(), this.tmpWidth = this.$window.width(), this.tmpHeight = this.$window.height(), this.watchIds.push(setTimeout(this.jdugeToStopResize, this.WATCH_INTERVAL))
+    },
+    clearTimer: function () {
+      for (; this.watchIds.length > 0;) clearTimeout(this.watchIds.pop())
+    },
+    jdugeToStopResize: function () {
+      var t = this.$window.width(),
+        i = this.$window.height(),
+        e = t == this.tmpWidth && i == this.tmpHeight;
+      this.tmpWidth = t, this.tmpHeight = i, e && this.setup()
+    },
+    bindEvent: function () {
+      this.$window.on("resize", this.watchWindowSize), this.$container.on("mouseenter", this.startEpicenter), this.$container.on("mousemove", this.moveEpicenter)
+    },
+    getAxis: function (t) {
+      var i = this.$container.offset();
+      return {
+        x: t.clientX - i.left + this.$window.scrollLeft(),
+        y: t.clientY - i.top + this.$window.scrollTop()
+      }
+    },
+    startEpicenter: function (t) {
+      this.axis = this.getAxis(t)
+    },
+    moveEpicenter: function (t) {
+      var i = this.getAxis(t);
+      this.axis || (this.axis = i), this.generateEpicenter(i.x, i.y, i.y - this.axis.y), this.axis = i
+    },
+    generateEpicenter: function (t, i, e) {
+      if (!(i < this.height / 2 - this.THRESHOLD || i > this.height / 2 + this.THRESHOLD)) {
+        var h = Math.round(t / this.pointInterval);
+        h < 0 || h >= this.points.length || this.points[h].interfere(i, e)
+      }
+    },
+    reverseVertical: function () {
+      this.reverse = !this.reverse;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].reverseVertical()
+    },
+    controlStatus: function () {
+      for (var t = 0, i = this.points.length; t < i; t++) this.points[t].updateSelf();
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].updateNeighbors();
+      this.fishes.length < this.fishCount && 0 == --this.intervalCount && (this.intervalCount = this.MAX_INTERVAL_COUNT, this.fishes.push(new FISH(this)))
+    },
+    render: function () {
+      requestAnimationFrame(this.render), this.controlStatus(), this.context.clearRect(0, 0, this.width, this.height), this.context.fillStyle = this.FISH_COLOR;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].render(this.context);
+      this.context.save(), this.context.globalCompositeOperation = "xor", this.context.beginPath(), this.context.moveTo(0, this.reverse ? 0 : this.height);
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].render(this.context);
+      this.context.lineTo(this.width, this.reverse ? 0 : this.height), this.context.closePath(), this.context.fill(), this.context.restore()
+    }
+  },
+  SURFACE_POINT = function (t, i) {
+    this.renderer = t, this.x = i, this.init()
+  };
+  SURFACE_POINT.prototype = {
+    SPRING_CONSTANT: .03,
+    SPRING_FRICTION: .9,
+    WAVE_SPREAD: .3,
+    ACCELARATION_RATE: .01,
+    init: function () {
+      this.initHeight = this.renderer.height * this.renderer.INIT_HEIGHT_RATE, this.height = this.initHeight, this.fy = 0, this.force = {
+        previous: 0,
+        next: 0
+      }
+    },
+    setPreviousPoint: function (t) {
+      this.previous = t
+    },
+    setNextPoint: function (t) {
+      this.next = t
+    },
+    interfere: function (t, i) {
+      this.fy = this.renderer.height * this.ACCELARATION_RATE * (this.renderer.height - this.height - t >= 0 ? -1 : 1) * Math.abs(i)
+    },
+    updateSelf: function () {
+      this.fy += this.SPRING_CONSTANT * (this.initHeight - this.height), this.fy *= this.SPRING_FRICTION, this.height += this.fy
+    },
+    updateNeighbors: function () {
+      this.previous && (this.force.previous = this.WAVE_SPREAD * (this.height - this.previous.height)), this.next && (this.force.next = this.WAVE_SPREAD * (this.height - this.next.height))
+    },
+    render: function (t) {
+      this.previous && (this.previous.height += this.force.previous, this.previous.fy += this.force.previous), this.next && (this.next.height += this.force.next, this.next.fy += this.force.next), t.lineTo(this.x, this.renderer.height - this.height)
+    }
+  };
+  var FISH = function (t) {
+    this.renderer = t, this.init()
+  };
+  FISH.prototype = {
+    GRAVITY: .4,
+    init: function () {
+      this.direction = Math.random() < .5, this.x = this.direction ? this.renderer.width + this.renderer.THRESHOLD : -this.renderer.THRESHOLD, this.previousY = this.y, this.vx = this.getRandomValue(4, 10) * (this.direction ? -1 : 1), this.renderer.reverse ? (this.y = this.getRandomValue(1 * this.renderer.height / 10, 4 * this.renderer.height / 10), this.vy = this.getRandomValue(2, 5), this.ay = this.getRandomValue(.05, .2)) : (this.y = this.getRandomValue(6 * this.renderer.height / 10, 9 * this.renderer.height / 10), this.vy = this.getRandomValue(-5, -2), this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1, this.theta = 0, this.phi = 0
+    },
+    getRandomValue: function (t, i) {
+      return t + (i - t) * Math.random()
+    },
+    reverseVertical: function () {
+      this.isOut = !this.isOut, this.ay *= -1
+    },
+    controlStatus: function (t) {
+      this.previousY = this.y, this.x += this.vx, this.y += this.vy, this.vy += this.ay, this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = !1) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1), this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI), this.renderer.generateEpicenter(this.x + (this.direction ? -1 : 1) * this.renderer.THRESHOLD, this.y, this.y - this.previousY), (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init()
+    },
+    render: function (t) {
+      t.save(), t.translate(this.x, this.y), t.rotate(Math.PI + Math.atan2(this.vy, this.vx)), t.scale(1, this.direction ? 1 : -1), t.beginPath(), t.moveTo(-30, 0), t.bezierCurveTo(-20, 15, 15, 10, 40, 0), t.bezierCurveTo(15, -10, -20, -15, -30, 0), t.fill(), t.save(), t.translate(40, 0), t.scale(.9 + .2 * Math.sin(this.theta), 1), t.beginPath(), t.moveTo(0, 0), t.quadraticCurveTo(5, 10, 20, 8), t.quadraticCurveTo(12, 5, 10, 0), t.quadraticCurveTo(12, -5, 20, -8), t.quadraticCurveTo(5, -10, 0, 0), t.fill(), t.restore(), t.save(), t.translate(-3, 0), t.rotate((Math.PI / 3 + Math.PI / 10 * Math.sin(this.phi)) * (this.renderer.reverse ? -1 : 1)), t.beginPath(), this.renderer.reverse ? (t.moveTo(5, 0), t.bezierCurveTo(10, 10, 10, 30, 0, 40), t.bezierCurveTo(-12, 25, -8, 10, 0, 0)) : (t.moveTo(-5, 0), t.bezierCurveTo(-10, -10, -10, -30, 0, -40), t.bezierCurveTo(12, -25, 8, -10, 0, 0)), t.closePath(), t.fill(), t.restore(), t.restore(), this.controlStatus(t)
+    }
+  }, $(function () {
+    RENDERER.init()
+    $('.dark').click(function () {
+      setTimeout(() => {
+        RENDERER.setFishColor();
+        RENDERER.context.fill();
+      });
+    })
+  });
+</script>
+  
+  <div class="footer bg-color">
+    <div class="footer-main">
+      
+        
+          <div class="link">
+            
+          </div>
+        
+      
+        
+          <div class="footer-copyright">
+            <p>Copyright © 2019 - 2020 <a target="_blank" rel="noopener" href="https://github.com/yuang01">yuang01</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/yuang01/theme">Bamboo</a> </p>
+
+          </div>
+        
+      
+        
+          
+            <!-- 不蒜子统计 -->
+            <!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+      <i class="fas fa-eye" aria-hidden="true"></i>本站总访问量：<span id="busuanzi_value_site_pv"></span> 次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+      <i class="fas fa-users" aria-hidden="true"></i>本站访客数：<span id="busuanzi_value_site_uv"></span> 人
+</span>
+
+          
+        
+      
+        
+          <div class="footer-custom">
+            
+          </div>
+        
+      
+    </div>
+  </div>
+
+
+
+    <!-- 渲染暗黑按钮 -->
+    
+      <div class="dark">
+  <div class="dark-content">
+    <i class="fas fa-moon" aria-hidden="true"></i>
+    <!-- <span>关灯</span> -->
+  </div>
+  
+</div>
+
+<script>
+  $(function() {
+    let isDark = JSON.parse(localStorage.getItem('dark'))  || JSON.parse('false');
+    if (isDark) {
+      $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+    }
+    $('.dark').click(function() {
+      if ($(document.body).is('.darkModel')) {
+        $(document.body).removeClass('darkModel');
+        localStorage.setItem('dark', false);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-moon" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      } else {
+        $(document.body).addClass('darkModel');
+        localStorage.setItem('dark', true);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      }
+    })
+  })
+</script>
+    
+    <!-- 渲染回到顶部按钮 -->
+    
+      <div class="goTop top-btn-color" pointer>
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</div>
+<script src="/js/goTop.js"></script>
+
+    
+    <!-- 渲染左下角音乐播放器 -->
+    
+      <link rel="stylesheet" href="/js/aplayer/APlayer@1.10.1.min.css">
+<style>
+.aplayer .aplayer-lrc p {
+  
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px !important;
+}
+
+.aplayer .aplayer-lrc p.aplayer-lrc-current {
+  
+  font-size: 15px;
+  color: #42b983;
+}
+
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+  left: -66px !important;
+}
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+  left: 0px !important;
+}
+
+
+</style>
+<meting-js  
+  class=""
+  server="tencent"
+  type="playlist"
+  id="8062553743"
+  fixed='true'
+  autoplay='true'
+  theme='#42b983'
+  loop='all'
+  order='random'
+  preload='auto'
+  volume='0.7'
+  list-folded='true'
+>
+</meting-js>
+
+<!-- <style>
+  #aplayer {
+    position: fixed;
+    left: 0;
+    bottom: 300px;
+  }
+</style> -->
+<script src="https://unpkg.com/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script src="https://unpkg.com/meting@2/dist/Meting.min.js"></script>
+    
+
+    <!-- 图片放大 -->
+    
+      <script src="/js/fancybox/jquery.fancybox.min.js"></script>
+    
+
+    <!-- 百度解析 -->
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <!-- 背景彩带 -->
+    
+      <script type="text/javascript" size="100" alpha='0.4' zIndex="-1" src="/js/ribbon.min.js"></script>
+    
+
+    <script src="/js/utils/index.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- 文章目录所需js -->
+<link href="/js/tocbot/tocbot.css" rel="stylesheet">
+<script src="/js/tocbot/tocbot.min.js"></script>
+
+<script>
+  var headerEl = 'h2, h3, h4',  //headers 
+    content = '.post-detail',//文章容器
+    idArr = {};  //标题数组以确定是否增加索引id
+  //add #id
+  var option = {
+    // Where to render the table of contents.
+    tocSelector: '.toc',
+    // Where to grab the headings to build the table of contents.
+    contentSelector: content,
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: headerEl,
+    scrollSmooth: true,
+    scrollSmoothOffset: -80,
+    headingsOffset: -($(window).height() * 0.4 - 45),
+    positionFixedSelector: '.toc-main',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    activeLinkClass: 'is-active-link',
+    // onClick: function (e) {},
+  }
+  if ($('.toc').length > 0) {
+
+    $(content).children(headerEl).each(function () {
+      //去除空格以及多余标点
+      var headerId = $(this).text().replace(/[\s|\~|`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\_|\+|\=|\||\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\：|\，|\。]/g, '');
+
+      headerId = headerId.toLowerCase();
+      if (idArr[headerId]) {
+        //id已经存在
+        $(this).attr('id', headerId + '-' + idArr[headerId]);
+        idArr[headerId]++;
+      }
+      else {
+        //id未存在
+        idArr[headerId] = 1;
+        $(this).attr('id', headerId);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      tocbot.init(option);
+      mobileTocClick();
+    });
+
+  }
+
+  window.tocScrollFn = function () {
+    return bamboo.throttle(function () {
+      findHeadPosition();
+    }, 100)()
+  }
+  window.addEventListener('scroll', tocScrollFn);
+
+  const findHeadPosition = function (top) {
+    if ($('.toc-list').length <= 0) {
+      return false;
+    }
+    setTimeout(() => {  // or DOMContentLoaded 
+      autoScrollToc();
+    }, 0);
+  }
+
+  const autoScrollToc = function () {
+    const $activeItem = document.querySelector('.is-active-link');
+    const $cardToc = document.querySelector('.toc-content');
+    const activePosition = $activeItem.getBoundingClientRect().top
+    const sidebarScrollTop = $cardToc.scrollTop
+    if (activePosition > (document.documentElement.clientHeight - 100)) {
+      $cardToc.scrollTop = sidebarScrollTop + 150
+    }
+    if (activePosition < 100) {
+      $cardToc.scrollTop = sidebarScrollTop - 150
+    }
+  }
+
+  document.addEventListener('pjax:send', function () {
+    if ($('.toc').length) {
+      tocbot.destroy();
+    }
+  });
+
+  document.addEventListener('pjax:complete', function () {
+    if ($('.toc').length) {
+      tocbot.init(option);
+      mobileTocClick();
+    }
+  });
+  
+  // 手机端toc按钮点击出现目录
+  const mobileTocClick = function () {
+    const $cardTocLayout = document.getElementsByClassName('toc-aside')[0];
+    const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0];
+    let right = '45px';
+    if (window.innerWidth >= 551 && window.innerWidth <= 992) {
+      right = '100px'
+    }
+    const mobileToc = {
+      open: () => {
+        $cardTocLayout.style.cssText = 'animation: toc-open .3s; opacity: 1; right: ' + right
+      },
+
+      close: () => {
+        $cardTocLayout.style.animation = 'toc-close .2s'
+        setTimeout(() => {
+          $cardTocLayout.style.cssText = "opacity:''; animation: ''; right: ''"
+        }, 100)
+      }
+    }
+    document.getElementById('toc-mobile-btn').addEventListener('click', () => {
+      if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
+      else mobileToc.close()
+    })
+
+    $cardToc.addEventListener('click', (e) => {
+      if (window.innerWidth < 992) { // 小于992px的时候
+        mobileToc.close()
+      }
+    })
+  }
+</script>
+
+<style>
+  .is-position-fixed {
+    position: sticky !important;
+    top: 74px;
+  }
+
+  .toc-main ul {
+    counter-reset: show-list;
+  }
+
+  .toc-main ul li::before {
+    content: counter(item)".";
+    display: block;
+    position: absolute;
+    left: 12px;
+    top: 0;
+  }
+</style> 
+
+<!-- 设置导航背景 -->
+<script>
+  let setHeaderClass = () => {
+    const headerMenuTransparent = true;
+    if (!headerMenuTransparent) { return; }
+    const nav = $('#navHeader');
+    const navTop = nav.outerHeight();
+    const winTop = $(window).scrollTop();
+    if(winTop > navTop) {
+      nav.addClass('header-bg-color');
+    }
+    else {
+      nav.removeClass('header-bg-color');
+    }
+  };
+
+  let scrollCollect = () => {
+    return bamboo.throttle(function (e) {
+      setHeaderClass();
+    }, 200)()
+  }
+
+  let initHeaderBg = () => {
+    setHeaderClass();
+  }
+
+  setHeaderClass();
+  window.addEventListener('scroll', scrollCollect);
+
+  document.addEventListener('pjax:send', function () {
+    window.removeEventListener('scroll', scrollCollect)
+  })
+  document.addEventListener('pjax:complete', function () {
+    window.addEventListener('scroll', scrollCollect);
+    setHeaderClass();
+  })
+</script> 
+
+<!-- 渲染issues标签里的内容 -->
+<script>
+  function loadIssuesJS() {
+    if ($(".post-detail").find(".issues-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/issues/index.js');
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof IssuesAPI == "undefined") {
+      loadIssuesJS();
+    }
+  })
+</script>
+
+<!-- 输入框打字特效 -->
+<!-- 输入框打字特效 -->
+
+  <script src="/js/activate-power-mode.js"></script>
+  <script>
+    POWERMODE.colorful = true;  // 打开随机颜色特效
+    POWERMODE.shake = false;    // 关闭输入框抖动
+    document.body.addEventListener('input', POWERMODE);//监听打字事件
+  </script>
+
+
+<!-- markdown代码一键复制功能 -->
+
+  <link rel="stylesheet" href="https://unpkg.com/v-plugs-ayu/lib/ayu.css">
+  <script src="https://unpkg.com/v-plugs-ayu/lib/ayu.umd.min.js"></script>
+  <script src="/js/clipboard/clipboard.min.js"></script>
+  <div id="appCopy">
+  </div>
+  <script data-pjax>
+    var vm = new Vue({
+      el: '#appCopy',
+      data: {
+      },
+      computed: {
+      },
+      mounted() {
+        const that = this;
+        var copy = '复制';
+        /* code */
+        var initCopyCode = function () {
+          var copyHtml = '';
+          copyHtml += '<button class="btn-copy" data-clipboard-snippet="" style="position:absolute;top:0;right:0;z-index:1;">';
+          copyHtml += '<i class="fas fa-copy"></i><span>' + copy + '</span>';
+          copyHtml += '</button>';
+          $(".post-detail pre").not('.gutter pre').wrap("<div class='codeBox' style='position:relative;width:100%;'></div>")
+          $(".post-detail pre").not('.gutter pre').before(copyHtml);
+          new ClipboardJS('.btn-copy', {
+            target: function (trigger) {
+              return trigger.nextElementSibling;
+            }
+          });
+        }
+        initCopyCode();
+        $('.btn-copy').unbind('click').bind('click', function () {
+          doSomething();
+        })
+        $(document).unbind('keypress').bind('keypress', function (e) {
+          if (e.ctrlKey && e.keyCode == 67) {
+            doSomething();
+          }
+        })
+
+        function doSomething() {
+          that.$notify({
+            title: "成功",
+            content: "代码已复制，请遵守相关授权协议。",
+            type: 'success'
+          })
+        }
+      },
+      methods: {
+      },
+      created() { }
+    })
+  </script>
+  
+
+<!-- 图片懒加载 -->
+<script defer src="https://unpkg.com/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+<!-- 卡片滚动动画 -->
+   
+
+<!-- 评论所需js -->
+
+  
+    <script type="text/javascript">
+  var utteranceCommon = {};
+
+  function check_utterance() {
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    if (isDark) {
+      utteranceCommon.Theme = 'github-dark';
+    } else {
+      utteranceCommon.Theme = 'github-light';
+    }
+
+    return document.getElementById("gitment-container");
+  }
+  comment_el = '#gitment-container';
+  load_utterance = function () {
+    if ($(comment_el).length) {
+      // 匿名函数，防止污染全局变量
+      const HEAD = check_utterance();
+
+      var utterances = document.createElement('script');
+      utterances.type = 'text/javascript';
+      utterances.async = true;
+      utterances.setAttribute('issue-term', 'pathname')
+      utterances.setAttribute('theme', utteranceCommon.Theme)
+      utterances.setAttribute('repo', '')
+      utterances.crossorigin = 'anonymous';
+      utterances.src = 'https://utteranc.es/client.js';
+      // content 是要插入评论的地方
+      document.getElementById('gitment-container').appendChild(utterances);
+
+    }
+  }
+
+  function dark_utterance() {
+    const HEAD = check_utterance();
+    if (!HEAD) return;
+    const message = {
+      type: 'set-theme',
+      theme: utteranceCommon.Theme
+    };
+    const utteranceIframe = document.querySelector('iframe');
+    utteranceIframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+
+  $(document).ready(load_utterance);
+  document.addEventListener('pjax:complete', function () {
+    load_utterance();
+  });
+
+  $('.dark').click(function () {
+    setTimeout(() => {
+      dark_utterance();
+    });
+  })
+
+</script>
+
+<style>
+  .utterances {
+    max-width: inherit !important;
+  }
+</style>
+  
+
+
+<!-- 鼠标点击特效 -->
+<!-- 爱心点击 -->
+
+  
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 999; pointer-events: none;" ></canvas>
+    <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/js/cursor/explosion.min.js"></script>
+  
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" data-pjax></script>
+
+
+    <!-- pjax -->
+    
+
+<!-- pjax -->
+
+
+  <script src="/js/pjax@0.2.8/index.js"></script>
+  
+    <!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
+
+<div class="pjax-animate">
+  
+    <div class="loading-circle"><div id="loader-circle"></div></div>
+    <script>
+      window.ShowLoading = function() {
+        $(".loading-circle").css("display", "block");
+      };
+      window.HideLoading = function() {
+        $(".loading-circle").css("display", "none");
+      }
+    </script>
+  
+	<script>
+    document.addEventListener('pjax:complete', function () {
+      window.HideLoading();
+    })
+    document.addEventListener('pjax:send', function () {
+      window.ShowLoading();
+    })
+    document.addEventListener('pjax:error', function () {
+      window.HideLoading();
+    })
+	</script>
+</div>
+
+  
+
+  <script>
+    var pjax = new Pjax({
+      elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([no-pjax])',   // 拦截正常带链接的 a 标签
+      selectors: ["#pjax-container","title"],                                   // 根据实际需要确认重载区域
+      cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+      timeout: 5000
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+
+    })
+    
+    document.addEventListener('pjax:complete', function () {
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.location.href = e.triggerElement.href;
+    })
+    
+    // 刷新不从顶部开始
+    document.addEventListener("DOMContentLoaded", function () {
+      history.scrollRestoration = 'auto';
+    })
+  </script>
+
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
